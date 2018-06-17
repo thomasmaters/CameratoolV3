@@ -20,7 +20,7 @@ function InWorldVisualization:updateInWorldView(aButton)
 	local timeLineElements = self.ParentGraph:getAllTimeLineElements() --I sinserly hope this is a copy 
 	tempCamTargetPoints = {}
 	tempCamPositionPoints = {}
-	outputChatBox(#timeLineElements)
+
 	for i=#timeLineElements,1,-1 do
 		if PathCamPosition:made(timeLineElements[i]) then
 			table.insert(tempCamPositionPoints, table.remove(timeLineElements, i))
@@ -28,17 +28,16 @@ function InWorldVisualization:updateInWorldView(aButton)
 			table.insert(tempCamTargetPoints, table.remove(timeLineElements, i))
 		end
 	end
-	outputChatBox(#tempCamPositionPoints)
-	outputChatBox(tostring(tempCamPositionPoints))
-	self.PositionPoints 		= self:convertToInterpolatableTable(self:removeInpossiblePaths(tempCamPositionPoints))
-	self.TargetPoints   		= self:convertToInterpolatableTable(self:removeInpossiblePaths(tempCamTargetPoints))
+
+	self.PositionPoints 		= self:convertToInterpolatableTable(tempCamPositionPoints)
+	self.TargetPoints   		= self:convertToInterpolatableTable(tempCamTargetPoints)
 	
 	self.PositionSplinePoints 	= self:getSplinePointsTable(self.PositionPoints)
-	self.TargetSplinePoints 	= self:getSplinePointsTable(self.TargetPoints)
+	self.TargetSplinePoints 	= {}--self:getSplinePointsTable(self.TargetPoints)
 end
 
 function InWorldVisualization:draw()
-	if(#self.PositionSplinePoints < 2) then return end
+	if(#self.PositionSplinePoints < 1) then return end
 	
 	for k,v in ipairs(self.PositionSplinePoints) do
 		for i=1,#v - 1 do
@@ -46,10 +45,10 @@ function InWorldVisualization:draw()
 		end
 	end
 	
-	--if(#self.PositionPoints > 0) then
-	---	local splineMatrix = self:getAnimationPosition(self.PositionPoints)
-	--	setElementPosition(self.Object,splineMatrix[1][1],splineMatrix[1][2],splineMatrix[1][3])
-	--end
+	if(#self.PositionPoints > 0) then
+		local splineMatrix = self:getAnimationPosition(self.PositionPoints)
+		--setElementPosition(self.Object,splineMatrix[1][1],splineMatrix[1][2],splineMatrix[1][3])
+	end
 end
 
 function InWorldVisualization:getAnimationPosition(aTable)
@@ -84,7 +83,7 @@ function InWorldVisualization:getAnimationPosition(aTable)
 			matrixValue4 = aTable[animationIndex][animationPosition].EndPosition:pack()
 		else
 			matrixValue3 = aTable[animationIndex][animationPosition + 1].EndPosition:pack()
-			matrixValue4 = aTable[animationIndex][animationPosition + 2].EndPosition:pack()
+			matrixValue4 = aTable[animationIndex][animationPosition + 1].EndPosition:pack() --I changed this to a +1, is this correct?
 		end
 		
 		animationMatrix = matrix{matrixValue1.matrixValue2,matrixValue3,matrixValue4}
@@ -110,52 +109,26 @@ end
 --Converts a table with Paths in a table with coordinates
 -------------------------------
 function InWorldVisualization:getSplinePointsTable(aTable)
-	if not aTable or #aTable < 2 then return {} end --Do we have a table with atleast 2 elements?
+	if not aTable or #aTable == 0 then return {} end
 	local tempTable = {}
 	anotherTempTable = {}
 	
 	for k,subTable in ipairs(aTable) do
+	outputChatBox("sub table size: " .. #subTable)
 		tempTable[k] = {}
 		anotherTempTable[k] = {}
 		for subKey,v in ipairs(subTable) do
 			table.insert(tempTable[k],v.StartPosition:pack())
 			if subKey == #subTable then
 				table.insert(tempTable[k],v.EndPosition:pack())
-				anotherTempTable[k] = self.SplineInstance:getCurvePoints(tempTable[k])
 			end
 		end
+		anotherTempTable[k] = self.SplineInstance:getCurvePoints(tempTable[k],4)
+		outputChatBox("Size of tempTable: " .. #tempTable[k] .. " Size of splinepoints: " .. #anotherTempTable[k])
 	end
 	
+	print_r(anotherTempTable)
 	return anotherTempTable
-end
-
--------------------------------
---Removes overlapping Paths.
--------------------------------
-function InWorldVisualization:removeInpossiblePaths(aTable)
-	if aTable == nil or #aTable < 1 then return {} end
-	tempTable = {}
-	
-	--Sort table on StartTime
-	local index = 1
-	table.insert(tempTable,table.remove(aTable,index))
-	
-	--Remove overlapping timelineelements.
-	while #aTable > 0 do			
-		for i=1,#aTable,1 do
-			if aTable[i].StartTime < tempTable[index].StartTime + tempTable[index].Duration then
-				table.remove(aTable, i) --It does overlap, remove it.
-				break
-			else
-				table.insert(tempTable,table.remove(aTable,i)) --It doesn't overlap, reinsert it in the table.
-				index = index + 1
-				break
-			end
-		end
-	end
-
-	outputChatBox(#tempTable)
-	return tempTable
 end
 
 -------------------------------
@@ -172,34 +145,20 @@ function InWorldVisualization:convertToInterpolatableTable(aTable)
 		end
 	)
 	
-	--Check for connected paths and add them to the return table.
-	local function getConnectedPath()
-		if tempTable[index][#tempTable[index]].ConnectedFromPath == nil and tempTable[index][#tempTable[index]].ConnectedToPath != nil then
-			
-		end
-		if tempTable[index][#tempTable[index]].ConnectedFromPath == nil and tempTable[index][#tempTable[index]].ConnectedToPath == nil then
-			table.insert(tempTable[index],table.remove(aTable,index))
-		end
-		if tempTable[index][#tempTable[index]].ConnectedPath == nil then --Has it a connectedPath?
-			return
-		else
-			for k,v in ipairs(aTable) do --Check if our connected path excits.
-				if tempTable[index][#tempTable[index]].ConnectedPath == v then
-					table.insert(tempTable[index],table.remove(aTable,k))
-					getConnectedPath()
-					return
-				end
-			end
-		end
-	end
-	
+	--Sort the table so connected timelineelements are grouped toghter.
 	while #aTable > 0 do
-		tempTable[index] = {}
-		tempTable[index][1] = table.remove(aTable,1)
-		getConnectedPath()
-		index = index + 1
+		if tempTable[index] == nil then
+			tempTable[index] = {}
+			tempTable[index][1] = table.remove(aTable,1)
+		end
+		if tempTable[index][#tempTable[index]].ConnectedToPath == nil then
+			outputChatBox("Increasing index")
+			index = index + 1
+		else
+			outputChatBox("Path has a connection")
+			tempTable[index][#tempTable[index] + 1] = table.remove(aTable,1)
+		end
 	end
-	
 	return tempTable
 end
 

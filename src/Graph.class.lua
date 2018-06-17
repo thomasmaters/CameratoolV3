@@ -15,13 +15,25 @@ function Graph:init(aPosition, aSize)
 	timeLineSliderBox = Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - 50),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,50))
 	self.timeLineSlider = 	Slider(Coordinate2D(0,15), Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,20), Coordinate2D(20,20),0,self.GraphTotalTime,timeLineSliderBox)
 	
-	for i=0,GlobalConstants.AMOUNT_OF_TIMELINES - 1 do --Create graph time lines
+	table.insert(self.GraphTimeLines, GraphTimeLine(self,
+		Coordinate2D(0,0),
+		Coordinate2D(aSize.x,aSize.y / GlobalConstants.AMOUNT_OF_TIMELINES), 
+		{["PathCamPosition"] = true}
+	)) 
+	table.insert(self.GraphTimeLines, GraphTimeLine(self,
+		Coordinate2D(0,aSize.y / GlobalConstants.AMOUNT_OF_TIMELINES),
+		Coordinate2D(aSize.x,aSize.y / GlobalConstants.AMOUNT_OF_TIMELINES),
+		{["PathCamTarget"] = true}
+	)) 
+	
+	for i=2,GlobalConstants.AMOUNT_OF_TIMELINES - 1 do --Create graph time lines
 		table.insert(
 			self.GraphTimeLines,
 			GraphTimeLine(
 				self,
 				Coordinate2D(0,i * aSize.y / GlobalConstants.AMOUNT_OF_TIMELINES),
-				Coordinate2D(aSize.x,aSize.y / GlobalConstants.AMOUNT_OF_TIMELINES)
+				Coordinate2D(aSize.x,aSize.y / GlobalConstants.AMOUNT_OF_TIMELINES),
+				{["DynamicEffect"] = true, ["StaticEffect"] = true}
 			) --Create graphTimeLines
 		)
 	end

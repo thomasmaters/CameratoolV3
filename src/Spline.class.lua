@@ -39,10 +39,11 @@ function Spline:getCurvePoints(points, numOfSeg)
 	end
 	
 	for i=2,#points - 2, 1 do
-		local returnTable = calcCurve({points[i-1],points[i],points[i+1],points[i+2]},100) --Cut table in pieces
+		local returnTable = calcCurve({points[i-1],points[i],points[i+1],points[i+2]},numOfSeg) --Cut table in pieces
 		for j=1,#returnTable do
 			table.insert(curveTable,table.remove(returnTable,1))								--Put calculated points in a new table
 		end
+		returnTable = {}
 	end
 	table.insert(curveTable,Coordinate3D(unpack(points[#points - 1])))							--Add the last controlpoint again
 	

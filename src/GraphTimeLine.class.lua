@@ -75,7 +75,7 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 					timeIncreaseRate = -1 * (b.StartTime - v.StartTime - v.Duration - 1)
 					
 					if Path:trycast(v) then
-						outputChatBox("aPath")
+						outputChatBox("Connected 2 paths toghter")
 						b.StartPosition = v.EndPosition
 						v.ConnectedToPath = b
 					end
@@ -232,7 +232,7 @@ function GraphTimeLine:canObjectSnapToTimeLine(aTimeLineElement)
 	local HoveringOverTime = self.ParentGraph:getCurrentTimeFromMousePosition()
 	local GraphStartTime,GraphEndTime = self.ParentGraph:getGraphTimeSpan()
 	
-	if self.AllowedTimeLineTypes[aTimeLineElement:name()] == nil then return false end
+	if self.AllowedTimeLineTypes[aTimeLineElement:class():name()] == nil then return false end
 	if not HoveringOverTime then return false end --Did we get a time?
 	if HoveringOverTime + aTimeLineElement.Duration > GraphEndTime then return false end --Don't go outside the graph
 	
