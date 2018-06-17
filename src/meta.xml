@@ -1,0 +1,40 @@
+<meta>
+	<min_mta_version client="1.3.0-9.04431" />
+	<oop>true</oop>
+	
+	<script src="matrix.lua" type="client" />
+	<script src="inheritance.lua" type="client" />
+	<script src="InWorldVisualization.class.lua" type="client" />
+	<script src="Spline.class.lua" type="client" />
+	<script src="Coordinate3D.class.lua" type="client" />
+	<script src="Coordinate2D.class.lua" type="client" />
+	<script src="Constants.class.lua" type="client" />
+	<script src="Enums.class.lua" type="client" />
+	<script src="Interpolate.class.lua" type="client" />
+	<script src="Mouse.class.lua" type="client" />
+	
+	<script src="Gui.class.lua" type="client" />
+	
+	<script src="Rectangle.Gui.class.lua" type="client" />
+	<script src="Text.Gui.class.lua" type="client" />
+	<script src="Button.Gui.class.lua" type="client" />
+	<script src="Line.Gui.class.lua" type="client" />
+	<script src="Slider.Gui.class.lua" type="client" />
+	
+	<script src="Interface.class.lua" type="client" />
+	<script src="HandleInterfaceEvents.class.lua" type="client" />
+	<script src="CameratoolApplication.lua" type="client" />	
+
+	<script src="Graph.class.lua" type="client" />
+	<script src="GraphTimeLine.class.lua" type="client" />
+	<script src="Path.class.lua" type="client" />
+	<script src="PathCamPosition.class.lua" type="client" />
+	<script src="PathCamTarget.class.lua" type="client" />
+	<script src="Effect.class.lua" type="client" />
+	<script src="DynamicEffect.class.lua" type="client" />
+	<script src="StaticEffect.class.lua" type="client" />
+	<script src="EffectCameraFade.class.lua" type="client" />
+	<script src="EffectCameraFOV.class.lua" type="client" />
+	<script src="EffectCameraGoggle.class.lua" type="client" />
+	<script src="EffectCameraRoll.class.lua" type="client" />
+</meta>
