@@ -1,6 +1,6 @@
 GraphTimeLine = newclass("GraphTimeLine")
 
-function GraphTimeLine:init(aGraph,aPosition,aSize,aGraphTimeLineElements)
+function GraphTimeLine:init(aGraph,aPosition,aSize,aAllowedTimeLineTypes,aGraphTimeLineElements)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("GraphTimeLine.class:init") end
 	---PERTTYFUNCTION---
@@ -14,6 +14,7 @@ function GraphTimeLine:init(aGraph,aPosition,aSize,aGraphTimeLineElements)
 	self.Position = aPosition or error("No TimeLine position given!")
 	self.Size = aSize or error("No TimeLine size given!")	
 	self.TimeLineRectangle = Rectangle(aPosition - self.ParentGraph:getPosition(),aSize,nil,nil,nil,nil,false)
+	self.AllowedTimeLineTypes = aAllowedTimeLineTypes or {} --Name(s) of class(es) to allow. Key value pair, if key exists, type is allowed.
 	self.TimeLineElements = aGraphTimeLineElements or {}
 	
 	addEvent ( "timeLineElementHold", true )
@@ -56,7 +57,6 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 	if v == nil or StaticEffect:made(v) then return end --Are we hovering above a timelineelement, or is it a static effect?
 	if Path:trycast(v) then --Are we scrolling above a Path timelineelement? If so, remove its connected path.
 		v.ConnectedToPath = nil
-		v.ConnectedFromPath = nil
 	end
 	
 	local timeIncreaseRate = GlobalConstants.BASE_SCROLL_TIME_INCREASE * (aButton == "mouse_wheel_down" and 1 or -1) --Base time added and direction
@@ -78,7 +78,6 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 						outputChatBox("aPath")
 						b.StartPosition = v.EndPosition
 						v.ConnectedToPath = b
-						b.ConnectedFromPath = v
 					end
 					break
 				end
@@ -231,7 +230,9 @@ end
 -------------------------------
 function GraphTimeLine:canObjectSnapToTimeLine(aTimeLineElement)
 	local HoveringOverTime = self.ParentGraph:getCurrentTimeFromMousePosition()
-	local GraphStartTime,GraphEndTime = self.ParentGraph:getGraphTimeSpan()	
+	local GraphStartTime,GraphEndTime = self.ParentGraph:getGraphTimeSpan()
+	
+	if self.AllowedTimeLineTypes[aTimeLineElement:name()] == nil then return false end
 	if not HoveringOverTime then return false end --Did we get a time?
 	if HoveringOverTime + aTimeLineElement.Duration > GraphEndTime then return false end --Don't go outside the graph
 	

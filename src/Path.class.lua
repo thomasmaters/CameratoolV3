@@ -18,7 +18,6 @@ function Path:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bIsP
 	self.PathAnimationType = aAnimationType or GlobalEnums.EasingTypes.Linear
 	self.bPathSelected = bIsPathSelected or false
 	self.ConnectedToPath = nil
-	self.ConnectedFromPath = nil
 	
 	--GlobalInterface:addGuiElementToRenderStack(self)
 end
