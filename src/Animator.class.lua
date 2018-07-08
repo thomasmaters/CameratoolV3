@@ -15,6 +15,10 @@ function Animator:getCurrentPosition()
 	return self.CurrentPosition
 end
 
+function Animator:getAnimationTime()
+	return getTickCount() - self.AnimationStartTime
+end
+
 --Sets bAnimating to false and internal logic will kill everything in the next onClientPreRender tick.
 function Animator:stopAnimating()
 	self.bAnimating = false
@@ -23,8 +27,10 @@ end
 function Animator:interpolateOver(timeLinePaths)
 	--local timeLinePaths = self.GraphTimeLines[1]:getTimeLineElements()
 	--Sort the timeline elements so we know the first element is the first element to animate.
-	if not #timeLinePaths > 0 then return end
+	if not (#timeLinePaths > 0) then return end
 	if self.bAnimating then return end
+	
+	outputChatBox("Start animating")
 	
 	table.sort(timeLinePaths,
 		function(a,b)
@@ -36,10 +42,12 @@ function Animator:interpolateOver(timeLinePaths)
 	self.interpolateInstance = nil
 	self.animateStartTime = getTickCount()
 	
-	local animationPoints = {}
-	local index = 1
+	animationPoints = {}
+	index = 1
 	
+	--Sleep execution until a point in the graph is reached.
 	function waitForNext(tickCountToWaitFor)
+		outputChatBox("Sleeping")
 		function sleep()
 			coroutine.resume(waitRoutine)
 		end
@@ -49,7 +57,8 @@ function Animator:interpolateOver(timeLinePaths)
 			function()
 				while(tickCountToWaitFor > (getTickCount() - self.animateStartTime)) do
 					--Do we need to kill ourselfs?
-					if self.bAnimating == false then
+					if not self.bAnimating then
+						outputChatBox("Stopping coroutine because animating is false")
 						removeEventHandler ( "onClientPreRender", getRootElement(), sleep)
 						return
 					end
@@ -62,6 +71,7 @@ function Animator:interpolateOver(timeLinePaths)
 	end
 	
 	function prepareNext()
+		outputChatBox("Prepare next")
 		if index > #timeLinePaths then
 			self.bAnimating = false
 			return --End animation
@@ -74,7 +84,7 @@ function Animator:interpolateOver(timeLinePaths)
 			animationPoints = {}
 			--Do we have a connected path in the previouse path?
 			if (index ~= 1 and timeLinePaths[index - 1].ConnectedToPath ~= nil) then
-				table.insert(animationPoints, timeLinePaths[index - 1].EndPosition:pack())
+				table.insert(animationPoints, timeLinePaths[index - 1].StartPosition:pack())
 			else
 				table.insert(animationPoints, timeLinePaths[index].StartPosition:pack())
 			end
@@ -84,10 +94,11 @@ function Animator:interpolateOver(timeLinePaths)
 			
 			--Do we have a connectedPath?
 			if timeLinePaths[index].ConnectedToPath ~= nil then
-				table.insert(animationPoints, timeLinePaths[index + 1].StartPosition:pack())
+				table.insert(animationPoints, timeLinePaths[index + 1].EndPosition:pack())
 			else
 				table.insert(animationPoints, timeLinePaths[index].EndPosition:pack())
 			end
+			print_r(animationPoints)
 		
 			--Start interpolating
 			self.interpolateInstance = Interpolate(0,1,timeLinePaths[index].Duration, nil)
@@ -102,14 +113,13 @@ function Animator:interpolateOver(timeLinePaths)
 			removeEventHandler ( "onClientPreRender", getRootElement(), animate)
 		end
 		
-		if progress == 1 then
+		self.CurrentPosition = GlobalSpline:getPointOnSpline(animationPoints,progress)
+		
+		if progress >= 1 then
 			removeEventHandler ( "onClientPreRender", getRootElement(), animate)
 			index = index + 1
 			prepareNext()
 		end
-		
-		output = GlobalSpline:getPointOnSpline(animationPoints,progress)
-		outputChatBox("x: " .. output[1] .. " y: " .. output[2].. " z: " .. output[3])
 	end
 	
 	prepareNext()

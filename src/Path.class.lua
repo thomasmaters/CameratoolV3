@@ -11,8 +11,8 @@ function Path:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bIsP
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Path.class:init") end
 	---PERTTYFUNCTION---
-	self.StartPosition = Coordinate3D(15 + math.random(0,15),15 + math.random(0,15),15 + math.random(0,15))
-	self.EndPosition = Coordinate3D(15 + math.random(0,15) ,15 + math.random(0,15),15 + math.random(0,15))
+	self.StartPosition = Coordinate3D(15 + math.random(0,50),15 + math.random(0,50),15 + math.random(0,15))
+	self.EndPosition = Coordinate3D(15 + math.random(0,50) ,15 + math.random(0,50),15 + math.random(0,15))
 	self.StartTime = aAnimationStartTime or 0
 	self.Duration = aAnimationDuration or 3000
 	self.PathAnimationType = aAnimationType or GlobalEnums.EasingTypes.Linear

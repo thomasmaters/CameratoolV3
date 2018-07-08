@@ -58,8 +58,8 @@ function Graph:init(aPosition, aSize)
 end
 
 function Graph:getGraphTimeLine(aIndex)
-	if aIndex > 0 and aIndex <= #self.GraphTimeLines[aIndex] then
-		return self.GraphTimeLines[aIndex]
+	if aIndex > 0  then
+		return self.GraphTimeLines[aIndex]:getTimeLineElements()
 	end
 	return false
 end

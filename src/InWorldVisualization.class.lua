@@ -48,7 +48,6 @@ end
 function InWorldVisualization:draw()
 	if(#self.PositionSplinePoints < 1) then return end
 	self:visualizeAnimation()
-	
 	for k,v in ipairs(self.PositionSplinePoints) do
 		for i=1,#v - 1 do
 			dxDrawLine3D(v[i].x, v[i].y, v[i].z, v[i + 1].x, v[i + 1 ].y, v[i + 1].z,tocolor ( 0, 255, 0, 230 ), 10)
@@ -62,8 +61,8 @@ function InWorldVisualization:visualizeAnimation()
 		--self.TargetAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(2))
 	end
 	
-	local curPosition = self.PositionAnimator:getPosition()
-	self.AnimatedObject:setPosition(curPosition[1], curPosition[2], curPosition[3])
+	local curPosition = self.PositionAnimator:getCurrentPosition()
+	self.AnimatedObject:setPosition(Vector3(curPosition[1],curPosition[2],curPosition[3]))
 end
 
 -------------------------------

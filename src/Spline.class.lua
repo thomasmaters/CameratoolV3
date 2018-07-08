@@ -56,6 +56,8 @@ function Spline:getCurvePoints(points, numOfSeg)
 end
 
 function Spline:getPointOnSpline(points, progress)
+	if progress >= 1 then return points[3] end
+	if progress <= 0 then return points[2] end
 	local m1 = matrix{points[1],points[2],points[3],points[4]}
 	local m2 = matrix.mul(self:getPointsBaseMatrix(progress), m1)
 	return {m2[1][1],m2[1][2],m2[1][3]}
