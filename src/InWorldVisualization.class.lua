@@ -6,14 +6,26 @@ function InWorldVisualization:init(aGraph)
 	self.TargetTimeLineElements = {}
 	self.PositionSplinePoints = {}
 	self.TargetSplinePoints = {}	
+	
 	self.bEnableInWorldView = true
+	
+	self.AnimatedObject = createObject ( 980, 0, 0, 0)
+	
+	self.PositionAnimator = Animator()
+	self.TargetAnimator = Animator()
 
 	addEventHandler( "onClientKey", getRootElement(), bind(self.updateInWorldView,self))
 	addEventHandler( "onClientRender" , getRootElement(), bind(self.draw,self))
 end
 
-function InWorldVisualization:updateInWorldView(aButton)
-	if aButton ~= 'l' then return end
+function InWorldVisualization:updateInWorldView(aButton, pressOrRelease)
+	if aButton ~= 'l' or pressOrRelease then return end
+	
+	if self.PositionAnimator:isAnimating() then
+		self.PositionAnimator:stopAnimating()
+		self.TargetAnimator:stopAnimating()
+	end
+	
 	local timeLineElements = self.ParentGraph:getAllTimeLineElements() --I sinserly hope this is a copy 
 	tempCamTargetPoints = {}
 	tempCamPositionPoints = {}
@@ -35,6 +47,7 @@ end
 
 function InWorldVisualization:draw()
 	if(#self.PositionSplinePoints < 1) then return end
+	self:visualizeAnimation()
 	
 	for k,v in ipairs(self.PositionSplinePoints) do
 		for i=1,#v - 1 do
@@ -43,8 +56,14 @@ function InWorldVisualization:draw()
 	end
 end
 
-function InWorldVisualization:animate()
+function InWorldVisualization:visualizeAnimation()
+	if not self.PositionAnimator:isAnimating() then
+		self.PositionAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(1))
+		--self.TargetAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(2))
+	end
 	
+	local curPosition = self.PositionAnimator:getPosition()
+	self.AnimatedObject:setPosition(curPosition[1], curPosition[2], curPosition[3])
 end
 
 -------------------------------

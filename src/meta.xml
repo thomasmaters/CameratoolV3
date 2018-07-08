@@ -4,6 +4,7 @@
 	
 	<script src="matrix.lua" type="client" />
 	<script src="inheritance.lua" type="client" />
+	<script src="Animator.class.lua" type="client" />
 	<script src="InWorldVisualization.class.lua" type="client" />
 	<script src="Spline.class.lua" type="client" />
 	<script src="Coordinate3D.class.lua" type="client" />
