@@ -98,7 +98,6 @@ function Graph:prepareInterpolate()
 	index = 1
 	interpolateInstance = nil
 	animateStartTime = getTickCount()
-	splineInstance = Spline()
 	
 	function waitForNext(tickCountToWaitFor)
 		function sleep()
@@ -154,7 +153,7 @@ function Graph:prepareInterpolate()
 			prepareNext()
 		end
 		
-		output = splineInstance:getPointOnSpline(animationPoints,progress)
+		output = GlobalSpline:getPointOnSpline(animationPoints,progress)
 		outputChatBox("x: " .. output[1] .. " y: " .. output[2].. " z: " .. output[3])
 	end
 	

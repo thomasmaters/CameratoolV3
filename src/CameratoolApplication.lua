@@ -101,6 +101,7 @@ GlobalConstants = Constants()
 GlobalEnums = Enums()
 GlobalInterface = HandleInterfaceEvents()
 GlobalMouse = Mouse()
+GlobalSpline = Spline(GlobalConstants.SPLINE_TENSION)
 
 local fps = false
 function getCurrentFPS() -- Setup the useful function
@@ -123,6 +124,7 @@ local function drawFPS()
 end
 addEventHandler("onClientRender", root, drawFPS)
 
+--Our main function
 addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource()),
 	function()
 		---PERTTYFUNCTION---
@@ -130,33 +132,19 @@ addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource(
 		---PERTTYFUNCTION--- 
 		local InternalGraph = Graph(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50))
 		GlobalInterface:createInterface()
-		--print_r(GlobalInterface.InterfaceRenderStack)
-		local aSpline = Spline()
 		s = {{0,1.5,0},{2,2,0},{3,1,0},{4,0.5,0},{5,1,0},{6,2,0},{7,3,0}}
-		local curvePoints = aSpline:getCurvePoints(s, 10);
---		addEventHandler("onClientRender", root,
---			function()
---				local multi = 20
---				for k=2,#s - 2 do
---					temp = {s[k-1],s[k],s[k+1],s[k+2]}
---					for i=0,1 - 0.01,0.01 do
---						a = aSpline:getCurveFunction(temp,i)
---						b = aSpline:getCurveFunction(temp,i + 0.01)
---						dxDrawLine(100 + a.x * multi,600 + a.y * multi,100 + b.x * multi,600 + b.y * multi)
---					end
---				end
---			end
---		)
-local multi = 20
-    addEventHandler("onClientRender", root,
-      function()
-        for i=1,#curvePoints - 1, 1 do
-          a = curvePoints[i];
-          b = curvePoints[i + 1];
-          dxDrawLine3D(a.x * multi,a.y * multi, a.z + 10 ,b.x * multi,b.y * multi, b.z + 10)
-          dxDrawLine(100 + a.x * multi,600 + a.y * multi,100 + b.x * multi,600 + b.y * multi)
-        end
-      end
-      )
-	end
+		local curvePoints = GlobalSpline:getCurvePoints(s, 10);
+		
+		local multi = 20
+			addEventHandler("onClientRender", root,
+			  function()
+				for i=1,#curvePoints - 1, 1 do
+				  a = curvePoints[i];
+				  b = curvePoints[i + 1];
+				  dxDrawLine3D(a.x * multi,a.y * multi, a.z + 10 ,b.x * multi,b.y * multi, b.z + 10)
+				  dxDrawLine(100 + a.x * multi,600 + a.y * multi,100 + b.x * multi,600 + b.y * multi)
+				end
+			  end
+			  )
+			end
 )

@@ -6,7 +6,6 @@ function InWorldVisualization:init(aGraph)
 	self.TargetTimeLineElements = {}
 	self.PositionSplinePoints = {}
 	self.TargetSplinePoints = {}	
-	self.SplineInstance = Spline(0.5)
 	self.bEnableInWorldView = true
 
 	addEventHandler( "onClientKey", getRootElement(), bind(self.updateInWorldView,self))
@@ -66,7 +65,7 @@ function InWorldVisualization:getSplinePointsTable(aTable)
 				table.insert(tempTable[k],v.EndPosition:pack())
 			end
 		end
-		anotherTempTable[k] = self.SplineInstance:getCurvePoints(tempTable[k],4)
+		anotherTempTable[k] = GlobalSpline:getCurvePoints(tempTable[k],4)
 		outputChatBox("Size of tempTable: " .. #tempTable[k] .. " Size of splinepoints: " .. #anotherTempTable[k])
 	end
 

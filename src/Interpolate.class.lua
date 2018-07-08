@@ -13,9 +13,7 @@ function Interpolate:init(aFrom,aTo,aTime,aEasingType)
 end
 
 function Interpolate:getCurrentProgressValue()
-	local Progress = (getTickCount() - 
-	self.CreateTime) / 
-	self.Time
+	local Progress = (getTickCount() - self.CreateTime) / self.Time
 	
 	if Progress >= 1 then return self.To end
 	

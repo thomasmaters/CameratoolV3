@@ -30,6 +30,8 @@ function Constants:init(o)
 	------------------------INTERFACE-------------------------
 	self.APP_HEIGHT = 280
 	self.LEFT_WINDOW_WIDTH = 350
+	------------------------DEFAULT SETTINGS------------------
+	self.SPLINE_TENSION = 0.5
 	---PERTTYFUNCTION---
 	if self.ENABLE_PRETTY_FUNCTION then outputDebugString("Constants.class:init") end
 	---PERTTYFUNCTION---
