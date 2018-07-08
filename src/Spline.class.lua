@@ -27,7 +27,12 @@ function Spline:getCurvePoints(points, numOfSeg)
 
 	function calcCurve(points,numOfSeg)				--Function for calculating the curve between 2 points
 		tempTable = {}
-		m2 = matrix{points[1],points[2],points[3],points[4]}
+		m2 = {}
+		if Coordinate3D:made(points[1]) then
+			m2 = matrix{points[1]:pack(),points[2]:pack(),points[3]:pack(),points[4]:pack()}
+		else
+			m2 = matrix{points[1],points[2],points[3],points[4]}
+		end
 		
 		for i=0,1,(1/numOfSeg) do							
 			local m3 = matrix{{i * i * i, i * i, i, 1}}	
@@ -50,10 +55,10 @@ function Spline:getCurvePoints(points, numOfSeg)
 	return curveTable
 end
 
-function Spline:getPointOnSpline(progress, points)
+function Spline:getPointOnSpline(points, progress)
 	local m1 = matrix{points[1],points[2],points[3],points[4]}
-	local m2 = matrix.mul(getPointsBaseMatrix(progress), m1)
-	return Coordinate3D(m2[1][1],m2[1][2],m2[1][3])
+	local m2 = matrix.mul(self:getPointsBaseMatrix(progress), m1)
+	return {m2[1][1],m2[1][2],m2[1][3]}
 end
 
 --Calculates a matrix from the current progress on the curve.

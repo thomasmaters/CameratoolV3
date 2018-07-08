@@ -2,7 +2,7 @@ Interpolate = newclass("Interpolate")
 
 function Interpolate:init(aFrom,aTo,aTime,aEasingType)
 	---PERTTYFUNCTION---
-	if self.ENABLE_PRETTY_FUNCTION then outputDebugString("Interpolate.class:init") end
+	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Interpolate.class:init") end
 	---PERTTYFUNCTION---
 	
 	self.From = aFrom or 0
@@ -13,9 +13,11 @@ function Interpolate:init(aFrom,aTo,aTime,aEasingType)
 end
 
 function Interpolate:getCurrentProgressValue()
-	local Progress = (getTickCount() - self.CreateTime) / self.Time
+	local Progress = (getTickCount() - 
+	self.CreateTime) / 
+	self.Time
 	
-	if Progress > 1 then return self.To end
+	if Progress >= 1 then return self.To end
 	
 	local Value,_,_  = interpolateBetween ( 
 			self.From	, 0, 0,

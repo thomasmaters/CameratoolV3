@@ -76,15 +76,89 @@ end
 
 function Graph:getAllTimeLineElements()
 	local tempTable = {}
-	
+	self:prepareInterpolate()
 	for k,v in ipairs(self.GraphTimeLines) do
-		timeLinePaths = v:getTimeLineElements()
+		local timeLinePaths = v:getTimeLineElements()
 		for ke,va in ipairs(timeLinePaths) do
 			table.insert(tempTable,va)
 		end
 	end
 	
 	return tempTable
+end
+
+function Graph:prepareInterpolate()
+	local timeLinePaths = self.GraphTimeLines[1]:getTimeLineElements()
+	table.sort(timeLinePaths,
+		function(a,b)
+			return a.StartTime < b.StartTime
+		end
+	)
+	animationPoints = {}
+	index = 1
+	interpolateInstance = nil
+	animateStartTime = getTickCount()
+	splineInstance = Spline()
+	
+	function waitForNext(tickCountToWaitFor)
+		function sleep()
+			coroutine.resume(waitRoutine)
+		end
+		
+		addEventHandler ( "onClientPreRender", getRootElement(), sleep)
+		waitRoutine = coroutine.create(
+			function()
+				while(tickCountToWaitFor > (getTickCount() - animateStartTime)) do
+					coroutine.yield()
+				end
+				removeEventHandler ( "onClientPreRender", getRootElement(), sleep)
+				prepareNext()
+			end)
+	end
+	
+	function prepareNext()
+		outputChatBox("prepareNext")
+		if index > #timeLinePaths then
+			return --End animation
+		end
+		
+		if timeLinePaths[index].StartTime > (getTickCount() - animateStartTime) then
+			waitForNext(timeLinePaths[index].StartTime)
+		else
+			animationPoints = {}
+			if (index ~= 1 and timeLinePaths[index - 1].ConnectedToPath ~= nil) then
+				table.insert(animationPoints, timeLinePaths[index - 1].EndPosition:pack())
+			else
+				table.insert(animationPoints, timeLinePaths[index].StartPosition:pack())
+			end
+			
+			table.insert(animationPoints, timeLinePaths[index].StartPosition:pack())
+			table.insert(animationPoints, timeLinePaths[index].EndPosition:pack())
+			
+			if timeLinePaths[index].ConnectedToPath ~= nil then
+				table.insert(animationPoints, timeLinePaths[index + 1].StartPosition:pack())
+			else
+				table.insert(animationPoints, timeLinePaths[index].EndPosition:pack())
+			end
+		
+			interpolateInstance = Interpolate(0,1,timeLinePaths[index].Duration, nil)
+			addEventHandler ( "onClientPreRender", getRootElement(), animate)
+		end
+	end
+	
+	function animate()
+		local progress = interpolateInstance:getCurrentProgressValue()
+		if progress == 1 then
+			removeEventHandler ( "onClientPreRender", getRootElement(), animate)
+			index = index + 1
+			prepareNext()
+		end
+		
+		output = splineInstance:getPointOnSpline(animationPoints,progress)
+		outputChatBox("x: " .. output[1] .. " y: " .. output[2].. " z: " .. output[3])
+	end
+	
+	prepareNext()
 end
 
 function Graph:getGraphTimeSpan()

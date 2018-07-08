@@ -41,7 +41,7 @@ function HandleInterfaceEvents:onDragAbleButtonClick(aDragableObject)
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("HandleInterfaceEvents.class:onDragAbleButtonClick") end
 	---PERTTYFUNCTION---
 	
-	if not aDragableObject then return end
+	if not aDragableObject then return end--TODO using the function class():made().
 	if(aDragableObject.super.PrimaryColor == GlobalConstants.CAM_PATH_COLOR) then
 		GlobalMouse:holdObject(PathCamPosition(0, 2500, nil, false, false))
 	elseif(aDragableObject.super.PrimaryColor == GlobalConstants.CAM_TARGET_PATH_COLOR) then
