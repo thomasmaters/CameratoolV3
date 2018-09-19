@@ -5,10 +5,11 @@ TextDefault = 	{
 					Font = "default",
 					TextVerticalAlign = "center",
 					TextHorizontalAlign = "center",
+					Clip=true
 				}
 
 
-function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizontalTextAlgin, aVerticalTextAlgin, aPrimaryColor, aSecondaryColor)
+function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizontalTextAlgin, aVerticalTextAlgin, aPrimaryColor, aSecondaryColor, aTextClipping)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Text.Gui.class:init") end
 	---PERTTYFUNCTION---
@@ -25,6 +26,7 @@ function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizon
 	self.TextScale = aTextScale or 1
 	self.TextVerticalAlign = aVerticalTextAlgin or "center"
 	self.TextHorizontalAlign = aHorizontalTextAlgin or "center"
+	self.bClipText = abClipText or true
 	
 	self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
 	GlobalInterface:addGuiElementToRenderStack(self)
@@ -40,7 +42,18 @@ function Text:draw()
 				self.TextScale,
 				self.Font,
 				self.TextHorizontalAlign,
-				self.TextVerticalAlign)
+				self.TextVerticalAlign,
+				self.bClipText)
+end
+
+function Text:getTextWidth(aText)
+	if not aText then aText = self.Text end
+	return dxGetTextWidth(self.Text,self.TextScale,self.Font)
+end
+
+function Text:setText(aText)
+	if aText == nil then return end 
+	self.Text = aText
 end
 
 function Text:setPosition(aNewPosition)

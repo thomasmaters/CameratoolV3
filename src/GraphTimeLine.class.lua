@@ -39,6 +39,13 @@ function GraphTimeLine:draw()
 			v:draw()
 		end
 	end
+	for k,v in ipairs(self.TimeLineElements) do
+		if self:isTimeLineElementOnGraph(v) and v.ConnectedToPath ~= nil then
+			dxDrawImage(v.PathRectangle.GuiPosition.x + v.PathRectangle.Size.x - 24,
+				v.PathRectangle.GuiPosition.y + 7,
+				48,15,GlobalConstants.TEXTURE_LINK)		
+		end
+	end
 end
 
 -------------------------------

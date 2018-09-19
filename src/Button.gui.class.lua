@@ -44,6 +44,10 @@ function Button:setPosition(aNewPosition)
 	self.ButtonText:setPosition(aNewPosition)
 end
 
+function Button:setText(aNewText)
+	self.ButtonText:setText(aNewText)
+end
+
 function Button:getPosition()
 	return self.super.GuiPosition
 end

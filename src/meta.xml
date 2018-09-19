@@ -2,6 +2,10 @@
 	<min_mta_version client="1.3.0-9.04431" />
 	<oop>true</oop>
 	
+	<file src="/Images/eye.png" download="true" />
+	<file src="/Images/foot.png" download="true" />
+	<file src="/Images/link.png" download="true" />
+	
 	<script src="matrix.lua" type="client" />
 	<script src="inheritance.lua" type="client" />
 	<script src="Animator.class.lua" type="client" />
@@ -21,7 +25,9 @@
 	<script src="Button.Gui.class.lua" type="client" />
 	<script src="Line.Gui.class.lua" type="client" />
 	<script src="Slider.Gui.class.lua" type="client" />
+	<script src="InputBox.Gui.class.lua" type="client" />
 	
+	<script src="Properties.class.lua" type="client" />
 	<script src="Interface.class.lua" type="client" />
 	<script src="HandleInterfaceEvents.class.lua" type="client" />
 	<script src="CameratoolApplication.lua" type="client" />	

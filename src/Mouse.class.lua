@@ -10,11 +10,9 @@ function Mouse:init()
 		function(aPressedButton,aButtonState,_,_)
 			if(aPressedButton == "left" and aButtonState == "down") then
 				self.bMouseIsDragging = false
-				outputChatBox("mous clicking")
 			elseif(aPressedButton == "left" and aButtonState == "up") then
 				self.bMouseIsDragging = nil
 				triggerEvent("mouseReleased", getRootElement())
-				outputChatBox("mous released")
 			end
 		end
 	)

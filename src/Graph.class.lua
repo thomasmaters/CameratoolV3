@@ -77,6 +77,11 @@ function Graph:updateRenderTarget()
 	for k,v in ipairs(self.GraphTimeLines) do
 		v:draw()
 	end
+	--TODO: Maybe change the drawing to Line class?
+	for i=math.floor(self.GraphCurrentTime / 5000) - 1,math.ceil((self.GraphCurrentTime + self.GraphVisableDuration)/5000) do
+		local x = self:getPositionOnGraphFromTime(i * 5000)
+		dxDrawLine(x,0,x,self.Size.y)
+	end
 	dxSetRenderTarget()
 	dxDrawImage( self.Position.x,  self.Position.y,  self.Size.x, self.Size.y, self.GraphRenderTarget )  
 end

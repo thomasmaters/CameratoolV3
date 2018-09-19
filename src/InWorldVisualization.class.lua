@@ -56,9 +56,10 @@ function InWorldVisualization:draw()
 end
 
 function InWorldVisualization:visualizeAnimation()
-	if not self.PositionAnimator:isAnimating() then
+	if not self.PositionAnimator:isAnimating() and not self.TargetAnimator:isAnimating() then
+		self.AnimatedObject:setPosition(Vector3(0,0,0))
 		self.PositionAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(1))
-		--self.TargetAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(2))
+		self.TargetAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(2))
 	end
 	
 	local curPosition = self.PositionAnimator:getCurrentPosition()
