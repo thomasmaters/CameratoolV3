@@ -34,6 +34,9 @@ function Interface:createInterface()
 	leftWindowButtonEffDynamic = 	Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,120), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me4", leftWindowMain,0,GlobalConstants.DYNAMIC_EFFECT_COLOR,nil, bind(GlobalInterface.onDragAbleButtonClick,self))
 	
 	timeLineWindowMain = 			Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50),nil,2)
+	
+	rightWindowMain = 				Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT),nil,2)
+	GlobalProperties:addInterfaceElement(rightWindowMain)
 end
 
 function Interface:showInterface(Showing)

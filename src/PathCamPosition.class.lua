@@ -6,7 +6,9 @@ function PathCamPosition:init(aAnimationStartTime, aAnimationDuration, aAnimatio
 	---PERTTYFUNCTION---
 	
 	self.super:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bIsPathSelected, bIsPathDragged)
-	self.PathRectangle = Rectangle(Coordinate2D(0,0),Coordinate2D(100,30),nil,nil,GlobalConstants.CAM_PATH_COLOR,nil,false)	
+	self.PathRectangle = Rectangle(Coordinate2D(0,0),Coordinate2D(100,30),nil,nil,GlobalConstants.CAM_PATH_COLOR,nil,false)
+
+	GlobalProperties:addProperty({{get = function() return self.PathRectangle:getPosition() end, set = self.PathRectangle.setPosition}})
 end
 
 function PathCamPosition:updateSelectedColor()
@@ -19,4 +21,8 @@ end
 
 function PathCamPosition:draw()
 	self.PathRectangle:draw()
+	dxDrawImageSection(self.PathRectangle.GuiPosition.x,
+		self.PathRectangle.GuiPosition.y,
+		30 * self.PathRectangle.Size.x / 30,30,
+		0,0,self.PathRectangle.Size.x / 30 * 256,256,GlobalConstants.TEXTURE_FOOT)
 end

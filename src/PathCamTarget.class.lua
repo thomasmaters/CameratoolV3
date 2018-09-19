@@ -19,5 +19,9 @@ end
 
 function PathCamTarget:draw()
 	self.PathRectangle:draw()
+	dxDrawImageSection(self.PathRectangle.GuiPosition.x,
+		self.PathRectangle.GuiPosition.y,
+		30 * self.PathRectangle.Size.x / 30,30,
+		0,0,self.PathRectangle.Size.x / 30 * 256,256,GlobalConstants.TEXTURE_EYE)
 end
 

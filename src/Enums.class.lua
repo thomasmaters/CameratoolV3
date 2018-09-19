@@ -33,6 +33,12 @@ function Enums:init(o)
   nightvision = "nightvision", 
   thermalvision = "thermalvision"
   }
+  
+  self.InputBoxTypes =
+  {
+  none = "none",
+  number = "number"
+  }
 end
 
 function Enums:test()

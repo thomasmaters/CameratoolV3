@@ -1,5 +1,5 @@
 Constants = newclass("Constants")
---GlobalConstants = Constants:new()
+
 function Constants:init(o)
 	self.ENABLE_PRETTY_FUNCTION = true
 	self.SCREEN_WIDTH, 
@@ -30,8 +30,13 @@ function Constants:init(o)
 	------------------------INTERFACE-------------------------
 	self.APP_HEIGHT = 280
 	self.LEFT_WINDOW_WIDTH = 350
+	self.RIGHT_WINDOW_WIDTH = self.SCREEN_WIDTH - 350 - self.SCREEN_WIDTH * 0.6
 	------------------------DEFAULT SETTINGS------------------
 	self.SPLINE_TENSION = 0.5
+	------------------------TEXTURES--------------------
+	self.TEXTURE_EYE = DxTexture("/Images/eye.png")
+	self.TEXTURE_FOOT = DxTexture("/Images/foot.png")
+	self.TEXTURE_LINK = DxTexture("/Images/link.png")
 	---PERTTYFUNCTION---
 	if self.ENABLE_PRETTY_FUNCTION then outputDebugString("Constants.class:init") end
 	---PERTTYFUNCTION---
