@@ -34,6 +34,7 @@
 
 	<script src="Graph.class.lua" type="client" />
 	<script src="GraphTimeLine.class.lua" type="client" />
+	<script src="TimeLineElement.class.lua" type="client" />
 	<script src="Path.class.lua" type="client" />
 	<script src="PathCamPosition.class.lua" type="client" />
 	<script src="PathCamTarget.class.lua" type="client" />

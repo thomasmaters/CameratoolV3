@@ -1,6 +1,6 @@
 InputBox = Gui:subclass("InputBox")
 
-function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, aSecondaryColor, aInputType)
+function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, aSecondaryColor, aInputType, aCallback)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("InputBox.Gui.class:init") end
 	---PERTTYFUNCTION---
@@ -15,6 +15,7 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
 	self.InputText = Text(Coordinate2D() + aPosition, self.DefaultText, aParent, aSize, "default", 1.4, "left")
 	self.CharacterLimit = 10
 	self.InputType = aInputType or GlobalEnums.InputBoxTypes.number
+	self.Callback = aCallback or nil
 	
 	self.LastTickBackspace = 0
 	
@@ -29,10 +30,19 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
 	GlobalInterface:addGuiElementToRenderStack(self)
 end
 
+function InputBox:destroy()
+	GlobalInterface:removeInterfaceElement(self)
+	self = nil --Do we need to set itself manually to nil or will the gc do that?
+end
+
+function InputBox:getText()
+	return self.CurrentText or ""
+end
+
 function InputBox:removeFocus()
 	mousePosition = GlobalMouse:getPosition()
-	if mousePosition.x <= self.GuiPosition.x or mousePosition.x >= self.GuiPosition.x + self.Size.x or
-		mousePosition.y <= self.GuiPosition.y or mousePosition.y >= self.GuiPosition.y + self.Size.y then
+	if mousePosition.x <= self.ClickableAera.GuiPosition.x or mousePosition.x >= self.ClickableAera.GuiPosition.x + self.Size.x or
+		mousePosition.y <= self.ClickableAera.GuiPosition.y or mousePosition.y >= self.ClickableAera.GuiPosition.y + self.Size.y then
 		outputChatBox("Remove focus")
 		self.bFocus = false
 		self:enableDefaultText()
@@ -63,6 +73,9 @@ end
 
 function InputBox:updateText()
 	self.InputText:setText(self.CurrentText)
+	if self.Callback ~= nil then
+		self.Callback(self.CurrentText)
+	end
 end
 
 function InputBox:handleChar(character)
@@ -99,6 +112,9 @@ function InputBox:handleSpecialKey(button, state)
 		elseif button == "backspace" and string.len(self.CurrentText) == 0 then
 			self:enableDefaultText()
 			self:updateText()
+		else if button == "enter" then
+			self:enableDefaultText()
+			self:updateText()			
 		elseif button == "escape" then
 			self:removeFocus()
 			self:enableDefaultText()

@@ -1,19 +1,18 @@
 PathCamPosition = Path:subclass("PathCamPosition")
 
-function PathCamPosition:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bIsPathSelected, bIsPathDragged)
+function PathCamPosition:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bSelected, bIsPathDragged)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("PathCamPosition.class:init") end
 	---PERTTYFUNCTION---
 	
-	self.super:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bIsPathSelected, bIsPathDragged)
+	self.super:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bSelected, bIsPathDragged)
 	self.PathRectangle = Rectangle(Coordinate2D(0,0),Coordinate2D(100,30),nil,nil,GlobalConstants.CAM_PATH_COLOR,nil,false)
-
-	GlobalProperties:addProperty({{get = function() return self.PathRectangle:getPosition() end, set = self.PathRectangle.setPosition}})
 end
 
 function PathCamPosition:updateSelectedColor()
-	if(self.bPathSelected) then 
+	if(self.bSelected) then 
 		self.PathRectangle.PrimaryColor = GlobalConstants.CAM_PATH_COLOR_SELECTED
+		GlobalProperties:addObjectToProperties(self)
 	else
 		self.PathRectangle.PrimaryColor = GlobalConstants.CAM_PATH_COLOR
 	end

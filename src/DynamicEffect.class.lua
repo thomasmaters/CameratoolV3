@@ -1,14 +1,13 @@
-DynamicEffect = newclass("DynamicEffect")
+DynamicEffect = TimeLineElement:subclass("DynamicEffect")
 
 function DynamicEffect:init(aStartTime, aDuration, aAnimationType, aStartValue, aEndValue, aEffectObject)
-	self.StartTime = aStartTime or 0
-	self.Duration = aDuration or 1000
 	self.EffectAnimationType = aAnimationType or GlobalEnums.EasingTypes.Linear
 	self.EffectAnimationStartValue = aStartValue or 0
 	self.EffectAnimationEndValue =  aEndValue or 0
 	self.EffectObject = aEffectObject or nil
 	self.EffectRectangle = Rectangle(Coordinate2D(0,0),Coordinate2D(100,30),nil,nil,GlobalConstants.DYNAMIC_EFFECT_COLOR,nil,false)
-	self.bSelected = false
+	
+	self.super:init(nil, aStartTime, aDuration or 1000, false)
 end
 
 function DynamicEffect:getEffectStartValue()
@@ -17,10 +16,6 @@ end
 
 function DynamicEffect:draw()
 	self.EffectRectangle:draw()
-end
-
-function DynamicEffect:isSelected()
-	return self.bSelected
 end
 
 function DynamicEffect:setSelected(aSelectState)

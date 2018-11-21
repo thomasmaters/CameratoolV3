@@ -1,12 +1,11 @@
-StaticEffect = newclass("StaticEffect")
+StaticEffect = TimeLineElement:subclass("StaticEffect")
 
 function StaticEffect:init(aStartTime, aDuration, aToSetValue, aEffectObject)
-	self.StartTime = aStartTime or 0
-	self.Duration = aDuration or 1000
 	self.EffectValue = aToSetValue or 0
 	self.EffectObject = aEffectObject or nil
 	self.EffectRectangle = Rectangle(Coordinate2D(0,0),Coordinate2D(100,30),nil,nil,GlobalConstants.STATIC_EFFECT_COLOR,nil,false)
-	self.bSelected = false
+	
+	self.super:init(nil, aStartTime, aDuration or 1000, false)
 end
 
 function StaticEffect:getEffectStartValue()
@@ -15,10 +14,6 @@ end
 
 function StaticEffect:draw()
 	self.EffectRectangle:draw()
-end
-
-function StaticEffect:isSelected()
-	return self.bSelected
 end
 
 function StaticEffect:setSelected(aSelectState)

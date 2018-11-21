@@ -21,11 +21,13 @@ function GraphTimeLine:init(aGraph,aPosition,aSize,aAllowedTimeLineTypes,aGraphT
 	addEvent ( "timeLineElementRelease", true )
 	addEvent ( "mouseIsDragging", true )
 	addEvent ( "onCT3DeleteButtonClick", true)
+	addEvent ( "timeLineUpdateRequest", true)
 	addEventHandler ( "timeLineElementHold", getRootElement(), bind(self.mouseHoldsTimeLineElement,self))
 	addEventHandler ( "timeLineElementRelease", getRootElement(), bind(self.mouseReleasesTimeLineElement,self))
 	addEventHandler ( "mouseIsDragging", getRootElement(), bind(self.dragging,self))
 	addEventHandler( "onClientKey", getRootElement(), bind(self.onMouseScrollOnTimeLineElement,self))
 	addEventHandler( "onCT3DeleteButtonClick", getRootElement(), bind(self.deleteSelectedTimeLineElements,self))
+	addEventHandler( "timeLineUpdateRequest", getRootElement(), bind(self.updateGraphTimeLineElements,self))
 	GlobalInterface:addButtonClickBind(self)
 end
 
@@ -77,17 +79,15 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 		v.Duration = GlobalConstants.MINIMUM_PATH_DURATION
 	else --Are we hitting a other timelinelement?
 		for k,b in ipairs(self.TimeLineElements) do
-			if (self:isTimeLineElementOnGraph(b)) then --Get all visable objects on graph
-				if(b.StartTime > v.StartTime + v.Duration and b.StartTime < v.StartTime + v.Duration - timeIncreaseRate) then
-					timeIncreaseRate = -1 * (b.StartTime - v.StartTime - v.Duration - 1)
-					
-					if Path:trycast(v) then
-						outputChatBox("Connected 2 paths toghter")
-						b.StartPosition = v.EndPosition
-						v.ConnectedToPath = b
-					end
-					break
+			if(b.StartTime > v.StartTime + v.Duration and b.StartTime < v.StartTime + v.Duration - timeIncreaseRate) then
+				timeIncreaseRate = -1 * (b.StartTime - v.StartTime - v.Duration - 1)
+				
+				if Path:trycast(v) then
+					outputChatBox("Connected 2 paths together")
+					b.StartPosition = v.EndPosition
+					v.ConnectedToPath = b
 				end
+				break
 			end
 		end
 		
@@ -98,14 +98,44 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 		v.Duration = v.Duration - timeIncreaseRate	--Increase timelineelements duration				
 	end
 	
-	v:setSize(
+	self:resizeTimeLineElement(v)	
+	return
+end
+
+-------------------------------
+--Gets the smallest time a timelineelement can be.
+-------------------------------
+function GraphTimeLine:getCollisionBasedTimeLineElementDuration(aTimeLineElement)
+	local smallestTime = aTimeLineElement.duration
+	
+	--Are we going lower then the minimum?
+	if smallestTime < GlobalConstants.MINIMUM_PATH_DURATION then 
+		smallestTime = GlobalConstants.MINIMUM_PATH_DURATION
+	end
+	
+	for k,b in ipairs(self.TimeLineElements) do
+		if(b ~= aTimeLineElement) then --Not itself
+			if(b.StartTime > aTimeLineElement.StartTime and aTimeLineElement.StartTime + aTimeLineElement.duration > b.StartTime) then
+				local tempSmallestTime =  (b.StartTime - aTimeLineElement.StartTime - 1)
+				if(tempSmallestTime < smallestTime) then
+					smallestTime = tempSmallestTime
+				end
+			end
+		end
+	end
+	return smallestTime
+end
+
+-------------------------------
+--Resizes a timelieelement based on its duration.
+-------------------------------
+function GraphTimeLine:resizeTimeLineElement(aTimeLineElement)
+	aTimeLineElement:setSize(
 		Coordinate2D(
-			self.ParentGraph:getTimeLineElementWidthFromTime(v.Duration),
+			self.ParentGraph:getTimeLineElementWidthFromTime(aTimeLineElement.Duration),
 			self.Size.y
 		)
 	)--Resize according to the timeline scale and his duration
-		
-	return
 end
 
 -------------------------------
@@ -171,12 +201,7 @@ function GraphTimeLine:mouseReleasesTimeLineElement()
 	local ParentGraphPosition = self.ParentGraph:getPosition()
 	objectBeingHold.StartTime = HoveringOverTime
 	objectBeingHold:setPosition(Coordinate2D(objectBeingHold:getPosition().x - ParentGraphPosition.x,self.Position.y - ParentGraphPosition.y))
-	objectBeingHold:setSize(
-		Coordinate2D(
-			self.ParentGraph:getTimeLineElementWidthFromTime(objectBeingHold.Duration),
-			self.Size.y
-		)
-	)--Resize according to the timeline scale
+	self:resizeTimeLineElement(objectBeingHold)	
 	
 	self:addGraphTimeLineElement(GlobalMouse:getObjectBeingHold())
 	
@@ -241,26 +266,36 @@ function GraphTimeLine:canObjectSnapToTimeLine(aTimeLineElement)
 	
 	if self.AllowedTimeLineTypes[aTimeLineElement:class():name()] == nil then return false end
 	if not HoveringOverTime then return false end --Did we get a time?
-	if HoveringOverTime + aTimeLineElement.Duration > GraphEndTime then return false end --Don't go outside the graph
 	
 	for k,v in ipairs(self.TimeLineElements) do
-		if (self:isTimeLineElementOnGraph(v)) then --Get all visable objects on graph
-			if	(v.StartTime >= HoveringOverTime and v.StartTime < HoveringOverTime + aTimeLineElement.Duration) or
-				(v.StartTime + v.Duration > HoveringOverTime and v.StartTime + v.Duration < HoveringOverTime + aTimeLineElement.Duration) or
-				(v.StartTime < HoveringOverTime and HoveringOverTime + aTimeLineElement.Duration < v.StartTime + v.Duration)then --Can it not snap here?
-				return false		
-			end
+		if	(v.StartTime >= HoveringOverTime and v.StartTime < HoveringOverTime + aTimeLineElement.Duration) or
+			(v.StartTime + v.Duration > HoveringOverTime and v.StartTime + v.Duration < HoveringOverTime + aTimeLineElement.Duration) or
+			(v.StartTime < HoveringOverTime and HoveringOverTime + aTimeLineElement.Duration < v.StartTime + v.Duration)then --Can it not snap here?
+			return false		
 		end
 	end	
 	return true
 end
 
+-------------------------------
+--Checks if we have to render this timeline element.
+-------------------------------
 function GraphTimeLine:isTimeLineElementOnGraph(aTimeLineElement)
 	local GraphStartTime,GraphEndTime = self.ParentGraph:getGraphTimeSpan()
 	return 	(aTimeLineElement.StartTime > GraphStartTime and aTimeLineElement.StartTime <= GraphEndTime) or 
 			(aTimeLineElement.StartTime + aTimeLineElement.Duration > GraphStartTime and aTimeLineElement.StartTime + aTimeLineElement.Duration <= GraphEndTime) or
 			(aTimeLineElement.StartTime < GraphStartTime and aTimeLineElement.StartTime + aTimeLineElement.Duration > GraphEndTime)
 end
+
+-------------------------------
+--Tries to sync the timings of the connected timeline elements.
+-------------------------------
+function GraphTimeLine:syncTimeLineElement(aTimeLineElement)
+	if aTimeLineElement.ConnectedToPath == nil then return end
+	
+	
+end
+
 function GraphTimeLine:isMouseAboveTimeLine()
 	local MousePosition = GlobalMouse:getPosition()
 	return (MousePosition > self.Position and MousePosition < self.Position + self.Size)
@@ -281,7 +316,15 @@ function GraphTimeLine:removeTimeLineElement(aTimeLineElement)
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("GraphTimeLine.class:removeTimeLineElement") end
 	---PERTTYFUNCTION---
 	for k,v in ipairs(self.TimeLineElements) do
+		if (v.ConnectedToPath == aTimeLineElement) then
+			v.ConnectedToPath = nil
+			break
+		end
+	end
+	
+	for k,v in ipairs(self.TimeLineElements) do
 		if v == aTimeLineElement then
+			v.ConnectedToPath = nil
 			table.remove(self.TimeLineElements,k)
 			outputChatBox("Something removed, elements left: "..#self.TimeLineElements.. " on key ".. k)
 			break

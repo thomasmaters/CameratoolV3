@@ -9,7 +9,6 @@ function Spline:init(aTension)
 end
 
 --Catmull rom spline 3d implementation
---TODO: Make it possible to get a single point with a specific x, not only with line segments.
 function Spline:getCurvePoints(points, numOfSeg)
 	if #points < 2 then return nil end
 	
@@ -53,6 +52,11 @@ function Spline:getCurvePoints(points, numOfSeg)
 	table.insert(curveTable,Coordinate3D(unpack(points[#points - 1])))							--Add the last controlpoint again
 	
 	return curveTable
+end
+
+function Spline:getLengthOfSpline(points)
+	if #points ~= 2 then return end
+	
 end
 
 function Spline:getPointOnSpline(points, progress)

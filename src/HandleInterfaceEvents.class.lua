@@ -29,6 +29,7 @@ function HandleInterfaceEvents:onControlButtonsClick(aID)
 	if self.leftWindowButtonPlay.ID == aID then
 		outputChatBox("play")
 	elseif self.leftWindowButtonSync.ID == aID then
+		triggerEvent("onCT3SyncButtonClick",getRootElement())
 		outputChatBox("sync")
 	elseif self.leftWindowButtonDelete.ID == aID then
 		triggerEvent("onCT3DeleteButtonClick",getRootElement())

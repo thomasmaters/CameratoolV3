@@ -1,11 +1,11 @@
 Animator = newclass("Animator")
-
+		
 function Animator:init()
 	self.InterpolateInstance = nil
 	self.bAnimating = false
 	self.AnimationStartTime = 0
 	self.CurrentPosition = {}
-end
+end 
 
 function Animator:isAnimating()
 	return self.bAnimating
@@ -101,7 +101,7 @@ function Animator:interpolateOver(timeLinePaths)
 			print_r(animationPoints)
 		
 			--Start interpolating
-			self.interpolateInstance = Interpolate(0,1,timeLinePaths[index].Duration, nil)
+			self.interpolateInstance = Interpolate(0,1,timeLinePaths[index].Duration, timeLinePaths[index].PathAnimationType)
 			addEventHandler ( "onClientPreRender", getRootElement(), animate)
 		end
 	end

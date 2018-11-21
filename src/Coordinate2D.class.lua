@@ -5,6 +5,14 @@ function Coordinate2D:init(x,y)
 	self.y = y or 0
 end
 
+function Coordinate2D:setX(aX)
+	self.x = aX
+end
+
+function Coordinate2D:setY(aY)
+	self.y = aY
+end
+
 function Coordinate2D:__add(aOtherCoordinate)
 	return Coordinate2D(self.x + aOtherCoordinate.x, self.y + aOtherCoordinate.y)
 end
