@@ -1,3 +1,5 @@
+---@type HandleInterfaceEvents
+--@extends #Interface 
 HandleInterfaceEvents = Interface:subclass("HandleInterfaceEvents")
 
 function HandleInterfaceEvents:init(o)
@@ -46,7 +48,7 @@ function HandleInterfaceEvents:onDragAbleButtonClick(aDragableObject)
 	if(aDragableObject.super.PrimaryColor == GlobalConstants.CAM_PATH_COLOR) then
 		GlobalMouse:holdObject(PathCamPosition(0, 2500, nil, false, false))
 	elseif(aDragableObject.super.PrimaryColor == GlobalConstants.CAM_TARGET_PATH_COLOR) then
-		GlobalMouse:holdObject(PathCamTarget(0, 2500, nil, true, false))
+		GlobalMouse:holdObject(PathCamTarget(0, 2500, nil, false, false))
 	elseif(aDragableObject.super.PrimaryColor == GlobalConstants.STATIC_EFFECT_COLOR) then
 		GlobalMouse:holdObject(StaticEffect(0, 2500))
 	elseif(aDragableObject.super.PrimaryColor == GlobalConstants.DYNAMIC_EFFECT_COLOR) then

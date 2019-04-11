@@ -1,3 +1,4 @@
+---@type InWorldVisualization
 InWorldVisualization = newclass("InWorldVisualization")
 
 function InWorldVisualization:init(aGraph)

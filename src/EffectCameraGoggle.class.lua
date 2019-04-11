@@ -1,3 +1,6 @@
+---@type EffectCameraGoggle
+
+--- @return #EffectCameraGoggle 
 EffectCameraGoggle = Effect:subclass("EffectCameraGoggle")
 EffectCameraGoggleDefault = 
 {

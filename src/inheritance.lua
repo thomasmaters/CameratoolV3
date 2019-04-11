@@ -191,7 +191,7 @@ end
 
 -----------------------------------------------------------------------------------
 -- The 'Object' class
-
+---@type Object
 Object = {}
 
 local function obj_newitem() error "May not modify the class 'Object'. Subclass it instead." end
@@ -215,7 +215,7 @@ setmetatable(Object, { __newindex = obj_newitem, __index = obj_class_stuff,
 
 ----------------------------------------------------------------------
 -- function 'newclass'
-
+---@return #Object description
 function newclass(name, baseClass)
  baseClass = baseClass or Object
  return baseClass:subclass(name)

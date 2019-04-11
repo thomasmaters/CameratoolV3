@@ -1,3 +1,6 @@
+---@type Effect
+
+--- @return #Effect 
 Effect = newclass("Effect")
 
 function Effect:init(aEffectTypeObject)

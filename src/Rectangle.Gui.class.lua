@@ -1,3 +1,5 @@
+---@type Rectangle
+--@extends #Gui 
 Rectangle = Gui:subclass("Rectangle")
 
 function Rectangle:init(aPosition, aSize, aParent, aBorderSize, aPrimaryColor, aSecondaryColor, addToRenderStackFlag)

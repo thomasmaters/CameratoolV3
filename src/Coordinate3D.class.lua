@@ -1,3 +1,4 @@
+---@type Coordinate3D
 Coordinate3D = newclass("Coordinate3D")
 
 function Coordinate3D:init(x,y,z)

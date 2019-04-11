@@ -1,3 +1,5 @@
+---@type InputBox
+--@extends #Gui 
 InputBox = Gui:subclass("InputBox")
 
 function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, aSecondaryColor, aInputType, aCallback)
@@ -112,7 +114,7 @@ function InputBox:handleSpecialKey(button, state)
 		elseif button == "backspace" and string.len(self.CurrentText) == 0 then
 			self:enableDefaultText()
 			self:updateText()
-		else if button == "enter" then
+		elseif button == "enter" then
 			self:enableDefaultText()
 			self:updateText()			
 		elseif button == "escape" then

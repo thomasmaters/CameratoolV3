@@ -1,3 +1,6 @@
+---@type Graph
+
+--- @return #Graph 
 Graph = newclass("Graph")
 
 function Graph:init(aPosition, aSize)

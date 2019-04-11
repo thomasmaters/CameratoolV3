@@ -1,3 +1,5 @@
+---@type Text
+--@extends #Gui 
 Text = Gui:subclass("Text")
 TextDefault = 	{
 					Text = "",

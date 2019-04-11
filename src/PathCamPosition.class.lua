@@ -1,3 +1,5 @@
+---@type PathCamPosition
+--@extends #Path
 PathCamPosition = Path:subclass("PathCamPosition")
 
 function PathCamPosition:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bSelected, bIsPathDragged)
@@ -6,16 +8,14 @@ function PathCamPosition:init(aAnimationStartTime, aAnimationDuration, aAnimatio
 	---PERTTYFUNCTION---
 	
 	self.super:init(aAnimationStartTime, aAnimationDuration, aAnimationType, bSelected, bIsPathDragged)
-	self.PathRectangle = Rectangle(Coordinate2D(0,0),Coordinate2D(100,30),nil,nil,GlobalConstants.CAM_PATH_COLOR,nil,false)
 end
 
-function PathCamPosition:updateSelectedColor()
-	if(self.bSelected) then 
-		self.PathRectangle.PrimaryColor = GlobalConstants.CAM_PATH_COLOR_SELECTED
-		GlobalProperties:addObjectToProperties(self)
-	else
-		self.PathRectangle.PrimaryColor = GlobalConstants.CAM_PATH_COLOR
-	end
+function PathCamPosition:getSelectedColor()
+  return GlobalConstants.CAM_PATH_COLOR_SELECTED
+end
+
+function PathCamPosition:getUnSelectedColor()
+  return GlobalConstants.CAM_PATH_COLOR
 end
 
 function PathCamPosition:draw()

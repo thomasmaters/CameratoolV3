@@ -1,3 +1,4 @@
+---@type Mouse
 Mouse = newclass("Mouse")
 
 function Mouse:init()

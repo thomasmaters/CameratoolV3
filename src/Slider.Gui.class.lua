@@ -1,3 +1,5 @@
+---@type Slider
+--@extends #Gui 
 Slider = Gui:subclass("Slider")
 
 function Slider:init(aPosition, aSize, aSelectorSize, aMinimalValue, aMaximalValue, aParent, aPrimaryColor, aSecondaryColor)

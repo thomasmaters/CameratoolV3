@@ -1,29 +1,45 @@
+--- @type Animator
+
+--- @return #Animator 
 Animator = newclass("Animator")
 		
 function Animator:init()
+  --- @field [parent=#Animator] #Interpolate InterpolateInstance
 	self.InterpolateInstance = nil
+	--- @field [parent=#Animator] #bool bAnimating 
 	self.bAnimating = false
+	--- @field [parent=#Animator] #int AnimationStartTime
 	self.AnimationStartTime = 0
+	--- @field [parent=#Animator] #Coordinate3D CurrentPosition
 	self.CurrentPosition = {}
 end 
 
+---@function [parent=#Animator] isAnimating
+--@return #bool 
 function Animator:isAnimating()
 	return self.bAnimating
 end
 
+---@function [parent=#Animator] getCurrentPosition
+--@return #Coordinate3D 
 function Animator:getCurrentPosition()
 	return self.CurrentPosition
 end
 
+---@function [parent=#Animator] getAnimationTime
+--@return #int Remaining animation time.
 function Animator:getAnimationTime()
 	return getTickCount() - self.AnimationStartTime
 end
 
+---@function [parent=#Animator] stopAnimating
 --Sets bAnimating to false and internal logic will kill everything in the next onClientPreRender tick.
 function Animator:stopAnimating()
 	self.bAnimating = false
 end
 
+---@function [parent=#Animator] interpolateOver
+--@field [parent=#Animator] #table timeLinePaths 
 function Animator:interpolateOver(timeLinePaths)
 	--local timeLinePaths = self.GraphTimeLines[1]:getTimeLineElements()
 	--Sort the timeline elements so we know the first element is the first element to animate.

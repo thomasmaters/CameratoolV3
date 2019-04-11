@@ -1,18 +1,32 @@
+--- @type Constants
+
+--- @return #Constants 
 Constants = newclass("Constants")
 
 function Constants:init(o)
+  --- @field [parent=#Constants] #bool ENABLE_PRETTY_FUNCTION
 	self.ENABLE_PRETTY_FUNCTION = true
+	--- @field [parent=#Constants] #int SCREEN_WIDTH
 	self.SCREEN_WIDTH, 
+	--- @field [parent=#Constants] #int SCREEN_HEIGHT
 	self.SCREEN_HEIGHT = guiGetScreenSize() --Players screen size
 	
 	---------------------PATHCOLORS---------------------
+	--- @field [parent=#Constants] #string CAM_PATH_COLOR
 	self.CAM_PATH_COLOR = "#FF7A7AFF"
+	--- @field [parent=#Constants] #string CAM_TARGET_PATH_COLOR
 	self.CAM_TARGET_PATH_COLOR = "#7A7AEBFF"
+	--- @field [parent=#Constants] #string STATIC_EFFECT_COLOR
 	self.STATIC_EFFECT_COLOR = "#7EF3BDFF"
+	--- @field [parent=#Constants] #string DYNAMIC_EFFECT_COLOR
 	self.DYNAMIC_EFFECT_COLOR = "#FCE782FF"
+	--- @field [parent=#Constants] #string CAM_PATH_COLOR_SELECTED
 	self.CAM_PATH_COLOR_SELECTED = "#FF7A7AAA"
+	--- @field [parent=#Constants] #string CAM_TARGET_PATH_COLOR_SELECTED
 	self.CAM_TARGET_PATH_COLOR_SELECTED = "#7A7AEBAA"
+	--- @field [parent=#Constants] #string STATIC_EFFECT_COLOR_SELECTED
 	self.STATIC_EFFECT_COLOR_SELECTED = "#7EF3BDAA"
+	--- @field [parent=#Constants] #string DYNAMIC_EFFECT_COLOR_SELECTED
 	self.DYNAMIC_EFFECT_COLOR_SELECTED = "#FCE782AA"
 	-----------------------GRAPH------------------------
 	self.AMOUNT_OF_TIMELINES = 8

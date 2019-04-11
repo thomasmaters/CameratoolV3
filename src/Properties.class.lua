@@ -1,3 +1,4 @@
+---@type Properties
 Properties = newclass("Properties")
 --Maybe make the properties so that it has slots and every slot can fit a guiElement.
 function Properties:init(aInterfaceArea)

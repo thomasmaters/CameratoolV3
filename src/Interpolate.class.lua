@@ -1,3 +1,4 @@
+---@type Interpolate
 Interpolate = newclass("Interpolate")
 
 function Interpolate:init(aFrom,aTo,aTime,aEasingType)

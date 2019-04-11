@@ -1,9 +1,15 @@
+---@type Enums
+
+---@return #Enums 
 Enums = newclass("Enums")
 
-function Enums:init(o)
+--- @function [parent=#Enums] init
+function Enums:init()
   ---PERTTYFUNCTION---
   if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Enums.class:init") end
   ---PERTTYFUNCTION---
+
+  ---@field [parent=#Enums] #table EasingTypes 
   self.EasingTypes = 
   {
   Linear = "Linear", 
@@ -27,6 +33,7 @@ function Enums:init(o)
   CosineCurve = "CosineCurve"
   }
   
+  ---@field [parent=#Enums] #table GoggleEffects 
   self.GoggleEffects = 
   {
   normal = "normal", 
@@ -34,6 +41,7 @@ function Enums:init(o)
   thermalvision = "thermalvision"
   }
   
+  ---@field [parent=#Enums] #table InputBoxTypes 
   self.InputBoxTypes =
   {
   none = "none",
@@ -41,6 +49,7 @@ function Enums:init(o)
   }
 end
 
+--- @function [parent=#Enums] test
 function Enums:test()
   outputChatBox("enumstest")
 end

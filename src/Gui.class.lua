@@ -1,3 +1,4 @@
+--- @type Gui
 Gui = newclass("Gui")
 
 function Gui:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)

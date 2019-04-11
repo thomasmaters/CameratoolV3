@@ -1,3 +1,6 @@
+---@type DynamicEffect
+
+--- @return #DynamicEffect 
 DynamicEffect = TimeLineElement:subclass("DynamicEffect")
 
 function DynamicEffect:init(aStartTime, aDuration, aAnimationType, aStartValue, aEndValue, aEffectObject)
@@ -18,13 +21,9 @@ function DynamicEffect:draw()
 	self.EffectRectangle:draw()
 end
 
-function DynamicEffect:setSelected(aSelectState)
-	if aSelectState == nil then 
-		self.bSelected = true
-		return
-	end
-	self.bSelected = aSelectState
-	self:updateSelectedColor()
+function DynamicEffect:setSelected()
+  self.bSelected = not self.bSelected
+  self:updateSelectedColor()
 end
 
 function DynamicEffect:updateSelectedColor()

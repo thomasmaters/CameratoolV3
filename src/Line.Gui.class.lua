@@ -1,3 +1,5 @@
+---@type Line
+--@extends #Gui 
 Line = Gui:subclass("line")  
 
 function Line:init(aLineStartPosition, aLineEndPosition, aParent, aLineThickness, bLineHoverEnabled, bLineSelectEnabled, aPrimaryColor, aSecondaryColor)

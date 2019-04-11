@@ -1,3 +1,6 @@
+---@type EffectCameraFOV
+
+--- @return #EffectCameraFOV 
 EffectCameraFOV = Effect:subclass("EffectCameraFOV")
 EffectCameraFOVDefault = 
 {

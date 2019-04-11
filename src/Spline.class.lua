@@ -1,3 +1,4 @@
+---@type Spline
 Spline = newclass("Spline")
 
 function Spline:init(aTension)

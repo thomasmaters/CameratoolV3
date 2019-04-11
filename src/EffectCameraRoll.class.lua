@@ -1,3 +1,6 @@
+---@type EffectCameraRoll
+
+--- @return #EffectCameraRoll 
 EffectCameraRoll = Effect:subclass("EffectCameraRoll")
 EffectCameraRollDefault = 
 {

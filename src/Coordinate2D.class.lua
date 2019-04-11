@@ -1,3 +1,4 @@
+---@type Coordinate2D
 Coordinate2D = newclass("Coordinate2D")
 
 function Coordinate2D:init(x,y)

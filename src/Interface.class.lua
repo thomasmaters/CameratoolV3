@@ -1,3 +1,4 @@
+---@type Interface
 Interface = newclass("Interface")
 
 function Interface:init(o)

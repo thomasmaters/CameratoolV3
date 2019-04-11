@@ -1,3 +1,5 @@
+---@type StaticEffect
+--@extends #TimeLineElement 
 StaticEffect = TimeLineElement:subclass("StaticEffect")
 
 function StaticEffect:init(aStartTime, aDuration, aToSetValue, aEffectObject)
@@ -16,12 +18,8 @@ function StaticEffect:draw()
 	self.EffectRectangle:draw()
 end
 
-function StaticEffect:setSelected(aSelectState)
-	if aSelectState == nil then 
-		self.bSelected = true
-		return
-	end
-	self.bSelected = aSelectState
+function StaticEffect:setSelected()
+  self.bSelected = not self.bSelected
 	self:updateSelectedColor()
 end
 

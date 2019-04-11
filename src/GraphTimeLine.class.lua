@@ -1,3 +1,4 @@
+--- @type GraphTimeLine
 GraphTimeLine = newclass("GraphTimeLine")
 
 function GraphTimeLine:init(aGraph,aPosition,aSize,aAllowedTimeLineTypes,aGraphTimeLineElements)
@@ -220,13 +221,10 @@ function GraphTimeLine:clicked()
 	--self:removeSelection()
 	
 	local HoveringOverTime = self.ParentGraph:getCurrentTimeFromMousePosition()
-	for k,v in ipairs(self.TimeLineElements) do
-		if (self:isTimeLineElementOnGraph(v)) then --Get all visable objects on graph
-			if(v.StartTime < HoveringOverTime and HoveringOverTime < v.StartTime + v.Duration) then
-				v:setSelected(not v:isSelected())
-			end
-		end
-	end	
+	local TimeLineElementKey = self:getTimeLineElementFromTime(HoveringOverTime)
+	if TimeLineElementKey ~= nil then
+		self.TimeLineElements[TimeLineElementKey]:setSelected(true)
+	end
 end
 
 -------------------------------
@@ -315,6 +313,7 @@ function GraphTimeLine:removeTimeLineElement(aTimeLineElement)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("GraphTimeLine.class:removeTimeLineElement") end
 	---PERTTYFUNCTION---
+	--Isn't some other timelineelement connected to this timelineelement?
 	for k,v in ipairs(self.TimeLineElements) do
 		if (v.ConnectedToPath == aTimeLineElement) then
 			v.ConnectedToPath = nil

@@ -1,11 +1,13 @@
+--- @type Path
+-- @extends #TimeLineElement 
 Path = TimeLineElement:subclass("Path")
-Path:virtual("setSelected")
-Path:virtual("updateSelectedColor")
 Path:virtual("draw")
 Path:virtual("setPosition")
 Path:virtual("getPosition")
 Path:virtual("setSize")
 Path:virtual("getSize")
+Path:virtual("getSelectedColor")
+Path:virtual("getUnSelectedColor")
 
 function Path:init(aStartTime, aDuration, aAnimationType, bIsSelected, bIsPathDragged)
 	---PERTTYFUNCTION---
@@ -16,31 +18,25 @@ function Path:init(aStartTime, aDuration, aAnimationType, bIsSelected, bIsPathDr
 	self.PathAnimationType = aAnimationType or GlobalEnums.EasingTypes.Linear
 	self.ConnectedToPath = nil
 	
+	self.PathRectangle = Rectangle(Coordinate2D(0,0),Coordinate2D(100,30),nil,nil,GlobalConstants.CAM_PATH_COLOR,nil,false)
+	
 	self.super:init(nil, aStartTime, aDuration or 3000, bIsSelected)
-	--GlobalInterface:addGuiElementToRenderStack(self)
 end
 
-function Path:setStartTime(aStartTime)
-	outputChatBox("JOOOOOOOOOOOOOOO we willen de starttijd zetten" ..self.StartTime)
-	if not type(aStartTime) == "number" then return end
-	self.StartTime = aStartTime 
-end
-
-function Path:getStartTime()
-	return self.StartTime
-end
-
-function Path:setSelected(aSelectState)
-	if aSelectState == nil then 
-		self.bSelected = true
-		return
-	end
-	self.bSelected = aSelectState
+function Path:setSelected(...)
+	---PERTTYFUNCTION---
+	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Path.class:setSelected") end
+	---PERTTYFUNCTION---
+	self.bSelected = not self.bSelected
 	self:updateSelectedColor()
 end
 
-function Path:getTimeSpan()
-	return self.StartTime,self.StartTime + self.Duration
+function Path:updateSelectedColor()
+  if(self.bSelected) then 
+    self.PathRectangle.PrimaryColor = self:getSelectedColor()
+  else
+    self.PathRectangle.PrimaryColor = self:getUnSelectedColor()
+  end
 end
 
 function Path:setPosition(aNewPosition)
