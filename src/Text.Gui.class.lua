@@ -1,15 +1,6 @@
 ---@type Text
 --@extends #Gui 
 Text = Gui:subclass("Text")
-TextDefault = 	{
-					Text = "",
-					TextScale = 1,
-					Font = "default",
-					TextVerticalAlign = "center",
-					TextHorizontalAlign = "center",
-					Clip=true
-				}
-
 
 function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizontalTextAlgin, aVerticalTextAlgin, aPrimaryColor, aSecondaryColor, aTextClipping)
 	---PERTTYFUNCTION---

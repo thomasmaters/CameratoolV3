@@ -58,13 +58,13 @@ function Animator:interpolateOver(timeLinePaths)
 	self.interpolateInstance = nil
 	self.animateStartTime = getTickCount()
 	
-	animationPoints = {}
-	index = 1
+	local animationPoints = {}
+	local index = 1
 	
 	--Sleep execution until a point in the graph is reached.
-	function waitForNext(tickCountToWaitFor)
+	local function waitForNext(tickCountToWaitFor)
 		outputChatBox("Sleeping")
-		function sleep()
+		local function sleep()
 			coroutine.resume(waitRoutine)
 		end
 		
@@ -86,7 +86,7 @@ function Animator:interpolateOver(timeLinePaths)
 		)
 	end
 	
-	function prepareNext()
+	local function prepareNext()
 		outputChatBox("Prepare next")
 		if index > #timeLinePaths then
 			self.bAnimating = false
@@ -99,7 +99,7 @@ function Animator:interpolateOver(timeLinePaths)
 			--Construct the points to interpolate over.
 			animationPoints = {}
 			--Do we have a connected path in the previouse path?
-			if (index ~= 1 and timeLinePaths[index - 1].ConnectedToPath ~= nil) then
+			if (index ~= 1 and timeLinePaths[index - 1]:isConnectedToPath()) then
 				table.insert(animationPoints, timeLinePaths[index - 1].StartPosition:pack())
 			else
 				table.insert(animationPoints, timeLinePaths[index].StartPosition:pack())
@@ -109,7 +109,7 @@ function Animator:interpolateOver(timeLinePaths)
 			table.insert(animationPoints, timeLinePaths[index].EndPosition:pack())
 			
 			--Do we have a connectedPath?
-			if timeLinePaths[index].ConnectedToPath ~= nil then
+			if timeLinePaths[index]:isConnectedToPath() then
 				table.insert(animationPoints, timeLinePaths[index + 1].EndPosition:pack())
 			else
 				table.insert(animationPoints, timeLinePaths[index].EndPosition:pack())
@@ -122,7 +122,7 @@ function Animator:interpolateOver(timeLinePaths)
 		end
 	end
 	
-	function animate()
+	local function animate()
 		local progress = self.interpolateInstance:getCurrentProgressValue()
 		
 		if self.bAnimating == false then

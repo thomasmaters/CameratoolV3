@@ -13,9 +13,9 @@ end
 function Spline:getCurvePoints(points, numOfSeg)
 	if #points < 2 then return nil end
 	
-	tension = self.Tension
-	numOfSeg = numOfSeg or 10
-	curveTable = {}
+	local tension = self.Tension
+	local numOfSeg = numOfSeg or 10
+	local curveTable = {}
 	
 	local m1 = matrix{	{-tension		,2 - tension	,tension - 2		,tension	},
 						{2 * tension	,tension - 3	,3 - 2 * tension	,-tension	},
@@ -26,8 +26,8 @@ function Spline:getCurvePoints(points, numOfSeg)
 	table.insert(points,points[#points]) 			--duplicate last value
 
 	function calcCurve(points,numOfSeg)				--Function for calculating the curve between 2 points
-		tempTable = {}
-		m2 = {}
+		local tempTable = {}
+		local m2 = {}
 		if Coordinate3D:made(points[1]) then
 			m2 = matrix{points[1]:pack(),points[2]:pack(),points[3]:pack(),points[4]:pack()}
 		else

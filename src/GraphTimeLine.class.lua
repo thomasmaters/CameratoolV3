@@ -16,6 +16,7 @@ function GraphTimeLine:init(aGraph,aPosition,aSize,aAllowedTimeLineTypes,aGraphT
 	self.Size = aSize or error("No TimeLine size given!")	
 	self.TimeLineRectangle = Rectangle(aPosition - self.ParentGraph:getPosition(),aSize,nil,nil,nil,nil,false)
 	self.AllowedTimeLineTypes = aAllowedTimeLineTypes or {} --Name(s) of class(es) to allow. Key value pair, if key exists, type is allowed.
+	---@field [parent=#GraphTimeLine] #TimeLineElement TimeLineElements
 	self.TimeLineElements = aGraphTimeLineElements or {}
 	
 	addEvent ( "timeLineElementHold", true )
@@ -43,7 +44,7 @@ function GraphTimeLine:draw()
 		end
 	end
 	for k,v in ipairs(self.TimeLineElements) do
-		if self:isTimeLineElementOnGraph(v) and v.ConnectedToPath ~= nil then
+		if (self:isTimeLineElementOnGraph(v) and v:isConnectedToPath()) then
 			dxDrawImage(v.PathRectangle.GuiPosition.x + v.PathRectangle.Size.x - 24,
 				v.PathRectangle.GuiPosition.y + 7,
 				48,15,GlobalConstants.TEXTURE_LINK)		
@@ -63,10 +64,10 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 	if not self:isMouseAboveTimeLine() then return end
 	
 	local HoveringOverTime = self.ParentGraph:getCurrentTimeFromMousePosition()
-	local v = self.TimeLineElements[self:getTimeLineElementFromTime(HoveringOverTime)]
-	if v == nil or StaticEffect:made(v) then return end --Are we hovering above a timelineelement, or is it a static effect?
-	if Path:trycast(v) then --Are we scrolling above a Path timelineelement? If so, remove its connected path.
-		v.ConnectedToPath = nil
+  local selectedTimeLineElement = self.TimeLineElements[self:getTimeLineElementFromTime(HoveringOverTime)]
+	if selectedTimeLineElement == nil or StaticEffect:made(selectedTimeLineElement) then return end --Are we hovering above a timelineelement, or is it a static effect?
+	if Path:trycast(selectedTimeLineElement) then --Are we scrolling above a Path timelineelement? If so, remove its connected path.
+		selectedTimeLineElement:removeConnectedPath()
 	end
 	
 	local timeIncreaseRate = GlobalConstants.BASE_SCROLL_TIME_INCREASE * (aButton == "mouse_wheel_down" and 1 or -1) --Base time added and direction
@@ -76,30 +77,30 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 	elseif getKeyState("lalt") then
 		timeIncreaseRate = timeIncreaseRate * GlobalConstants.SLOW_SCROLL_MULITPLIER
 	end
-	if v.Duration - timeIncreaseRate < GlobalConstants.MINIMUM_PATH_DURATION then --Are we going lower then the minimum?
-		v.Duration = GlobalConstants.MINIMUM_PATH_DURATION
+	if selectedTimeLineElement.Duration - timeIncreaseRate < GlobalConstants.MINIMUM_PATH_DURATION then --Are we going lower then the minimum?
+		selectedTimeLineElement.Duration = GlobalConstants.MINIMUM_PATH_DURATION
 	else --Are we hitting a other timelinelement?
 		for k,b in ipairs(self.TimeLineElements) do
-			if(b.StartTime > v.StartTime + v.Duration and b.StartTime < v.StartTime + v.Duration - timeIncreaseRate) then
-				timeIncreaseRate = -1 * (b.StartTime - v.StartTime - v.Duration - 1)
+			if(b.StartTime > selectedTimeLineElement.StartTime + selectedTimeLineElement.Duration and b.StartTime < selectedTimeLineElement.StartTime + selectedTimeLineElement.Duration - timeIncreaseRate) then
+				timeIncreaseRate = -1 * (b.StartTime - selectedTimeLineElement.StartTime - selectedTimeLineElement.Duration - 1)
 				
-				if Path:trycast(v) then
+				if Path:trycast(selectedTimeLineElement) ~= nil then
 					outputChatBox("Connected 2 paths together")
-					b.StartPosition = v.EndPosition
-					v.ConnectedToPath = b
+					b.StartPosition = selectedTimeLineElement.EndPosition
+					selectedTimeLineElement:connectToPath(b)
 				end
 				break
 			end
 		end
 		
-		if (v.StartTime + v.Duration - timeIncreaseRate > self.ParentGraph.GraphTotalTime + self.ParentGraph.GraphVisableDuration) then --does or new size extent the maximum value of the graph?
+		if (selectedTimeLineElement.StartTime + selectedTimeLineElement.Duration - timeIncreaseRate > self.ParentGraph.GraphTotalTime + self.ParentGraph.GraphVisableDuration) then --does or new size extent the maximum value of the graph?
 			self.ParentGraph:increaseGraphTotalTime(GlobalConstants.BASE_SCROLL_TIME_INCREASE * GlobalConstants.GRAPH_TOTAL_TIME_INCREASE_MULTIPLIER) --Increase it by 10(default) seconds 
 		end
 		
-		v.Duration = v.Duration - timeIncreaseRate	--Increase timelineelements duration				
+		selectedTimeLineElement.Duration = selectedTimeLineElement.Duration - timeIncreaseRate	--Increase timelineelements duration				
 	end
 	
-	self:resizeTimeLineElement(v)	
+	self:resizeTimeLineElement(selectedTimeLineElement)	
 	return
 end
 
@@ -289,7 +290,7 @@ end
 --Tries to sync the timings of the connected timeline elements.
 -------------------------------
 function GraphTimeLine:syncTimeLineElement(aTimeLineElement)
-	if aTimeLineElement.ConnectedToPath == nil then return end
+	if not aTimeLineElement:isConnectedToPath() then return end
 	
 	
 end
@@ -316,14 +317,14 @@ function GraphTimeLine:removeTimeLineElement(aTimeLineElement)
 	--Isn't some other timelineelement connected to this timelineelement?
 	for k,v in ipairs(self.TimeLineElements) do
 		if (v.ConnectedToPath == aTimeLineElement) then
-			v.ConnectedToPath = nil
+			v.ConnectedToPath:removeConnectedPath()
 			break
 		end
 	end
 	
 	for k,v in ipairs(self.TimeLineElements) do
 		if v == aTimeLineElement then
-			v.ConnectedToPath = nil
+			v.ConnectedToPath:removeConnectedPath()
 			table.remove(self.TimeLineElements,k)
 			outputChatBox("Something removed, elements left: "..#self.TimeLineElements.. " on key ".. k)
 			break

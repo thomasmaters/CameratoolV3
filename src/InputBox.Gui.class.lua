@@ -42,7 +42,7 @@ function InputBox:getText()
 end
 
 function InputBox:removeFocus()
-	mousePosition = GlobalMouse:getPosition()
+	local mousePosition = GlobalMouse:getPosition()
 	if mousePosition.x <= self.ClickableAera.GuiPosition.x or mousePosition.x >= self.ClickableAera.GuiPosition.x + self.Size.x or
 		mousePosition.y <= self.ClickableAera.GuiPosition.y or mousePosition.y >= self.ClickableAera.GuiPosition.y + self.Size.y then
 		outputChatBox("Remove focus")
@@ -82,7 +82,7 @@ end
 
 function InputBox:handleChar(character)
 	if self.bFocus and string.len(self.CurrentText) < self.CharacterLimit then
-		newCurrentText = self.CurrentText.. "" ..character
+		local newCurrentText = self.CurrentText.. "" ..character
 		if self:validateType(newCurrentText) then
 			self.CurrentText =  newCurrentText
 			self:updateText()

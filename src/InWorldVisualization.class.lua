@@ -28,8 +28,8 @@ function InWorldVisualization:updateInWorldView(aButton, pressOrRelease)
 	end
 	
 	local timeLineElements = self.ParentGraph:getAllTimeLineElements() --I sinserly hope this is a copy 
-	tempCamTargetPoints = {}
-	tempCamPositionPoints = {}
+	local tempCamTargetPoints = {}
+	local tempCamPositionPoints = {}
 
 	for i=#timeLineElements,1,-1 do
 		if PathCamPosition:made(timeLineElements[i]) then
@@ -73,7 +73,7 @@ end
 function InWorldVisualization:getSplinePointsTable(aTable)
 	if not aTable or #aTable == 0 then return {} end
 	local tempTable = {}
-	anotherTempTable = {}
+	local anotherTempTable = {}
 	
 	for k,subTable in ipairs(aTable) do
 	outputChatBox("sub table size: " .. #subTable)
@@ -97,7 +97,7 @@ end
 -------------------------------
 function InWorldVisualization:convertToInterpolatableTable(aTable)
 	if aTable == nil or #aTable < 1 then return {} end
-	tempTable = {}
+	local tempTable = {}
 	local index = 1
 	
 	table.sort(aTable,
@@ -106,13 +106,13 @@ function InWorldVisualization:convertToInterpolatableTable(aTable)
 		end
 	)
 	
-	--Sort the table so connected timelineelements are grouped toghter.
+	--Sort the table so connected timelineelements are grouped together.
 	while #aTable > 0 do
 		if tempTable[index] == nil then
 			tempTable[index] = {}
 			tempTable[index][1] = table.remove(aTable,1)
 		end
-		if tempTable[index][#tempTable[index]].ConnectedToPath == nil then
+		if not tempTable[index][#tempTable[index]]:isConnectedToPath() then
 			index = index + 1
 		else
 			tempTable[index][#tempTable[index] + 1] = table.remove(aTable,1)

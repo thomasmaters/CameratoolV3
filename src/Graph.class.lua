@@ -15,7 +15,7 @@ function Graph:init(aPosition, aSize)
 	self.GraphTimeLines = {}
 	self.WorldVisualization = InWorldVisualization(self)
 	
-	timeLineSliderBox = Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - 50),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,50))
+	local timeLineSliderBox = Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - 50),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,50))
 	self.timeLineSlider = 	Slider(Coordinate2D(0,15), Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,20), Coordinate2D(20,20),0,self.GraphTotalTime,timeLineSliderBox)
 	
 	table.insert(self.GraphTimeLines, GraphTimeLine(self,
@@ -68,7 +68,7 @@ function Graph:getGraphTimeLine(aIndex)
 end
 
 function Graph:increaseGraphTotalTime(aIncreaseValue)
-	self.GraphTotalTime = self.GraphTotalTime + aIncreaseValue
+  self.GraphTotalTime = self.GraphTotalTime + aIncreaseValue
 	self.timeLineSlider:increaseSliderMaximalValue(aIncreaseValue)
 	outputChatBox(self.GraphTotalTime)
 end
