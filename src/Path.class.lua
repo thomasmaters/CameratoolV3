@@ -34,7 +34,6 @@ function Path:isConnectedToPath()
 end
 
 function Path:removeConnectedPath()
-  outputChatBox("Removed connected path")
   self.ConnectedToPath = nil
 end
 

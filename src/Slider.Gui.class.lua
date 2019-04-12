@@ -34,7 +34,7 @@ end
 
 function Slider:clicked()
 	
-	function moveSliderSelector()		
+	local function moveSliderSelector()		
 		if GlobalMouse:isMousePressed("mouse1") then
 			local previousSliderValue = self:getCurrentValue()		
 			

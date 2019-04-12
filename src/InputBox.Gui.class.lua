@@ -42,10 +42,11 @@ function InputBox:getText()
 end
 
 function InputBox:removeFocus()
+  if not self.bFocus then return end
+  
 	local mousePosition = GlobalMouse:getPosition()
 	if mousePosition.x <= self.ClickableAera.GuiPosition.x or mousePosition.x >= self.ClickableAera.GuiPosition.x + self.Size.x or
 		mousePosition.y <= self.ClickableAera.GuiPosition.y or mousePosition.y >= self.ClickableAera.GuiPosition.y + self.Size.y then
-		outputChatBox("Remove focus")
 		self.bFocus = false
 		self:enableDefaultText()
 	end
@@ -53,16 +54,18 @@ end
 
 function InputBox:draw()
 	if self.bFocus then
-		if string.len(self.CurrentText) > 0 and getKeyState("backspace") and self.LastTickBackspace == 0 then
+    local backspaceKeyState = getKeyState("backspace")
+    
+		if string.len(self.CurrentText) > 0 and backspaceKeyState and self.LastTickBackspace == 0 then
 			self.LastTickBackspace = getTickCount() + 500
-		elseif string.len(self.CurrentText) > 0 and getKeyState("backspace") and self.LastTickBackspace - getTickCount() <= 0 then
+		elseif string.len(self.CurrentText) > 0 and backspaceKeyState and self.LastTickBackspace - getTickCount() <= 0 then
 			if getKeyState("lctrl") then
 				self.CurrentText = ""
 				self:updateText()
 			else
 				self:removeCharacter()
 			end
-		elseif self.LastTickBackspace ~= 0 and not getKeyState("backspace") then
+		elseif self.LastTickBackspace ~= 0 and not backspaceKeyState then
 			self.LastTickBackspace = 0
 		end
 	end

@@ -16,7 +16,7 @@ function GraphTimeLine:init(aGraph,aPosition,aSize,aAllowedTimeLineTypes,aGraphT
 	self.Size = aSize or error("No TimeLine size given!")	
 	self.TimeLineRectangle = Rectangle(aPosition - self.ParentGraph:getPosition(),aSize,nil,nil,nil,nil,false)
 	self.AllowedTimeLineTypes = aAllowedTimeLineTypes or {} --Name(s) of class(es) to allow. Key value pair, if key exists, type is allowed.
-	---@field [parent=#GraphTimeLine] #TimeLineElement TimeLineElements
+	---@field [parent=#GraphTimeLine] #table TimeLineElements
 	self.TimeLineElements = aGraphTimeLineElements or {}
 	
 	addEvent ( "timeLineElementHold", true )
@@ -44,7 +44,7 @@ function GraphTimeLine:draw()
 		end
 	end
 	for k,v in ipairs(self.TimeLineElements) do
-		if (self:isTimeLineElementOnGraph(v) and v:isConnectedToPath()) then
+		if (Path:made(v) and self:isTimeLineElementOnGraph(v) and v:isConnectedToPath()) then
 			dxDrawImage(v.PathRectangle.GuiPosition.x + v.PathRectangle.Size.x - 24,
 				v.PathRectangle.GuiPosition.y + 7,
 				48,15,GlobalConstants.TEXTURE_LINK)		
@@ -66,7 +66,7 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 	local HoveringOverTime = self.ParentGraph:getCurrentTimeFromMousePosition()
   local selectedTimeLineElement = self.TimeLineElements[self:getTimeLineElementFromTime(HoveringOverTime)]
 	if selectedTimeLineElement == nil or StaticEffect:made(selectedTimeLineElement) then return end --Are we hovering above a timelineelement, or is it a static effect?
-	if Path:trycast(selectedTimeLineElement) then --Are we scrolling above a Path timelineelement? If so, remove its connected path.
+	if Path:trycast(selectedTimeLineElement) and selectedTimeLineElement:isConnectedToPath() then --Are we scrolling above a Path timelineelement? If so, remove its connected path.
 		selectedTimeLineElement:removeConnectedPath()
 	end
 	
@@ -85,7 +85,6 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 				timeIncreaseRate = -1 * (b.StartTime - selectedTimeLineElement.StartTime - selectedTimeLineElement.Duration - 1)
 				
 				if Path:trycast(selectedTimeLineElement) ~= nil then
-					outputChatBox("Connected 2 paths together")
 					b.StartPosition = selectedTimeLineElement.EndPosition
 					selectedTimeLineElement:connectToPath(b)
 				end
@@ -316,15 +315,18 @@ function GraphTimeLine:removeTimeLineElement(aTimeLineElement)
 	---PERTTYFUNCTION---
 	--Isn't some other timelineelement connected to this timelineelement?
 	for k,v in ipairs(self.TimeLineElements) do
-		if (v.ConnectedToPath == aTimeLineElement) then
-			v.ConnectedToPath:removeConnectedPath()
+		if (v.ConnectedToPath == aTimeLineElement and Path:made(v)) then
+			v:removeConnectedPath()
 			break
 		end
 	end
 	
 	for k,v in ipairs(self.TimeLineElements) do
 		if v == aTimeLineElement then
-			v.ConnectedToPath:removeConnectedPath()
+		  if(Path:made(v)) then
+        v:removeConnectedPath()
+      end
+      
 			table.remove(self.TimeLineElements,k)
 			outputChatBox("Something removed, elements left: "..#self.TimeLineElements.. " on key ".. k)
 			break

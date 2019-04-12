@@ -51,7 +51,7 @@ function Mouse:holdObject(aObject)
 	if self.ObjectBeingHold then return false end
 	self.ObjectBeingHold = aObject
 	
-	function renderElementUnderMouse()
+	local function renderElementUnderMouse()
 		if(self:isMousePressed("mouse1"))then
 			self.ObjectBeingHold:draw()
 			self.ObjectBeingHold:setPosition(self.MousePosition)

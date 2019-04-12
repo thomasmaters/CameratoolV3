@@ -25,7 +25,7 @@ function Spline:getCurvePoints(points, numOfSeg)
 	table.insert(points,1,points[1]) 				--duplicate first value
 	table.insert(points,points[#points]) 			--duplicate last value
 
-	function calcCurve(points,numOfSeg)				--Function for calculating the curve between 2 points
+	local function calcCurve(points,numOfSeg)				--Function for calculating the curve between 2 points
 		local tempTable = {}
 		local m2 = {}
 		if Coordinate3D:made(points[1]) then
