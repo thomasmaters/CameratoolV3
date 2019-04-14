@@ -74,3 +74,7 @@ end
 function Rectangle:getPosition()
 	return self.super.GuiPosition
 end
+
+function Rectangle:destructor()
+  GlobalInterface:removeInterfaceElement(self)
+end

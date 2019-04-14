@@ -2,6 +2,7 @@
 --@extends #Interface 
 HandleInterfaceEvents = Interface:subclass("HandleInterfaceEvents")
 
+--- @function [parent=#HandleInterfaceEvents] init
 function HandleInterfaceEvents:init(o)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("HandleInterfaceEvents.class:init") end
@@ -13,6 +14,7 @@ function HandleInterfaceEvents:init(o)
 	addEventHandler("onRequestHideInterface",getRootElement(),bind(self.super.showInterface,Interface))
 end
 
+--- @function [parent=#HandleInterfaceEvents] onButtonClicked
 function HandleInterfaceEvents:onButtonClicked( aPressedButton, aButtonState, aCursorX, aCursorY )
 	if self:isInterfaceVisable() and aPressedButton == "left" and aButtonState == "down" and self.InterfaceClickBindendElements ~= nil then
 		local MousePosition = Coordinate2D(aCursorX,aCursorY)
@@ -27,6 +29,7 @@ function HandleInterfaceEvents:onButtonClicked( aPressedButton, aButtonState, aC
 	end
 end
 
+--- @function [parent=#HandleInterfaceEvents] onControlButtonsClick
 function HandleInterfaceEvents:onControlButtonsClick(aID)
 	if self.leftWindowButtonPlay.ID == aID then
 		outputChatBox("play")
@@ -39,6 +42,7 @@ function HandleInterfaceEvents:onControlButtonsClick(aID)
 	end
 end
 
+--- @function [parent=#HandleInterfaceEvents] onDragAbleButtonClick
 function HandleInterfaceEvents:onDragAbleButtonClick(aDragableObject)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("HandleInterfaceEvents.class:onDragAbleButtonClick") end

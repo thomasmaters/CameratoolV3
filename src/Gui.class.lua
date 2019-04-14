@@ -1,5 +1,6 @@
 --- @type Gui
 Gui = newclass("Gui")
+Gui:virtual("destructor")
 
 function Gui:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
 	---PERTTYFUNCTION---
@@ -14,4 +15,8 @@ end
 
 function Gui:getPosition()
 	return self.GuiPosition
+end
+
+function Gui:destructor()
+  self.parent:destructor()
 end

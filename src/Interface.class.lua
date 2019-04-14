@@ -37,9 +37,10 @@ function Interface:createInterface()
 	local timeLineWindowMain = 			Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50),nil,2)
 	
 	local rightWindowMain = 				Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT),nil,2)
-	GlobalProperties:addInterfaceElement(rightWindowMain)
 end
 
+--- @function [parent=#Interface] showInterface
+--@param #bool aShowing Show or hide the interface.
 function Interface:showInterface(Showing)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Interface.class:showInterface") end
@@ -68,6 +69,8 @@ function Interface:showInterface(Showing)
 	return
 end
 
+--- @function [parent=#Interface] addButtonClickBind
+--@param #Gui aGuiElement Adds a button click bind on the element.
 function Interface:addButtonClickBind(aGuiElement)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Interface.class:addButtonClickBind".. tostring(#self.InterfaceClickBindendElements)) end
@@ -75,6 +78,8 @@ function Interface:addButtonClickBind(aGuiElement)
 	table.insert(self.InterfaceClickBindendElements,aGuiElement)
 end
 
+--- @function [parent=#Interface] addGuiElementToRenderStack
+--@param #Gui aGuiElement Adds a onClientRender call to this element.
 function Interface:addGuiElementToRenderStack(aGuiElement)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Interface.class:addGuiElementToRenderStack") end
@@ -83,6 +88,8 @@ function Interface:addGuiElementToRenderStack(aGuiElement)
 	table.insert(self.InterfaceRenderStack, aGuiElement)
 end
 
+--- @function [parent=#Interface] removeInterfaceElement
+--@param #Gui aGuiElement Removes an element from the renderstack and its button click binds.
 function Interface:removeInterfaceElement(aGuiElement)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Interface.class:removeInterfaceElement") end
@@ -102,6 +109,7 @@ function Interface:removeInterfaceElement(aGuiElement)
 	end	
 end
 
+--- @function [parent=#Interface] drawInterface
 function Interface:drawInterface()
 	--if not self:isInterfaceVisable() then return end
 	for k, v in ipairs(self.InterfaceRenderStack) do
@@ -111,6 +119,8 @@ function Interface:drawInterface()
 	end
 end
 
+--- @function [parent=#Interface] isInterfaceVisable
+--@return #bool Returns true if the interface is visible or when its animating to visible/invisible.
 function Interface:isInterfaceVisable()
 	return (self.bIsInterfaceVisable and not isEventHandlerAdded("onClientRender",getRootElement(), hideInterfaceRender))
 end

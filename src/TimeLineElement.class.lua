@@ -1,6 +1,5 @@
 ---@type TimeLineElement
 TimeLineElement = newclass("TimeLineElement")
-TimeLineElement:virtual("setSelected")
 
 function TimeLineElement:init(aParentTimeLine, aStartTime, aDuration, bSelected)
 	---PERTTYFUNCTION---
@@ -14,7 +13,14 @@ function TimeLineElement:init(aParentTimeLine, aStartTime, aDuration, bSelected)
 end
 
 function TimeLineElement:setSelected()
-  outputChatBox("TimeLineElement:setSelected()")
+  self.bSelected = not self.bSelected
+  if self.bSelected then
+    GlobalProperties:onTimeLineElementSelect(self)
+    --triggerEvent("onTimeLineElementSelect", getResourceRootElement(), self)
+  else
+    GlobalProperties:onTimeLineElementDeselect(self)
+    --triggerEvent("onTimeLineElementDeselect", getResourceRootElement(), self)
+  end
 end
 
 function TimeLineElement:isSelected()

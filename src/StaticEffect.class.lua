@@ -19,7 +19,7 @@ function StaticEffect:draw()
 end
 
 function StaticEffect:setSelected()
-  self.bSelected = not self.bSelected
+  self.super:setSelected()
 	self:updateSelectedColor()
 end
 

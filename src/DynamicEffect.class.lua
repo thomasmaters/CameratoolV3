@@ -1,6 +1,5 @@
 ---@type DynamicEffect
-
---- @return #DynamicEffect 
+--@extends #TimeLineElement
 DynamicEffect = TimeLineElement:subclass("DynamicEffect")
 
 function DynamicEffect:init(aStartTime, aDuration, aAnimationType, aStartValue, aEndValue, aEffectObject)
@@ -22,7 +21,7 @@ function DynamicEffect:draw()
 end
 
 function DynamicEffect:setSelected()
-  self.bSelected = not self.bSelected
+  self.super:setSelected()
   self:updateSelectedColor()
 end
 

@@ -89,6 +89,7 @@ function Graph:updateRenderTarget()
 	dxDrawImage( self.Position.x,  self.Position.y,  self.Size.x, self.Size.y, self.GraphRenderTarget )  
 end
 
+--- @function [parent=#Graph] getAllTimeLineElements
 function Graph:getAllTimeLineElements()
 	local tempTable = {}
 	for k,v in ipairs(self.GraphTimeLines) do
@@ -101,6 +102,7 @@ function Graph:getAllTimeLineElements()
 	return tempTable
 end
 
+--- @function [parent=#Graph] getGraphTimeSpan
 function Graph:getGraphTimeSpan()
   return self.GraphCurrentTime, (self.GraphCurrentTime + self.GraphVisableDuration)
 end

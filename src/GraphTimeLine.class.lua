@@ -16,20 +16,18 @@ function GraphTimeLine:init(aGraph,aPosition,aSize,aAllowedTimeLineTypes,aGraphT
 	self.Size = aSize or error("No TimeLine size given!")	
 	self.TimeLineRectangle = Rectangle(aPosition - self.ParentGraph:getPosition(),aSize,nil,nil,nil,nil,false)
 	self.AllowedTimeLineTypes = aAllowedTimeLineTypes or {} --Name(s) of class(es) to allow. Key value pair, if key exists, type is allowed.
-	---@field [parent=#GraphTimeLine] #table TimeLineElements
+  ---@field [parent=#GraphTimeLine] #list<#TimeLineElement> TimeLineElements asdf
 	self.TimeLineElements = aGraphTimeLineElements or {}
 	
 	addEvent ( "timeLineElementHold", true )
 	addEvent ( "timeLineElementRelease", true )
 	addEvent ( "mouseIsDragging", true )
 	addEvent ( "onCT3DeleteButtonClick", true)
-	addEvent ( "timeLineUpdateRequest", true)
 	addEventHandler ( "timeLineElementHold", getRootElement(), bind(self.mouseHoldsTimeLineElement,self))
 	addEventHandler ( "timeLineElementRelease", getRootElement(), bind(self.mouseReleasesTimeLineElement,self))
 	addEventHandler ( "mouseIsDragging", getRootElement(), bind(self.dragging,self))
 	addEventHandler( "onClientKey", getRootElement(), bind(self.onMouseScrollOnTimeLineElement,self))
 	addEventHandler( "onCT3DeleteButtonClick", getRootElement(), bind(self.deleteSelectedTimeLineElements,self))
-	addEventHandler( "timeLineUpdateRequest", getRootElement(), bind(self.updateGraphTimeLineElements,self))
 	GlobalInterface:addButtonClickBind(self)
 end
 
@@ -322,7 +320,8 @@ function GraphTimeLine:removeTimeLineElement(aTimeLineElement)
 	end
 	
 	for k,v in ipairs(self.TimeLineElements) do
-		if v == aTimeLineElement then
+      if v == aTimeLineElement then
+      
 		  if(Path:made(v)) then
         v:removeConnectedPath()
       end
@@ -337,12 +336,6 @@ end
 function GraphTimeLine:addGraphTimeLineElement(aTimeLineElement)
 	table.insert(self.TimeLineElements,aTimeLineElement)
 	outputChatBox("new element added, new element count "..#self.TimeLineElements.. " at : "..aTimeLineElement.StartTime)
-end
-
-function GraphTimeLine:updateGraphTimeLineElements()
-	for k,v in ipairs(self.TimeLineElements) do
-		v:setPosition(Coordinate2D(self.ParentGraph:getPositionOnGraphFromTime(v.StartTime) - self.ParentGraph.Position.x,v:getPosition().y))
-	end	
 end
 
 function GraphTimeLine:deleteSelectedTimeLineElements()

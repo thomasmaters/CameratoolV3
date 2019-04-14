@@ -90,3 +90,10 @@ function Slider:setPosition(aNewPosition)
 	self.VisiualRectangle:setPosition(VisualRectanglePos)
 	self.SliderRectangle:setPosition(SliderRectanglePos)
 end
+
+function Slider:destructor()
+  self.SelectableRectangle:destructor()
+  self.VisiualRectangle:destructor()
+  self.SliderRectangle:destructor()
+  GlobalInterface:removeInterfaceElement(self)
+end

@@ -32,13 +32,12 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
 	GlobalInterface:addGuiElementToRenderStack(self)
 end
 
-function InputBox:destroy()
-	GlobalInterface:removeInterfaceElement(self)
-	self = nil --Do we need to set itself manually to nil or will the gc do that?
-end
-
 function InputBox:getText()
 	return self.CurrentText or ""
+end
+
+function InputBox:setText(aValue)
+  self.InputText:setText(tostring(aValue)) 
 end
 
 function InputBox:removeFocus()
@@ -131,4 +130,10 @@ function InputBox:setFocus()
 	outputChatBox("setfocus")
 	self.bShowDefault = false
 	self.bFocus = true
+end
+
+function InputBox:destructor()
+  self.ClickableAera:destructor()
+  self.InputText:destructor()
+  GlobalInterface:removeInterfaceElement(self)
 end

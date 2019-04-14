@@ -12,8 +12,8 @@ function InWorldVisualization:init(aGraph)
 	
 	self.AnimatedObject = createObject ( 980, 0, 0, 0)
 	
-	self.PositionAnimator = Animator()
-	self.TargetAnimator = Animator()
+	self.PositionAnimator = Animator() --#Animator
+	self.TargetAnimator = Animator() --#Animator
 
 	addEventHandler( "onClientKey", getRootElement(), bind(self.updateInWorldView,self))
 	addEventHandler( "onClientRender" , getRootElement(), bind(self.draw,self))

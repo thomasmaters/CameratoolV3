@@ -98,11 +98,11 @@ function string.random(aLength)
 end
 
 GlobalConstants = Constants()
-GlobalEnums = Enums()
-GlobalInterface = HandleInterfaceEvents()
-GlobalMouse = Mouse()
-GlobalSpline = Spline(GlobalConstants.SPLINE_TENSION)
-GlobalProperties = Properties()
+GlobalEnums = Enums() --#Enums
+GlobalInterface = HandleInterfaceEvents() --#HandleInterfaceEvents
+GlobalMouse = Mouse() --#Mouse
+GlobalSpline = Spline(GlobalConstants.SPLINE_TENSION) --#Spline
+GlobalProperties = Properties() --#Properties
 
 local fps = false
 function getCurrentFPS() -- Setup the useful function

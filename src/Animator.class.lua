@@ -14,31 +14,31 @@ function Animator:init()
 	self.CurrentPosition = {}
 end 
 
----@function [parent=#Animator] isAnimating
+--- @function [parent=#Animator] isAnimating
 --@return #bool 
 function Animator:isAnimating()
 	return self.bAnimating
 end
 
----@function [parent=#Animator] getCurrentPosition
+--- @function [parent=#Animator] getCurrentPosition
 --@return #Coordinate3D 
 function Animator:getCurrentPosition()
 	return self.CurrentPosition
 end
 
----@function [parent=#Animator] getAnimationTime
+--- @function [parent=#Animator] getAnimationTime
 --@return #int Remaining animation time.
 function Animator:getAnimationTime()
 	return getTickCount() - self.AnimationStartTime
 end
 
----@function [parent=#Animator] stopAnimating
+--- @function [parent=#Animator] stopAnimating
 --Sets bAnimating to false and internal logic will kill everything in the next onClientPreRender tick.
 function Animator:stopAnimating()
 	self.bAnimating = false
 end
 
----@function [parent=#Animator] interpolateOver
+--- @function [parent=#Animator] interpolateOver
 --@field [parent=#Animator] #table timeLinePaths 
 function Animator:interpolateOver(timeLinePaths)
 	--local timeLinePaths = self.GraphTimeLines[1]:getTimeLineElements()

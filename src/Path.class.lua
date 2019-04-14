@@ -45,7 +45,7 @@ function Path:setSelected(...)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Path.class:setSelected") end
 	---PERTTYFUNCTION---
-	self.bSelected = not self.bSelected
+	self.super:setSelected()
 	self:updateSelectedColor()
 end
 

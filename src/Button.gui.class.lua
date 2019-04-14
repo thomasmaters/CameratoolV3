@@ -31,12 +31,12 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
 	GlobalInterface:addButtonClickBind(self)
 end
 
----@function [parent=#Button] hover
+--- @function [parent=#Button] hover
 function Button:hover()
 	
 end
 
----@function [parent=#Button] clicked
+--- @function [parent=#Button] clicked
 function Button:clicked()
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Button.gui.class:clicked") end
@@ -48,7 +48,7 @@ function Button:clicked()
 	end
 end
 
----@function [parent=#Button] setPosition
+--- @function [parent=#Button] setPosition
 --@param #Coordinate2D aNewPosition 
 function Button:setPosition(aNewPosition)
 	self.super.GuiPosition = aNewPosition
@@ -56,7 +56,7 @@ function Button:setPosition(aNewPosition)
 	self.ButtonText:setPosition(aNewPosition)
 end
 
----@function [parent=#Button] setText
+--- @function [parent=#Button] setText
 --@param #string aNewText 
 function Button:setText(aNewText)
 	self.ButtonText:setText(aNewText)
@@ -64,4 +64,10 @@ end
 
 function Button:getPosition()
 	return self.super.GuiPosition
+end
+
+function Button:destructor()
+  self.ButtonRectangle:destructor()
+  self.ButtonText:destructor()
+  GlobalInterface:removeInterfaceElement(self)
 end

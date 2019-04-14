@@ -24,3 +24,7 @@ end
 function Line:getPosition()
 	return self.super.GuiPosition
 end
+
+function Line:destructor()
+  GlobalInterface:removeInterfaceElement(self)
+end

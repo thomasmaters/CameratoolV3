@@ -56,3 +56,7 @@ end
 function Text:getPosition()
 	return self.super.GuiPosition
 end
+
+function Text:destructor()
+  GlobalInterface:removeInterfaceElement(self)
+end
