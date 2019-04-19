@@ -36,7 +36,7 @@ function Slider:clicked()
 	
 	local function moveSliderSelector()		
 		if GlobalMouse:isMousePressed("mouse1") then
-			local previousSliderValue = self:getCurrentValue()		
+			local previousSliderValue = self:getValue()		
 			
 			local MousePosition = GlobalMouse:getPosition()
 			
@@ -48,7 +48,7 @@ function Slider:clicked()
 				self.SliderRectangle.super.GuiPosition.x = self.super.GuiPosition.x + self.Size.x - self.SliderRectangle.Size.x
 			end
 			
-			local currentSliderValue = self:getCurrentValue()
+			local currentSliderValue = self:getValue()
 			if(currentSliderValue ~= previousSliderValue)then --trigger an event when we moved the slider
 				triggerEvent("onSliderDrag",getRootElement(),self.ID,currentSliderValue)
 			end
@@ -59,7 +59,7 @@ function Slider:clicked()
 	addEventHandler("onClientRender",getRootElement(), moveSliderSelector)
 end
 
-function Slider:getCurrentValue()
+function Slider:getValue()
 	local totalSliderPixelSize = self.Size.x - self.SliderRectangle.Size.x
 	local totalValueSpan = math.abs(self.MaximalValue - self.MinimalValue)
 	local relativeSliderPosition = self.SliderRectangle.super.GuiPosition.x - self.super.GuiPosition.x
@@ -68,7 +68,7 @@ end
 
 function Slider:increaseSliderMaximalValue(aIncreaseValue)
 	self.MaximalValue = self.MaximalValue + aIncreaseValue
-	triggerEvent("onSliderDrag",getRootElement(),self.ID,self:getCurrentValue())
+	triggerEvent("onSliderDrag",getRootElement(),self.ID,self:getValue())
 end
 
 function Slider:draw()

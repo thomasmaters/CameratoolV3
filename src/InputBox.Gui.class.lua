@@ -2,7 +2,7 @@
 --@extends #Gui 
 InputBox = Gui:subclass("InputBox")
 
-function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, aSecondaryColor, aInputType, aCallback)
+function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, aSecondaryColor, aInputType)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("InputBox.Gui.class:init") end
 	---PERTTYFUNCTION---
@@ -13,11 +13,10 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
 	self.Size = aSize or Coordinate2D()
 	self.DefaultText = aDefaultText or ""
 	self.CurrentText = ""
-	self.ClickableAera = Button(Coordinate2D() + aPosition, aSize,self.CurrentText, aParent, 0, aPrimaryColor, aSecondaryColor, bind(self.setFocus,self))
-	self.InputText = Text(Coordinate2D() + aPosition, self.DefaultText, aParent, aSize, "default", 1.4, "left")
+	self.ClickableAera = Button(aPosition, aSize,self.CurrentText, aParent, 0, aPrimaryColor, aSecondaryColor, bind(self.setFocus,self))
+	self.InputText = Text(aPosition, self.DefaultText, aParent, aSize, "default", 1.4, "left")
 	self.CharacterLimit = 10
 	self.InputType = aInputType or GlobalEnums.InputBoxTypes.number
-	self.Callback = aCallback or nil
 	
 	self.LastTickBackspace = 0
 	
@@ -32,12 +31,13 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
 	GlobalInterface:addGuiElementToRenderStack(self)
 end
 
-function InputBox:getText()
+function InputBox:getValue()
 	return self.CurrentText or ""
 end
 
-function InputBox:setText(aValue)
-  self.InputText:setText(tostring(aValue)) 
+function InputBox:setValue(aValue)
+  self.InputText:setValue(tostring(aValue or self.CurrentText))
+  self.super:callUpdateHandlers()
 end
 
 function InputBox:removeFocus()
@@ -60,7 +60,7 @@ function InputBox:draw()
 		elseif string.len(self.CurrentText) > 0 and backspaceKeyState and self.LastTickBackspace - getTickCount() <= 0 then
 			if getKeyState("lctrl") then
 				self.CurrentText = ""
-				self:updateText()
+				self:setValue()
 			else
 				self:removeCharacter()
 			end
@@ -72,14 +72,7 @@ end
 
 function InputBox:removeCharacter()
 	self.CurrentText = string.sub(self.CurrentText, 1, -2)
-	self:updateText()
-end
-
-function InputBox:updateText()
-	self.InputText:setText(self.CurrentText)
-	if self.Callback ~= nil then
-		self.Callback(self.CurrentText)
-	end
+	self:setValue()
 end
 
 function InputBox:handleChar(character)
@@ -87,7 +80,7 @@ function InputBox:handleChar(character)
 		local newCurrentText = self.CurrentText.. "" ..character
 		if self:validateType(newCurrentText) then
 			self.CurrentText =  newCurrentText
-			self:updateText()
+			self:setValue()
 		end
 	end
 end
@@ -103,7 +96,7 @@ end
 function InputBox:enableDefaultText()
 	if not self.bFocus and string.len(self.CurrentText) == 0 then
 		self.bShowDefault = true
-		self.InputText:setText(self.DefaultText)
+		self.InputText:setValue(self.DefaultText)
 	end
 end
 
@@ -115,10 +108,10 @@ function InputBox:handleSpecialKey(button, state)
 			self:removeCharacter()
 		elseif button == "backspace" and string.len(self.CurrentText) == 0 then
 			self:enableDefaultText()
-			self:updateText()
+			self:setValue()
 		elseif button == "enter" then
 			self:enableDefaultText()
-			self:updateText()			
+			self:setValue()			
 		elseif button == "escape" then
 			self:removeFocus()
 			self:enableDefaultText()

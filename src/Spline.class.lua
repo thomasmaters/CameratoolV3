@@ -2,7 +2,9 @@
 Spline = newclass("Spline")
 
 function Spline:init(aTension)
+  ---@field [parent=#Spline] #number Tension Tension in catmull rom spline matrix.
 	self.Tension = aTension or 0.5
+	---@field [parent=#Spline] #table TensionMatrix Spline matrix.
 	self.TensionMatrix = matrix{	{-self.Tension		,2 - self.Tension	,self.Tension - 2		,self.Tension	},
 						{2 * self.Tension	,self.Tension - 3	,3 - 2 * self.Tension	,-self.Tension	},
 						{-self.Tension		,0				,self.Tension			,0			},

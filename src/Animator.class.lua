@@ -6,16 +6,16 @@ Animator = newclass("Animator")
 function Animator:init()
   --- @field [parent=#Animator] #Interpolate InterpolateInstance
 	self.InterpolateInstance = nil
-	--- @field [parent=#Animator] #bool bAnimating 
+	--- @field [parent=#Animator] #boolean bAnimating 
 	self.bAnimating = false
-	--- @field [parent=#Animator] #int AnimationStartTime
+	--- @field [parent=#Animator] #number AnimationStartTime
 	self.AnimationStartTime = 0
 	--- @field [parent=#Animator] #Coordinate3D CurrentPosition
 	self.CurrentPosition = {}
 end 
 
 --- @function [parent=#Animator] isAnimating
---@return #bool 
+--@return #boolean 
 function Animator:isAnimating()
 	return self.bAnimating
 end

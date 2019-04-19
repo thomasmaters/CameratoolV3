@@ -56,10 +56,10 @@ function Button:setPosition(aNewPosition)
 	self.ButtonText:setPosition(aNewPosition)
 end
 
---- @function [parent=#Button] setText
---@param #string aNewText 
-function Button:setText(aNewText)
-	self.ButtonText:setText(aNewText)
+--- @function [parent=#Button] setValue
+--@param #string aValue 
+function Button:setValue(aValue)
+	self.ButtonText:setValue(aValue)
 end
 
 function Button:getPosition()

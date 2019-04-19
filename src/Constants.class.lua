@@ -4,11 +4,11 @@
 Constants = newclass("Constants")
 
 function Constants:init(o)
-  --- @field [parent=#Constants] #bool ENABLE_PRETTY_FUNCTION
+  --- @field [parent=#Constants] #boolean ENABLE_PRETTY_FUNCTION
 	self.ENABLE_PRETTY_FUNCTION = true
-	--- @field [parent=#Constants] #int SCREEN_WIDTH
+	--- @field [parent=#Constants] #number SCREEN_WIDTH
 	self.SCREEN_WIDTH, 
-	--- @field [parent=#Constants] #int SCREEN_HEIGHT
+	--- @field [parent=#Constants] #number SCREEN_HEIGHT
 	self.SCREEN_HEIGHT = guiGetScreenSize() --Players screen size
 	
 	---------------------PATHCOLORS---------------------
