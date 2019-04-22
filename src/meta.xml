@@ -8,6 +8,7 @@
 	
 	<script src="matrix.lua" type="client" />
 	<script src="inheritance.lua" type="client" />
+	<script src="UpdateHandler.lua" type="client" />
 	<script src="Animator.class.lua" type="client" />
 	<script src="InWorldVisualization.class.lua" type="client" />
 	<script src="Spline.class.lua" type="client" />
@@ -26,6 +27,8 @@
 	<script src="Line.Gui.class.lua" type="client" />
 	<script src="Slider.Gui.class.lua" type="client" />
 	<script src="InputBox.Gui.class.lua" type="client" />
+	<script src="GuiCoordinate2D.lua" type="client" />
+	<script src="GuiCoordinate3D.lua" type="client" />
 	
 	<script src="Properties.class.lua" type="client" />
 	<script src="Interface.class.lua" type="client" />
