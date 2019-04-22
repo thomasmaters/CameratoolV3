@@ -5,27 +5,54 @@ function Properties:init()
 	---@field [parent=#Properties] #table selectedElements Table of selected TimeLineElements.
 	self.SelectedTimeLineElements = {}
 	
+	self.PropertyUiElementsSize = 0
 	self.PropertiesUiElements = {}
+	
+	self.ParentWindow = Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT),nil,2)
 end
 
 function Properties:onTimeLineElementSelect(aTimeLineElement)
   table.insert(self.SelectedTimeLineElements, #self.SelectedTimeLineElements + 1,aTimeLineElement)
-  self:validateMultiSelect()
+  self:generatePropertyFields(aTimeLineElement)
+  
+  --self:validateMultiSelect()
 end
 
-function Properties:generatePropertyFields()
+function Properties:generatePropertyFields(aTimeLineElement)
+  if(TimeLineElement:made(aTimeLineElement)) then
+    table.insert(self.PropertiesUiElements,InputBox(self:getPropertyGuiPosition(30), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,30), self.ParentWindow))
+    aTimeLineElement:addUpdateHandler(function() self.PropertiesUiElements[1]:setValue(aTimeLineElement.StartTime, false) end)
+    self.PropertiesUiElements[#self.PropertiesUiElements]:addUpdateHandler(function() aTimeLineElement.StartTime = self.PropertiesUiElements[1]:getValue() end)
+    self.PropertiesUiElements[#self.PropertiesUiElements]:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
+    
+    table.insert(self.PropertiesUiElements,InputBox(self:getPropertyGuiPosition(30), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,30), self.ParentWindow))
+    aTimeLineElement:addUpdateHandler(function() self.PropertiesUiElements[2]:setValue(aTimeLineElement.Duration, false) end)
+    self.PropertiesUiElements[#self.PropertiesUiElements]:addUpdateHandler(function() aTimeLineElement:setDuration(self.PropertiesUiElements[2]:getValue()) end)
+    self.PropertiesUiElements[#self.PropertiesUiElements]:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
+  end
+  if(PathCamPosition:made(aTimeLineElement) ~= nil) then
+    --TODO Do we need this explicit cast?
+    aTimeLineElement = PathCamPosition:cast(aTimeLineElement)
+    --Start point edit
+    table.insert(self.PropertiesUiElements, GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60, aTimeLineElement.StartPosition), self.ParentWindow,aTimeLineElement.StartPosition))
+    self.PropertiesUiElements[#self.PropertiesUiElements]:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
+    
+    --End point edit
+    table.insert(self.PropertiesUiElements, GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60, aTimeLineElement.EndPosition), self.ParentWindow,aTimeLineElement.EndPosition))
+    self.PropertiesUiElements[#self.PropertiesUiElements]:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
+  end
 end
 
 function Properties:onTimeLineElementDeselect(aTimeLineElement)
   for key, val in ipairs(self.SelectedTimeLineElements) do
   	if(val == aTimeLineElement) then
       table.remove(self.SelectedTimeLineElements, key)
-      local removedElement = table.remove(self.propertieUI[1])
-      removedElement:destructor()
+      self:clear()
       break
   	end
   end
-
+  aTimeLineElement:clearUpdateHandlers()
+  self:clear()
   outputChatBox("deselected a timelineelement" .. #self.SelectedTimeLineElements)
 end
 
@@ -49,41 +76,27 @@ function Properties:validateMultiSelect()
   outputChatBox("Amount of TimeLineElements: " .. isTimeLineElement)
   outputChatBox("Amount of Paths: " .. isPath)
   outputChatBox("Amount of PathCamPositions: " .. isPathCamPosition)
-  if(isTimeLineElement == #self.SelectedTimeLineElements) then
-    self:addNumber(self.SelectedTimeLineElements[1].StartTime, 0)
-  end
 end
 
 function Properties:clear()
-	for k,v in ipairs(self.propertieUI) do
-		for ak,av in ipairs(v) do
+	for k,v in ipairs(self.PropertiesUiElements) do
+		--[[for ak,av in ipairs(v) do
 			av:destructor()
 			av = nil
-		end
+		end]]
+		v:destructor()
 		v = nil
+		self.PropertiesUiElements[k] = nil
 	end
+	self:resetPropertyUiElementHeight()
 end
 
-function Properties:addCoordinate3Dbox(aElement, aRow)
-	local coordinate = aElement.get()
-	local inputboxSize = self.GuiElement.Size / 4
-	
-	self.propertieUI[aRow + 1] = {}
-	table.insert(self.propertieUI[aRow + 1],InputBox(Coordinate2D(0,0), 				Coordinate2D(inputboxSize,100), self.GuiElement, tostring(coordinate.x), nil, nil, GlobalEnums.InputBoxTypes.number))
-	table.insert(self.propertieUI[aRow + 1],InputBox(Coordinate2D(inputboxSize,0), 		Coordinate2D(inputboxSize,100), self.GuiElement, tostring(coordinate.y), nil, nil, GlobalEnums.InputBoxTypes.number))
-	table.insert(self.propertieUI[aRow + 1],InputBox(Coordinate2D(inputboxSize * 2,0), 	Coordinate2D(inputboxSize,100), self.GuiElement, tostring(coordinate.z), nil, nil, GlobalEnums.InputBoxTypes.number))
+function Properties:resetPropertyUiElementHeight()
+  self.PropertyUiElementsSize = 0
 end
 
-function Properties:addCoordinate2Dbox(aElement, aRow)
-	local coordinate = aElement.get()
-	local inputboxSize = self.GuiElement.Size.x / 3
-	
-	self.propertieUI[aRow + 1] = {}
-	table.insert(self.propertieUI[aRow + 1], InputBox(Coordinate2D(0,0), 	Coordinate2D(inputboxSize,100), self.GuiElement, tostring(coordinate.x), nil, nil, GlobalEnums.InputBoxTypes.number))
-	table.insert(self.propertieUI[aRow + 1], InputBox(Coordinate2D(self.GuiElement.Size.x / 2,0), Coordinate2D(inputboxSize,100), self.GuiElement, tostring(coordinate.y), nil, nil, GlobalEnums.InputBoxTypes.number))
-end
-
-function Properties:addNumber(aElement, aRow)
-	self.propertieUI[1] = {}
-	table.insert(self.propertieUI[1], InputBox(Coordinate2D(500,500), 	Coordinate2D(500,30), self.GuiElement, aElement, nil, nil, GlobalEnums.InputBoxTypes.number))
+function Properties:getPropertyGuiPosition(addedHeight)
+  local UiCoordinate = Coordinate2D(0,self.PropertyUiElementsSize)
+  self.PropertyUiElementsSize = self.PropertyUiElementsSize + addedHeight
+  return UiCoordinate
 end

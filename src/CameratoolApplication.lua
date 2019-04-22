@@ -133,7 +133,5 @@ addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource(
 		---PERTTYFUNCTION--- 
 		local InternalGraph = Graph(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50))
 		GlobalInterface:createInterface()
-		InputBox(Coordinate2D(50,50), Coordinate2D(200,40), nil, "Inupt", GlobalConstants.CAM_TARGET_PATH_COLOR_SELECTED,GlobalConstants.CAM_TARGET_PATH_COLOR_SELECTED)
-		--InputBox(Coordinate2D(50,50), 	Coordinate2D(200,40), nil, "Drag me4",GlobalConstants.DYNAMIC_EFFECT_COLOR,GlobalConstants.DYNAMIC_EFFECT_COLOR)
 	end
 )
