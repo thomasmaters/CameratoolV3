@@ -26,7 +26,7 @@ function Path:init(aStartTime, aDuration, aAnimationType, bIsSelected, bIsPathDr
   --- @field [parent=#Path] #Rectangle PathRectangle	
 	self.PathRectangle = Rectangle(Coordinate2D(0,0),Coordinate2D(100,30),nil,nil,GlobalConstants.CAM_PATH_COLOR,nil,false)
 	
-	self.super:init(nil, aStartTime, aDuration or 3000, bIsSelected)
+	self.super:init(aStartTime, aDuration or 3000, bIsSelected)
 end
 
 function Path:isConnectedToPath()

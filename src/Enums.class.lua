@@ -45,7 +45,8 @@ function Enums:init()
   self.InputBoxTypes =
   {
   none = "none",
-  number = "number"
+  number = "number",
+  signedNumber = "signedNumber"
   }
 end
 
