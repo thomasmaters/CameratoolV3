@@ -8,26 +8,23 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Button.gui.class:init") end
 	---PERTTYFUNCTION---
-
-	if aParent then
-		aPosition.x = aParent.super.GuiPosition.x + aPosition.x + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aPosition.y = aParent.super.GuiPosition.y + aPosition.y + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aSize.x = aSize.x - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aSize.y = aSize.y - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-	end
-	
-	--- @field [parent=#Button] #Coordinate3D Size
-	self.Size = aSize or Coordinate2D()
-	--- @field [parent=#Button] #function ClickHandleFunction
-	self.ClickHandleFunction = aOnClickHandleFunction or nil
-
-  --- @field [parent=#Button] #Rectangle ButtonRectangle
-	self.ButtonRectangle = Rectangle(aPosition, aSize, nil, aBorderSize, aPrimaryColor, aSecondaryColor)
-	--- @field [parent=#Button] #Text ButtonText
-	self.ButtonText = Text(aPosition, aButtonText, nil, aSize, "default", 1.2)
 	
 	self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
 	
+	--- @field [parent=#Button] #Coordinate3D Size
+	self.Size = Coordinate2D(aSize)
+  if aParent then
+    self.GuiPosition.x = aParent.GuiPosition.x + self.GuiPosition.x + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+    self.GuiPosition.y = aParent.GuiPosition.y + self.GuiPosition.y + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+    self.Size.x = self.Size.x - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+    self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+  end
+	--- @field [parent=#Button] #function ClickHandleFunction
+	self.ClickHandleFunction = aOnClickHandleFunction or nil
+  --- @field [parent=#Button] #Rectangle ButtonRectangle
+	self.ButtonRectangle = Rectangle(self.GuiPosition, self.Size, nil, aBorderSize, aPrimaryColor, aSecondaryColor)
+	--- @field [parent=#Button] #Text ButtonText
+	self.ButtonText = Text(self.GuiPosition, aButtonText, nil, self.Size, "default", 1.2)
 	GlobalInterface:addButtonClickBind(self)
 end
 
@@ -67,6 +64,7 @@ function Button:getPosition()
 end
 
 function Button:destructor()
+  self.super:destructor()
   self.ButtonRectangle:destructor()
   self.ButtonText:destructor()
   GlobalInterface:removeInterfaceElement(self)

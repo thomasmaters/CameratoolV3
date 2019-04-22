@@ -93,8 +93,7 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
 		if (selectedTimeLineElement.StartTime + selectedTimeLineElement.Duration - timeIncreaseRate > self.ParentGraph.GraphTotalTime + self.ParentGraph.GraphVisableDuration) then --does or new size extent the maximum value of the graph?
 			self.ParentGraph:increaseGraphTotalTime(GlobalConstants.BASE_SCROLL_TIME_INCREASE * GlobalConstants.GRAPH_TOTAL_TIME_INCREASE_MULTIPLIER) --Increase it by 10(default) seconds 
 		end
-		
-		selectedTimeLineElement.Duration = selectedTimeLineElement.Duration - timeIncreaseRate	--Increase timelineelements duration				
+		selectedTimeLineElement:setDuration(selectedTimeLineElement.Duration - timeIncreaseRate)	
 	end
 	
 	self:resizeTimeLineElement(selectedTimeLineElement)	
@@ -221,7 +220,8 @@ function GraphTimeLine:clicked()
 	local HoveringOverTime = self.ParentGraph:getCurrentTimeFromMousePosition()
 	local TimeLineElementKey = self:getTimeLineElementFromTime(HoveringOverTime)
 	if TimeLineElementKey ~= nil then
-		self.TimeLineElements[TimeLineElementKey]:setSelected(true)
+		self.TimeLineElements[TimeLineElementKey]:setSelected()
+		self.TimeLineElements[TimeLineElementKey]:addUpdateHandler(function() self:updateGraphTimeLineElements() end)
 	end
 end
 
@@ -336,6 +336,13 @@ end
 function GraphTimeLine:addGraphTimeLineElement(aTimeLineElement)
 	table.insert(self.TimeLineElements,aTimeLineElement)
 	outputChatBox("new element added, new element count "..#self.TimeLineElements.. " at : "..aTimeLineElement.StartTime)
+end
+
+function GraphTimeLine:updateGraphTimeLineElements()
+  for k,v in ipairs(self.TimeLineElements) do
+    v:setPosition(Coordinate2D(self.ParentGraph:getPositionOnGraphFromTime(v.StartTime) - self.ParentGraph.Position.x,v:getPosition().y))
+    self:resizeTimeLineElement(v)
+  end 
 end
 
 function GraphTimeLine:deleteSelectedTimeLineElements()

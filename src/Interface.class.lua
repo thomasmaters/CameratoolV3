@@ -36,7 +36,7 @@ function Interface:createInterface()
 	
 	local timeLineWindowMain = 			Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50),nil,2)
 	
-	local rightWindowMain = 				Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT),nil,2)
+	--local rightWindowMain = 				Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT),nil,2)
 end
 
 --- @function [parent=#Interface] showInterface
@@ -97,13 +97,11 @@ function Interface:removeInterfaceElement(aGuiElement)
 	if not aGuiElement then return end
 	for k, v in ipairs(self.InterfaceRenderStack) do
 		if v == aGuiElement then
-			outputChatBox("something removed render")
 			table.remove(self.InterfaceRenderStack,k)
 		end
 	end		
 	for k, v in ipairs(self.InterfaceClickBindendElements) do
 		if v == aGuiElement then
-		outputChatBox("something removed button")
 			table.remove(self.InterfaceClickBindendElements,k)
 		end
 	end	

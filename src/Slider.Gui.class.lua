@@ -92,6 +92,7 @@ function Slider:setPosition(aNewPosition)
 end
 
 function Slider:destructor()
+  self.super:destructor()
   self.SelectableRectangle:destructor()
   self.VisiualRectangle:destructor()
   self.SliderRectangle:destructor()

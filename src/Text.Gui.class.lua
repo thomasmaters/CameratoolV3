@@ -18,15 +18,10 @@ function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizon
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Text.Gui.class:init") end
 	---PERTTYFUNCTION---
-	if aParent then
-		aPosition.x = aParent.super.GuiPosition.x + aPosition.x + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aPosition.y = aParent.super.GuiPosition.y + aPosition.y + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aSize.x = aSize.x - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aSize.y = aSize.y - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-	end
-	
-	---@field [parent=#Text] #Coordinate2D Size
-	self.Size = aSize or Coordinate2D()
+
+  self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
+	 ---@field [parent=#Text] #Coordinate2D Size
+  self.Size = Coordinate2D(aSize)
 	---@field [parent=#Text] #string Text
 	self.Text = aText or ""
 	---@field [parent=#Text] #string Font
@@ -40,7 +35,13 @@ function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizon
 	---@field [parent=#Text] #boolean bClipText
 	self.bClipText = abClipText or true
 	
-	self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
+	 if aParent then
+    self.GuiPosition.x = aParent.super.GuiPosition.x + self.GuiPosition.x + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+    self.GuiPosition.y = aParent.super.GuiPosition.y + self.GuiPosition.y + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+    self.Size.x = self.Size.x - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+    self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+  end
+	
 	GlobalInterface:addGuiElementToRenderStack(self)
 end
 
@@ -60,12 +61,16 @@ end
 
 function Text:getTextWidth(aText)
 	if not aText then aText = self.Text end
-	return dxGetTextWidth(self.Text,self.TextScale,self.Font)
+	return dxGetTextWidth(aText,self.TextScale,self.Font)
 end
 
 function Text:setValue(aText)
 	if aText == nil then return end 
 	self.Text = tostring(aText)
+end
+
+function Text:getValue()
+  return self.Text or ""
 end
 
 function Text:setPosition(aNewPosition)
@@ -77,5 +82,6 @@ function Text:getPosition()
 end
 
 function Text:destructor()
+  self.super:destructor()
   GlobalInterface:removeInterfaceElement(self)
 end
