@@ -11,25 +11,29 @@ function GuiCoordinate3D:init(aPosition, aSize, aParent, aCoordinate3D, addToRen
   local inputSizeY = math.floor(self.Size.y / 3 * 2)
   local inputStartY = math.floor(self.Size.y / 3)
   
+  if(aParent) then
+    aPosition = aParent.GuiPosition + aPosition
+  end
+  
   ---@field [parent=#GuiCoordinate3D] #Text InfoText Small text description of what the user can change.
-  self.InfoText = Text(aPosition,"Position",aParent,Coordinate2D(self.Size.x, 20))
+  self.InfoText = Text(Coordinate2D(),"Position",self,Coordinate2D(self.Size.x, 20))
   
   ---@field [parent=#GuiCoordinate3D] #InputBox InputX InputBox for x coordinate.
-  self.InputX = InputBox(aPosition + Coordinate2D(0,inputStartY), 
+  self.InputX = InputBox(Coordinate2D(0,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.floor(inputSizeX) or math.ceil(inputSizeX), inputSizeY), 
-    aParent,
+    self,
     "x", nil, nil, nil, addToRenderStackFlag
   )
   ---@field [parent=#GuiCoordinate3D] #InputBox InputY InputBox for y coordinate.
-  self.InputY = InputBox(aPosition + Coordinate2D(inputSizeX + 2,inputStartY), 
+  self.InputY = InputBox(Coordinate2D(inputSizeX + 2,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.ceil(inputSizeX) or math.floor(inputSizeX), inputSizeY), 
-    aParent,
+    self,
     "y", nil, nil, nil, addToRenderStackFlag
   )
   ---@field [parent=#GuiCoordinate3D] #InputBox InputZ InputBox for z coordinate.
-  self.InputZ = InputBox(aPosition + Coordinate2D(2*inputSizeX + 4,inputStartY), 
+  self.InputZ = InputBox(Coordinate2D(2*inputSizeX + 4,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.floor(inputSizeX) or math.ceil(inputSizeX), inputSizeY), 
-    aParent,
+    self,
     "z", nil, nil, nil, addToRenderStackFlag
   )
 

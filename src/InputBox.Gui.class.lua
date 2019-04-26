@@ -7,6 +7,10 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("InputBox.Gui.class:init") end
   ---PERTTYFUNCTION---
   if not aPosition then aPosition = Coordinate2D() end
+  
+  if(aParent) then
+    aPosition = aPosition + aParent.GuiPosition
+  end
     
   self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
   
@@ -16,13 +20,15 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   self.DefaultText = aDefaultText or "Unknown"
   ---@field [parent=#InputBox] #string CurrentText Texttual value of the inputbox.
   self.CurrentText = ""
+  
   --It needs '+ Coordinate2D()' for some weird reason, TODO fix it
+  --TODO if self cannot be giving as a parent in the constructor, try self.super?
   ---@field [parent=#InputBox] #Button ClickableArea Button thats enables input on the inputbox.
-  self.ClickableAera = Button(aPosition + Coordinate2D(), self.Size, self.CurrentText, aParent, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
+  self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
   self.ClickableAera:addUpdateHandler(function() self:setFocus() end)
   ---@field [parent=#InputBox] #Text InputText Visualizer for the inputted text.
-  self.InputText = Text(aPosition + Coordinate2D(), self.DefaultText, aParent, self.Size, "default", 1.4, "left", nil, nil, nil, addToRenderStackFlag)
-  ---@field [parent=#InputBox] #number CharacterLimit Amount of characters this input box will accespt.
+  self.InputText = Text(Coordinate2D(), self.DefaultText, self, self.Size, "default", 1.4, "left", nil, nil, nil, addToRenderStackFlag)
+  ---@field [parent=#InputBox] #number CharacterLimit Amount of characters this input box will accept.
   self.CharacterLimit = 10
   ---@field [parent=#InputBox] #Enums InputType Type of inputbox.
   self.InputType = aInputType or GlobalEnums.InputBoxTypes.signedNumber
@@ -184,7 +190,7 @@ function InputBox:setCursorBasedOnClickLocation()
       self.CursorPosition = 0
       return
     end
-    local distance = 9999
+    local distance = GlobalConstants.SCREEN_WIDTH
     for stringIndex=1, self.CurrentText:len() do
       local tempString = self.CurrentText:sub(1,stringIndex)
       
