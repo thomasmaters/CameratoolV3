@@ -2,7 +2,7 @@
 ---@extends #Gui
 GuiCoordinate3D = Gui:subclass("GuiCoordinate3D")
 
-function GuiCoordinate3D:init(aPosition, aSize, aParent, aCoordinate3D)
+function GuiCoordinate3D:init(aPosition, aSize, aParent, aCoordinate3D, addToRenderStackFlag)
   self.super:init(aPosition, aParent, nil, nil)
   ---@field [parent=#GuiCoordinate3D] #Coordinate2D Size Size of the gui element.
   self.Size = aSize or Coordinate2D()
@@ -18,20 +18,19 @@ function GuiCoordinate3D:init(aPosition, aSize, aParent, aCoordinate3D)
   self.InputX = InputBox(aPosition + Coordinate2D(0,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.floor(inputSizeX) or math.ceil(inputSizeX), inputSizeY), 
     aParent,
-    "x"
+    "x", nil, nil, nil, addToRenderStackFlag
   )
-  
   ---@field [parent=#GuiCoordinate3D] #InputBox InputY InputBox for y coordinate.
   self.InputY = InputBox(aPosition + Coordinate2D(inputSizeX + 2,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.ceil(inputSizeX) or math.floor(inputSizeX), inputSizeY), 
     aParent,
-    "y"
+    "y", nil, nil, nil, addToRenderStackFlag
   )
   ---@field [parent=#GuiCoordinate3D] #InputBox InputZ InputBox for z coordinate.
   self.InputZ = InputBox(aPosition + Coordinate2D(2*inputSizeX + 4,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.floor(inputSizeX) or math.ceil(inputSizeX), inputSizeY), 
     aParent,
-    "z"
+    "z", nil, nil, nil, addToRenderStackFlag
   )
 
   if not (aCoordinate3D == nil) then

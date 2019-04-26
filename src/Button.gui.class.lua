@@ -4,7 +4,7 @@
 --- @return #Button 
 Button = Gui:subclass("Button")
 
-function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrimaryColor, aSecondaryColor, aOnClickHandleFunction)
+function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrimaryColor, aSecondaryColor, addToRenderStackFlag)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Button.gui.class:init") end
 	---PERTTYFUNCTION---
@@ -19,8 +19,6 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
     self.Size.x = self.Size.x - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
     self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
   end
-	--- @field [parent=#Button] #function ClickHandleFunction
-	self.ClickHandleFunction = aOnClickHandleFunction or nil
   --- @field [parent=#Button] #Rectangle ButtonRectangle
 	self.ButtonRectangle = Rectangle(self.GuiPosition, self.Size, nil, aBorderSize, aPrimaryColor, aSecondaryColor)
 	--- @field [parent=#Button] #Text ButtonText
@@ -39,10 +37,7 @@ function Button:clicked()
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Button.gui.class:clicked") end
 	---PERTTYFUNCTION---
 	
-	if not self.ClickHandleFunction then return end
-	if(type(self.ClickHandleFunction) == "function") then
-		self.ClickHandleFunction(self)
-	end
+  self:callUpdateHandlers()
 end
 
 --- @function [parent=#Button] setPosition

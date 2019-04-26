@@ -2,7 +2,7 @@
 ---@extends #Gui
 GuiCoordinate2D = Gui:subclass("GuiCoordinate2D")
 
-function GuiCoordinate2D:init(aPosition, aSize, aParent)
+function GuiCoordinate2D:init(aPosition, aSize, aParent, addToRenderStackFlag)
   self.super:init(aPosition, aParent, nil, nil)
   ---@field [parent=#GuiCoordinate3D] #Coordinate2D Size Size of the gui element.
   self.Size = aSize or Coordinate2D()
@@ -18,14 +18,14 @@ function GuiCoordinate2D:init(aPosition, aSize, aParent)
   self.InputX = InputBox(aPosition + Coordinate2D(0,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.floor(inputSizeX) or math.ceil(inputSizeX), inputSizeY), 
     aParent,
-    "x"
+    "x", nil, nil, nil, addToRenderStackFlag
   )
   
   ---@field [parent=#GuiCoordinate2D] #InputBox InputY InputBox for y coordinate.
   self.InputY = InputBox(aPosition + Coordinate2D(inputSizeX + 2,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.ceil(inputSizeX) or math.floor(inputSizeX), inputSizeY), 
     aParent,
-    "y"
+    "y", nil, nil, nil, addToRenderStackFlag
   )
   
   self.InputX:addUpdateHandler(self:callUpdateHandler())

@@ -2,7 +2,7 @@
 --@extends #Gui 
 Slider = Gui:subclass("Slider")
 
-function Slider:init(aPosition, aSize, aSelectorSize, aMinimalValue, aMaximalValue, aParent, aPrimaryColor, aSecondaryColor)
+function Slider:init(aPosition, aSize, aSelectorSize, aMinimalValue, aMaximalValue, aParent, aPrimaryColor, aSecondaryColor, addToRenderStackFlag)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Slider.gui.class:init") end
 	---PERTTYFUNCTION---
@@ -28,7 +28,9 @@ function Slider:init(aPosition, aSize, aSelectorSize, aMinimalValue, aMaximalVal
 	self.SelectorSize = aSelectorSize or Coordinate2D()
 	self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
 	
-	GlobalInterface:addGuiElementToRenderStack(self)
+	if(addToRenderStackFlag == nil or addToRenderStackFlag == true) then
+	  GlobalInterface:addGuiElementToRenderStack(self)
+	end
 	GlobalInterface:addButtonClickBind(self)
 end
 

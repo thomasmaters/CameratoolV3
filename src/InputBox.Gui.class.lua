@@ -2,7 +2,7 @@
 --@extends #Gui 
 InputBox = Gui:subclass("InputBox")
 
-function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, aSecondaryColor, aInputType)
+function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, aSecondaryColor, aInputType, addToRenderStackFlag)
   ---PERTTYFUNCTION---
   if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("InputBox.Gui.class:init") end
   ---PERTTYFUNCTION---
@@ -18,9 +18,10 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   self.CurrentText = ""
   --It needs '+ Coordinate2D()' for some weird reason, TODO fix it
   ---@field [parent=#InputBox] #Button ClickableArea Button thats enables input on the inputbox.
-  self.ClickableAera = Button(aPosition + Coordinate2D(), self.Size, self.CurrentText, aParent, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, bind(self.setFocus,self))
+  self.ClickableAera = Button(aPosition + Coordinate2D(), self.Size, self.CurrentText, aParent, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
+  self.ClickableAera:addUpdateHandler(function() self:setFocus() end)
   ---@field [parent=#InputBox] #Text InputText Visualizer for the inputted text.
-  self.InputText = Text(aPosition + Coordinate2D(), self.DefaultText, aParent, self.Size, "default", 1.4, "left")
+  self.InputText = Text(aPosition + Coordinate2D(), self.DefaultText, aParent, self.Size, "default", 1.4, "left", nil, nil, nil, addToRenderStackFlag)
   ---@field [parent=#InputBox] #number CharacterLimit Amount of characters this input box will accespt.
   self.CharacterLimit = 10
   ---@field [parent=#InputBox] #Enums InputType Type of inputbox.
@@ -41,7 +42,9 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   addEventHandler( "onClientKey", getRootElement(), function(button, state) self:handleSpecialKey(button,state) end)
   addEventHandler("onClientCharacter", getRootElement(), function(...) self:handleChar(...) end)
   
-  GlobalInterface:addGuiElementToRenderStack(self)
+  if(addToRenderStackFlag == nil or addToRenderStackFlag == true) then
+    GlobalInterface:addGuiElementToRenderStack(self)
+  end
 end
 
 function InputBox:getValue()

@@ -14,7 +14,7 @@ Text = Gui:subclass("Text")
 --@param #string aPrimaryColor description
 --@param #string aSecondaryColor description
 --@param #boolean aTextClipping description
-function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizontalTextAlgin, aVerticalTextAlgin, aPrimaryColor, aSecondaryColor, aTextClipping)
+function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizontalTextAlgin, aVerticalTextAlgin, aPrimaryColor, aSecondaryColor, abClipText, addToRenderStackFlag)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Text.Gui.class:init") end
 	---PERTTYFUNCTION---
@@ -42,7 +42,9 @@ function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizon
     self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
   end
 	
-	GlobalInterface:addGuiElementToRenderStack(self)
+	if(addToRenderStackFlag == nil or addToRenderStackFlag == true) then
+	  GlobalInterface:addGuiElementToRenderStack(self)
+  end
 end
 
 function Text:draw()
