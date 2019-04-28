@@ -8,7 +8,7 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   ---PERTTYFUNCTION---
   if not aPosition then aPosition = Coordinate2D() end
   
-  if(aParent) then
+  if aParent then
     aPosition = aPosition + aParent.GuiPosition
   end
     
@@ -24,7 +24,7 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   --It needs '+ Coordinate2D()' for some weird reason, TODO fix it
   --TODO if self cannot be giving as a parent in the constructor, try self.super?
   ---@field [parent=#InputBox] #Button ClickableArea Button thats enables input on the inputbox.
-  self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
+  self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self.super, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
   self.ClickableAera:addUpdateHandler(function() self:setFocus() end)
   ---@field [parent=#InputBox] #Text InputText Visualizer for the inputted text.
   self.InputText = Text(Coordinate2D(), self.DefaultText, self, self.Size, "default", 1.4, "left", nil, nil, nil, addToRenderStackFlag)

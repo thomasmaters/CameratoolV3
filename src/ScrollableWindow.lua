@@ -3,7 +3,7 @@
 ScrollableWindow = Gui:subclass("ScrollableWindow")
 
 function ScrollableWindow:init(aPosition, aSize, aParent, aTotalSize)
-  assert(aSize.x != aTotalSize.x, "Error when creating a ScrollableWindow, sidewards scroll is not supported.")
+  assert(aSize.x ~= aTotalSize.x, "Error when creating a ScrollableWindow, sidewards scroll is not supported.")
   if(aParent) then
     aPosition = aPosition + aParent.GuiPosition
   end

@@ -14,10 +14,11 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
 	--- @field [parent=#Button] #Coordinate3D Size
 	self.Size = Coordinate2D(aSize)
   if aParent then
-    self.GuiPosition.x = aParent.GuiPosition.x + self.GuiPosition.x + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-    self.GuiPosition.y = aParent.GuiPosition.y + self.GuiPosition.y + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-    self.Size.x = self.Size.x - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-    self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+    outputChatBox(tostring(aParent.GuiPosition) .." ".. tostring(self.GuiPosition) .." ".. tostring(aParent.RectangleBorderSize) .." ".. tostring(GlobalConstants.RECTANGLE_BORDER_SIZE))
+    self.GuiPosition.x = aParent.GuiPosition.x + self.GuiPosition.x + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.GuiPosition.y = aParent.GuiPosition.y + self.GuiPosition.y + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.Size.x = self.Size.x - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
   end
   --- @field [parent=#Button] #Rectangle ButtonRectangle
 	self.ButtonRectangle = Rectangle(self.GuiPosition, self.Size, nil, aBorderSize, aPrimaryColor, aSecondaryColor)

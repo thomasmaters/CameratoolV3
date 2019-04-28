@@ -29,10 +29,15 @@ function Interface:createInterface()
 	local leftWindowTextEffStatic = 		Text(Coordinate2D(0,80), "Effect static", 	leftWindowMain, Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "default", 1.4, "left")
 	local leftWindowTextEffDynamic = 		Text(Coordinate2D(0,120), "Effect dynamic", leftWindowMain, Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "default", 1.4, "left")
 
-	local leftWindowButtonCamPos = 		Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,0), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me1", leftWindowMain,0,GlobalConstants.CAM_PATH_COLOR,nil, bind(GlobalInterface.onDragAbleButtonClick,self))
-	local leftWindowButtonCamLook = 		Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me2", leftWindowMain,0,GlobalConstants.CAM_TARGET_PATH_COLOR,nil, bind(GlobalInterface.onDragAbleButtonClick,self))
-	local leftWindowButtonEffStatic = 	Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,80), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me3", leftWindowMain,0,GlobalConstants.STATIC_EFFECT_COLOR,nil, bind(GlobalInterface.onDragAbleButtonClick,self))
-	local leftWindowButtonEffDynamic = 	Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,120), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me4", leftWindowMain,0,GlobalConstants.DYNAMIC_EFFECT_COLOR,nil, bind(GlobalInterface.onDragAbleButtonClick,self))
+	local leftWindowButtonCamPos = 		Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,0), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me1", leftWindowMain,0,GlobalConstants.CAM_PATH_COLOR,nil)
+	local leftWindowButtonCamLook = 		Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me2", leftWindowMain,0,GlobalConstants.CAM_TARGET_PATH_COLOR,nil)
+	local leftWindowButtonEffStatic = 	Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,80), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me3", leftWindowMain,0,GlobalConstants.STATIC_EFFECT_COLOR,nil)
+	local leftWindowButtonEffDynamic = 	Button(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,120), 	Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH/2,40), "Drag me4", leftWindowMain,0,GlobalConstants.DYNAMIC_EFFECT_COLOR,nil)
+	
+	leftWindowButtonCamPos:addUpdateHandler(function() GlobalInterface:onDragAbleButtonClick(leftWindowButtonCamPos) end)
+	leftWindowButtonCamLook:addUpdateHandler(function() GlobalInterface:onDragAbleButtonClick(leftWindowButtonCamLook) end)
+	leftWindowButtonEffStatic:addUpdateHandler(function() GlobalInterface:onDragAbleButtonClick(leftWindowButtonEffStatic) end)
+	leftWindowButtonEffDynamic:addUpdateHandler(function() GlobalInterface:onDragAbleButtonClick(leftWindowButtonEffDynamic) end)
 	
 	local timeLineWindowMain = 			Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50),nil,2)
 	

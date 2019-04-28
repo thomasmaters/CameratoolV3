@@ -8,10 +8,10 @@ function Slider:init(aPosition, aSize, aSelectorSize, aMinimalValue, aMaximalVal
 	---PERTTYFUNCTION---
 
 	if aParent then
-		aPosition.x = aParent.super.GuiPosition.x + aPosition.x + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aPosition.y = aParent.super.GuiPosition.y + aPosition.y + 2 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aSize.x = aSize.x - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
-		aSize.y = aSize.y - 4 * ( aParent.RectangleBorderSize or Constants.RECTANGLE_BORDER_SIZE )
+		aPosition.x = aParent.super.GuiPosition.x + aPosition.x + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+		aPosition.y = aParent.super.GuiPosition.y + aPosition.y + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+		aSize.x = aSize.x - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+		aSize.y = aSize.y - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
 	end
 	
 	local SliderRectanglePos = aPosition + Coordinate2D(0,aSize.y / 2) + Coordinate2D(0,-aSelectorSize.y / 2)
