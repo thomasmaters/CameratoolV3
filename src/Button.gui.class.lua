@@ -21,10 +21,15 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
     self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
   end
   --- @field [parent=#Button] #Rectangle ButtonRectangle
-	self.ButtonRectangle = Rectangle(self.GuiPosition, self.Size, nil, aBorderSize, aPrimaryColor, aSecondaryColor)
+	self.ButtonRectangle = Rectangle(self.GuiPosition, self.Size, nil, aBorderSize, aPrimaryColor, aSecondaryColor, addToRenderStackFlag)
 	--- @field [parent=#Button] #Text ButtonText
-	self.ButtonText = Text(self.GuiPosition, aButtonText, nil, self.Size, "default", 1.2)
+	self.ButtonText = Text(self.GuiPosition, aButtonText, nil, self.Size, "default", 1.2, nil, nil, nil, nil, nil, addToRenderStackFlag)
 	GlobalInterface:addButtonClickBind(self)
+end
+
+function Button:draw()
+  self.ButtonRectangle:draw()
+  self.ButtonText:draw()
 end
 
 --- @function [parent=#Button] hover

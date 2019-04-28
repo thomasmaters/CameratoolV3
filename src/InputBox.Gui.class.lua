@@ -24,10 +24,10 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   --It needs '+ Coordinate2D()' for some weird reason, TODO fix it
   --TODO if self cannot be giving as a parent in the constructor, try self.super?
   ---@field [parent=#InputBox] #Button ClickableArea Button thats enables input on the inputbox.
-  self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self.super, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
+  self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
   self.ClickableAera:addUpdateHandler(function() self:setFocus() end)
   ---@field [parent=#InputBox] #Text InputText Visualizer for the inputted text.
-  self.InputText = Text(Coordinate2D(), self.DefaultText, self, self.Size, "default", 1.4, "left", nil, nil, nil, addToRenderStackFlag)
+  self.InputText = Text(Coordinate2D(), self.DefaultText, self, self.Size, "default", 1.4, "left", nil, nil, nil, nil,addToRenderStackFlag)
   ---@field [parent=#InputBox] #number CharacterLimit Amount of characters this input box will accept.
   self.CharacterLimit = 10
   ---@field [parent=#InputBox] #Enums InputType Type of inputbox.
@@ -49,6 +49,7 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   addEventHandler("onClientCharacter", getRootElement(), function(...) self:handleChar(...) end)
   
   if(addToRenderStackFlag == nil or addToRenderStackFlag == true) then
+  outputChatBox("addToRender")
     GlobalInterface:addGuiElementToRenderStack(self)
   end
 end
@@ -82,6 +83,8 @@ function InputBox:removeFocus()
 end
 
 function InputBox:draw()
+  self.ClickableAera:draw()
+  self.InputText:draw()
 	if self.bFocus then
 	  self:drawCursor()
     local backspaceKeyState = getKeyState("backspace")

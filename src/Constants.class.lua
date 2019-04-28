@@ -5,7 +5,7 @@ Constants = newclass("Constants")
 
 function Constants:init(o)
   --- @field [parent=#Constants] #boolean ENABLE_PRETTY_FUNCTION
-	self.ENABLE_PRETTY_FUNCTION = true
+	self.ENABLE_PRETTY_FUNCTION = false
 	--- @field [parent=#Constants] #number SCREEN_WIDTH
 	self.SCREEN_WIDTH, 
 	--- @field [parent=#Constants] #number SCREEN_HEIGHT
