@@ -35,11 +35,10 @@ function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizon
 	---@field [parent=#Text] #boolean bClipText
 	self.bClipText = abClipText or true
 	
-	 if aParent then
-    self.GuiPosition.x = aParent.super.GuiPosition.x + self.GuiPosition.x + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-    self.GuiPosition.y = aParent.super.GuiPosition.y + self.GuiPosition.y + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-    self.Size.x = self.Size.x - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-    self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+	if aParent then
+    local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self:setRelativePosition(self.GuiPosition + Coordinate2D(2 * borderSize, 2 * borderSize))
+    self.Size = self.Size - Coordinate2D(4 * borderSize, 4 * borderSize)
   end
 	
 	if(addToRenderStackFlag == nil or addToRenderStackFlag == true) then
