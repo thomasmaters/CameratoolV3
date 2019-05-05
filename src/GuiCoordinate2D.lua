@@ -7,24 +7,30 @@ function GuiCoordinate2D:init(aPosition, aSize, aParent, addToRenderStackFlag)
   ---@field [parent=#GuiCoordinate3D] #Coordinate2D Size Size of the gui element.
   self.Size = aSize or Coordinate2D()
   
+  if aParent then
+    local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.super:setRelativePosition(self.super:getRelativePosition() + Coordinate2D(borderSize, borderSize))
+    self.Size = self.Size - Coordinate2D(2 * borderSize, 2 * borderSize)
+  end
+  
   local inputSizeX = (self.Size.x - 2) / 2
   local inputSizeY = math.floor(self.Size.y / 3 * 2)
   local inputStartY = math.floor(self.Size.y / 3)
   
   ---@field [parent=#GuiCoordinate3D] #Text InfoText Small text description of what the user can change.
-  self.InfoText = Text(aPosition,"Position",aParent,Coordinate2D(self.Size.x, 20))
+  self.InfoText = Text(Coordinate2D(),"Position",self.super,Coordinate2D(self.Size.x, 20))
   
   ---@field [parent=#GuiCoordinate2D] #InputBox InputX InputBox for x coordinate.
-  self.InputX = InputBox(aPosition + Coordinate2D(0,inputStartY), 
+  self.InputX = InputBox(Coordinate2D(0,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.floor(inputSizeX) or math.ceil(inputSizeX), inputSizeY), 
-    aParent,
+    self.super,
     "x", nil, nil, nil, addToRenderStackFlag
   )
   
   ---@field [parent=#GuiCoordinate2D] #InputBox InputY InputBox for y coordinate.
-  self.InputY = InputBox(aPosition + Coordinate2D(inputSizeX + 2,inputStartY), 
+  self.InputY = InputBox(Coordinate2D(inputSizeX + 2,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.ceil(inputSizeX) or math.floor(inputSizeX), inputSizeY), 
-    aParent,
+    self.super,
     "y", nil, nil, nil, addToRenderStackFlag
   )
   

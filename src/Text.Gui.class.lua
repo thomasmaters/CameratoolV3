@@ -35,10 +35,10 @@ function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizon
 	---@field [parent=#Text] #boolean bClipText
 	self.bClipText = abClipText or true
 	
-	if aParent then
+  if aParent then
     local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-    self:setRelativePosition(self.GuiPosition + Coordinate2D(2 * borderSize, 2 * borderSize))
-    self.Size = self.Size - Coordinate2D(4 * borderSize, 4 * borderSize)
+    self.super:setRelativePosition(self.super:getRelativePosition() + Coordinate2D(borderSize, borderSize))
+    self.Size = self.Size - Coordinate2D(2 * borderSize, 2 * borderSize)
   end
 	
 	if(addToRenderStackFlag == nil or addToRenderStackFlag == true) then
@@ -48,10 +48,10 @@ end
 
 function Text:draw()
 	dxDrawText(	self.Text,
-				self.super.GuiPosition.x,
-				self.super.GuiPosition.y,
-				self.super.GuiPosition.x + (self.Size.x or 0),
-				self.super.GuiPosition.y + (self.Size.y or dxGetFontHeight(self.TextScale,self.Font)),
+				self.GuiPosition.x,
+				self.GuiPosition.y,
+				self.GuiPosition.x + (self.Size.x or 0),
+				self.GuiPosition.y + (self.Size.y or dxGetFontHeight(self.TextScale,self.Font)),
 				tocolor(0,0,0),
 				self.TextScale,
 				self.Font,
@@ -72,14 +72,6 @@ end
 
 function Text:getValue()
   return self.Text or ""
-end
-
-function Text:setPosition(aNewPosition)
-	self.super.GuiPosition = aNewPosition
-end
-
-function Text:getPosition()
-	return self.super.GuiPosition
 end
 
 function Text:destructor()

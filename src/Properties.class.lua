@@ -4,6 +4,7 @@ Properties = newclass("Properties")
 function Properties:init()
 	---@field [parent=#Properties] #table selectedElements Table of selected TimeLineElements.
 	self.SelectedTimeLineElements = {}
+	self.PropertyUiElements = {}
 	
 	self.PropertyUiElementsSize = 0
 	
@@ -30,25 +31,27 @@ function Properties:generatePropertyFields(aTimeLineElement)
     aTimeLineElement:addUpdateHandler(function() startTimeInput:setValue(aTimeLineElement.StartTime, false) end)
     startTimeInput:addUpdateHandler(function() aTimeLineElement.StartTime = startTimeInput:getValue() end)
     startTimeInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
-    self.ScrollWindow:addUIElement(startTimeInput)
+    --self.ScrollWindow:addUIElement(startTimeInput)
+    table.insert(self.PropertyUiElements, startTimeInput)
     
     local durationInput = InputBox(self:getPropertyGuiPosition(30), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,30), self.ParentWindow, nil, nil, nil, nil, true)
     durationInput:setValue(aTimeLineElement.Duration, false)
     aTimeLineElement:addUpdateHandler(function() durationInput:setValue(aTimeLineElement.Duration, false) end)
     durationInput:addUpdateHandler(function() aTimeLineElement:setDuration(durationInput:getValue()) end)
     durationInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
-    self.ScrollWindow:addUIElement(durationInput)
+    table.insert(self.PropertyUiElements, durationInput)
+    --self.ScrollWindow:addUIElement(durationInput)
   end
   if(PathCamPosition:made(aTimeLineElement) ~= nil) then
     --TODO Do we need this explicit cast?
     aTimeLineElement = PathCamPosition:cast(aTimeLineElement)
-    --Start point edit
-    --table.insert(self.PropertiesUiElements, GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate3D(GlobalConstants.RIGHT_WINDOW_WIDTH,60, aTimeLineElement.StartPosition), self.ParentWindow,aTimeLineElement.StartPosition))
-    --self.PropertiesUiElements[#self.PropertiesUiElements]:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
+    local startPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow,aTimeLineElement.StartPosition)
+    startPointEdit:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
+    table.insert(self.PropertyUiElements, startPointEdit)
     
-    --End point edit
-    --table.insert(self.PropertiesUiElements, GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate3D(GlobalConstants.RIGHT_WINDOW_WIDTH,60, aTimeLineElement.EndPosition), self.ParentWindow,aTimeLineElement.EndPosition))
-    --self.PropertiesUiElements[#self.PropertiesUiElements]:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
+    local endPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow,aTimeLineElement.EndPosition)
+    endPointEdit:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
+    table.insert(self.PropertyUiElements, endPointEdit)
   end
 end
 
@@ -88,7 +91,11 @@ function Properties:validateMultiSelect()
 end
 
 function Properties:clear()
-  self.ScrollWindow:clear()
+  for k,v in ipairs(self.PropertyUiElements) do
+    v:destructor()
+    v = nil
+    self.PropertyUiElements[k] = nil
+  end
 	self:resetPropertyUiElementHeight()
 end
 

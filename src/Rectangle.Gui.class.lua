@@ -8,16 +8,16 @@ function Rectangle:init(aPosition, aSize, aParent, aBorderSize, aPrimaryColor, a
 	---PERTTYFUNCTION---
 	self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
 	
-	if aParent then
-    local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-    self:setRelativePosition(self:getRelativePosition() + Coordinate2D(2 * borderSize, 2 * borderSize))
-    self.Size = self.Size - Coordinate2D(4 * borderSize, 4 * borderSize)
-	end
-	
 	---@field [parent=#Rectangle] #Coordinate2D Size Size of the rectangle.
 	self.Size = aSize or Coordinate2D()
 	---@field [parent=#Rectangle] #number RectangleBorderSize Border size of the rectangle.
 	self.RectangleBorderSize = aBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE
+	
+  if aParent then
+    local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.super:setRelativePosition(self.super:getRelativePosition() + Coordinate2D(borderSize, borderSize))
+    self.Size = self.Size - Coordinate2D(2 * borderSize, 2 * borderSize)
+  end
 	
 	if addToRenderStackFlag == nil or addToRenderStackFlag == true then
 		GlobalInterface:addGuiElementToRenderStack(self)

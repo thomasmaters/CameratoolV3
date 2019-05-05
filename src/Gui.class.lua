@@ -16,7 +16,8 @@ function Gui:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
   self.super:init()
 
 	---@field [parent=#Gui] #Coordinate2D GuiPosition Position of the gui element on screen.
-	self.GuiPosition = Coordinate2D(aPosition) + Coordinate2D(aParent:getPosition())
+	self.GuiPosition = Coordinate2D(aPosition)
+	if aParent then self.GuiPosition = self.GuiPosition + aParent:getPosition() end
 	---@field [parent=#Gui] #Coordinate2D RelativePosition Position relative to the parent.
 	self.RelativePosition = Coordinate2D(aPosition)
 	---@field [parent=#Gui] #Gui parent Relative parent of the gui element.
@@ -40,8 +41,8 @@ end
 ---@function [parent=#Gui] setRelativePosition
 --@param #Coordinate2D aNewPosition Sets the relative position to its parent.
 function Gui:setRelativePosition(aNewPosition)
-  local coordinateDifference = self.RelativePosition - aNewPosition
-  self.GuiPosition = self.GuiPosition + coordinateDifference
+  local coordinateDifference = aNewPosition - self.RelativePosition
+  self.GuiPosition = self.GuiPosition + coordinateDifference 
   self.RelativePosition = aNewPosition
 end
 

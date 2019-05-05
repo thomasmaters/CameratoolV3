@@ -7,10 +7,6 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("InputBox.Gui.class:init") end
   ---PERTTYFUNCTION---
   if not aPosition then aPosition = Coordinate2D() end
-  
-  if aParent then
-    aPosition = aPosition + aParent.GuiPosition
-  end
     
   self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
   
@@ -20,14 +16,6 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   self.DefaultText = aDefaultText or "Unknown"
   ---@field [parent=#InputBox] #string CurrentText Texttual value of the inputbox.
   self.CurrentText = ""
-  
-  --It needs '+ Coordinate2D()' for some weird reason, TODO fix it
-  --TODO if self cannot be giving as a parent in the constructor, try self.super?
-  ---@field [parent=#InputBox] #Button ClickableArea Button thats enables input on the inputbox.
-  self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
-  self.ClickableAera:addUpdateHandler(function() self:setFocus() end)
-  ---@field [parent=#InputBox] #Text InputText Visualizer for the inputted text.
-  self.InputText = Text(Coordinate2D(), self.DefaultText, self, self.Size, "default", 1.4, "left", nil, nil, nil, nil,addToRenderStackFlag)
   ---@field [parent=#InputBox] #number CharacterLimit Amount of characters this input box will accept.
   self.CharacterLimit = 10
   ---@field [parent=#InputBox] #Enums InputType Type of inputbox.
@@ -43,13 +31,25 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
   ---@field [parent=#InputBox] #boolean bShowDefault Boolean indicating if the default text has to be shown.
   self.bShowDefault = false
   
+  if aParent then
+    local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.super:setRelativePosition(self.super:getRelativePosition() + Coordinate2D(borderSize, borderSize))
+    self.Size = self.Size - Coordinate2D(2 * borderSize, 2 * borderSize)
+  end
+  
+  ---@field [parent=#InputBox] #Button ClickableArea Button thats enables input on the inputbox.
+  self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self.super, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
+  self.ClickableAera:addUpdateHandler(function() self:setFocus() end)
+  
+  ---@field [parent=#InputBox] #Text InputText Visualizer for the inputted text.
+  self.InputText = Text(Coordinate2D(), self.DefaultText, self.super, self.Size, "default", 1.4, "left", nil, nil, nil, nil,addToRenderStackFlag)
+  
   addEvent("mouseReleased", true)
   addEventHandler("mouseReleased", getRootElement(), bind(self.removeFocus,self))
-  addEventHandler( "onClientKey", getRootElement(), function(button, state) self:handleSpecialKey(button,state) end)
+  addEventHandler("onClientKey", getRootElement(), function(button, state) self:handleSpecialKey(button,state) end)
   addEventHandler("onClientCharacter", getRootElement(), function(...) self:handleChar(...) end)
   
   if(addToRenderStackFlag == nil or addToRenderStackFlag == true) then
-  outputChatBox("addToRender")
     GlobalInterface:addGuiElementToRenderStack(self)
   end
 end

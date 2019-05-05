@@ -14,16 +14,21 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
 	--- @field [parent=#Button] #Coordinate3D Size
 	self.Size = Coordinate2D(aSize)
   if aParent then
+    local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.super:setRelativePosition(self.super:getRelativePosition() + Coordinate2D(borderSize, borderSize))
+    self.Size = self.Size - Coordinate2D(2 * borderSize, 2 * borderSize)
+  end
+  --[[if aParent then
     outputChatBox(tostring(aParent.GuiPosition) .." ".. tostring(self.GuiPosition) .." ".. tostring(aParent.RectangleBorderSize) .." ".. tostring(GlobalConstants.RECTANGLE_BORDER_SIZE))
     self.GuiPosition.x = aParent.GuiPosition.x + self.GuiPosition.x + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
     self.GuiPosition.y = aParent.GuiPosition.y + self.GuiPosition.y + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
     self.Size.x = self.Size.x - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
     self.Size.y = self.Size.y - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-  end
+  end]]
   --- @field [parent=#Button] #Rectangle ButtonRectangle
-	self.ButtonRectangle = Rectangle(self.GuiPosition, self.Size, nil, aBorderSize, aPrimaryColor, aSecondaryColor, addToRenderStackFlag)
+	self.ButtonRectangle = Rectangle(Coordinate2D(), self.Size, self, aBorderSize, aPrimaryColor, aSecondaryColor, addToRenderStackFlag)
 	--- @field [parent=#Button] #Text ButtonText
-	self.ButtonText = Text(self.GuiPosition, aButtonText, nil, self.Size, "default", 1.2, nil, nil, nil, nil, nil, addToRenderStackFlag)
+	self.ButtonText = Text(Coordinate2D(), aButtonText, self, self.Size, "default", 1.2, nil, nil, nil, nil, nil, addToRenderStackFlag)
 	GlobalInterface:addButtonClickBind(self)
 end
 

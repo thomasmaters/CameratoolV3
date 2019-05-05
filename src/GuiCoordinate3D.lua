@@ -3,20 +3,23 @@
 GuiCoordinate3D = Gui:subclass("GuiCoordinate3D")
 
 function GuiCoordinate3D:init(aPosition, aSize, aParent, aCoordinate3D, addToRenderStackFlag)
+  self.super:init(aPosition, aParent, nil, nil)
+  
   ---@field [parent=#GuiCoordinate3D] #Coordinate2D Size Size of the gui element.
   self.Size = aSize or Coordinate2D()
   
+  if aParent then
+    local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.super:setRelativePosition(self.super:getRelativePosition() + Coordinate2D(borderSize, borderSize))
+    self.Size = self.Size - Coordinate2D(2 * borderSize, 2 * borderSize)
+  end
+
   local inputSizeX = (self.Size.x - 4) / 3
   local inputSizeY = math.floor(self.Size.y / 3 * 2)
   local inputStartY = math.floor(self.Size.y / 3)
   
-  if(aParent) then
-    aPosition = aPosition + aParent.GuiPosition
-  end
-  self.super:init(aPosition, aParent, nil, nil)
-  
   ---@field [parent=#GuiCoordinate3D] #Text InfoText Small text description of what the user can change.
-  self.InfoText = Text(Coordinate2D(),"Position",self,Coordinate2D(self.Size.x, 20))
+  self.InfoText = Text(Coordinate2D(),"Position",self.super,Coordinate2D(self.Size.x, 20))
   
   ---@field [parent=#GuiCoordinate3D] #InputBox InputX InputBox for x coordinate.
   self.InputX = InputBox(Coordinate2D(0,inputStartY), 
@@ -33,7 +36,7 @@ function GuiCoordinate3D:init(aPosition, aSize, aParent, aCoordinate3D, addToRen
   ---@field [parent=#GuiCoordinate3D] #InputBox InputZ InputBox for z coordinate.
   self.InputZ = InputBox(Coordinate2D(2*inputSizeX + 4,inputStartY), 
     Coordinate2D((self.Size.x % 2 == 0) and math.floor(inputSizeX) or math.ceil(inputSizeX), inputSizeY), 
-    self,
+    self.super,
     "z", nil, nil, nil, addToRenderStackFlag
   )
 

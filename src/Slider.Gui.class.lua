@@ -2,35 +2,34 @@
 --@extends #Gui 
 Slider = Gui:subclass("Slider")
 
-function Slider:init(aPosition, aSize, aSelectorSize, aMinimalValue, aMaximalValue, aParent, aPrimaryColor, aSecondaryColor, addToRenderStackFlag)
+function Slider:init(aPosition, aSize, aSelectorSize, aMinimalValue, aMaximalValue, aParent, aPrimaryColor, aSecondaryColor)
 	---PERTTYFUNCTION---
 	if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Slider.gui.class:init") end
 	---PERTTYFUNCTION---
+  self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
 
-	if aParent then
-		aPosition.x = aParent.super.GuiPosition.x + aPosition.x + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-		aPosition.y = aParent.super.GuiPosition.y + aPosition.y + 2 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-		aSize.x = aSize.x - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-		aSize.y = aSize.y - 4 * ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
-	end
+  ---@field [parent=#Slider] #number MinimalValue Minimal value of the slider.
+  self.MinimalValue = aMinimalValue or 0
+  ---@field [parent=#Slider] #number MaximalValue Max value of the slider.
+  self.MaximalValue = aMaximalValue or 100
+  ---@field [parent=#Slider] #Coordinate2D Size Size of the slider.
+  self.Size = aSize or Coordinate2D()
+  ---@field [parent=#Slider] #Coordinate2D SelectorSize Size of the selector.
+  self.SelectorSize = aSelectorSize or Coordinate2D()
+
+  if aParent then
+    local borderSize = ( aParent.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE )
+    self.super:setRelativePosition(self.super:getRelativePosition() + Coordinate2D(borderSize, borderSize))
+    self.Size = self.Size - Coordinate2D(2 * borderSize, 2 * borderSize)
+  end
 	
-	local SliderRectanglePos = aPosition + Coordinate2D(0,aSize.y / 2) + Coordinate2D(0,-aSelectorSize.y / 2)
-	local VisualRectanglePos = aPosition + Coordinate2D(0,aSelectorSize.y / 2 - aSelectorSize.y * 0.125 - 2.5)
+	local SliderRectanglePos = Coordinate2D(0,aSize.y / 2) + Coordinate2D(0,-aSelectorSize.y / 2)
+	local VisualRectanglePos = Coordinate2D(0,aSelectorSize.y / 2 - aSelectorSize.y * 0.125)
 	local VisualRectangleSize= Coordinate2D(aSize.x,aSelectorSize.y*0.25)
 	
-	self.SelectableRectangle = Rectangle(aPosition, aSize, nil, 1, "#FFFFFF00", "#FFFFFF00",false)
-	self.VisiualRectangle = Rectangle(VisualRectanglePos, VisualRectangleSize, nil, 1, aPrimaryColor, aSecondaryColor,false)
-	self.SliderRectangle = Rectangle(SliderRectanglePos, aSelectorSize, nil, 1, aPrimaryColor, aSecondaryColor,false)
+	self.VisiualRectangle = Rectangle(VisualRectanglePos, VisualRectangleSize, self.super, 1, aPrimaryColor, aSecondaryColor)
+	self.SliderRectangle = Rectangle(SliderRectanglePos, aSelectorSize, self.super, 1, aPrimaryColor, aSecondaryColor)
 	
-	self.MinimalValue = aMinimalValue or 0
-	self.MaximalValue = aMaximalValue or 100
-	self.Size = aSize or Coordinate2D()
-	self.SelectorSize = aSelectorSize or Coordinate2D()
-	self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
-	
-	if(addToRenderStackFlag == nil or addToRenderStackFlag == true) then
-	  GlobalInterface:addGuiElementToRenderStack(self)
-	end
 	GlobalInterface:addButtonClickBind(self)
 end
 
@@ -42,12 +41,12 @@ function Slider:clicked()
 			
 			local MousePosition = GlobalMouse:getPosition()
 			
-			if(MousePosition.x > self.super.GuiPosition.x + self.SliderRectangle.Size.x/2 and MousePosition.x < self.super.GuiPosition.x + self.Size.x - self.SliderRectangle.Size.x/2) then
-				self.SliderRectangle.super.GuiPosition.x = MousePosition.x - self.SliderRectangle.Size.x/2			
+			if(MousePosition.x > self.GuiPosition.x + self.SliderRectangle.Size.x/2 and MousePosition.x < self.GuiPosition.x + self.Size.x - self.SliderRectangle.Size.x/2) then
+				self.SliderRectangle.GuiPosition.x = MousePosition.x - self.SliderRectangle.Size.x/2			
 			elseif(MousePosition.x < self.GuiPosition.x) then
-				self.SliderRectangle.super.GuiPosition.x = self.super.GuiPosition.x
-			elseif(MousePosition.x > self.super.GuiPosition.x + self.Size.x - self.SliderRectangle.Size.x) then
-				self.SliderRectangle.super.GuiPosition.x = self.super.GuiPosition.x + self.Size.x - self.SliderRectangle.Size.x
+				self.SliderRectangle.GuiPosition.x = self.GuiPosition.x
+			elseif(MousePosition.x > self.GuiPosition.x + self.Size.x - self.SliderRectangle.Size.x) then
+				self.SliderRectangle.GuiPosition.x = self.GuiPosition.x + self.Size.x - self.SliderRectangle.Size.x
 			end
 			
 			local currentSliderValue = self:getValue()
@@ -64,7 +63,7 @@ end
 function Slider:getValue()
 	local totalSliderPixelSize = self.Size.x - self.SliderRectangle.Size.x
 	local totalValueSpan = math.abs(self.MaximalValue - self.MinimalValue)
-	local relativeSliderPosition = self.SliderRectangle.super.GuiPosition.x - self.super.GuiPosition.x
+	local relativeSliderPosition = self.SliderRectangle.GuiPosition.x - self.GuiPosition.x
 	return totalValueSpan / totalSliderPixelSize * relativeSliderPosition
 end
 
@@ -73,14 +72,8 @@ function Slider:increaseSliderMaximalValue(aIncreaseValue)
 	triggerEvent("onSliderDrag",getRootElement(),self.ID,self:getValue())
 end
 
-function Slider:draw()
-	self.SelectableRectangle:draw()
-	self.VisiualRectangle:draw()
-	self.SliderRectangle:draw()
-end
-
 function Slider:getPosition()
-	return self.super.GuiPosition
+	return self.super:getPosition()
 end
 
 function Slider:setPosition(aNewPosition)
@@ -88,14 +81,12 @@ function Slider:setPosition(aNewPosition)
 	local VisualRectanglePos = aNewPosition + Coordinate2D(0,self.SelectorSize.y / 2 - self.SelectorSize.y * 0.125 - 2.5)
 	
 	self.super.GuiPosition = aNewPosition
-	self.SelectableRectangle:setPosition(aNewPosition)
 	self.VisiualRectangle:setPosition(VisualRectanglePos)
 	self.SliderRectangle:setPosition(SliderRectanglePos)
 end
 
 function Slider:destructor()
   self.super:destructor()
-  self.SelectableRectangle:destructor()
   self.VisiualRectangle:destructor()
   self.SliderRectangle:destructor()
   GlobalInterface:removeInterfaceElement(self)
