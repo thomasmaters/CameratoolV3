@@ -17,4 +17,4 @@ CameratoolV3 will be better than version 2 in the following respects:
 * **A.Noniem**(Thomas Maters) - *Version 2 & Version 3* - [thomasmaters](https://github.com/thomasmaters) 
 
 ### Special thanks to
-* **Party And Co** - *MTA community* - [website](www.mta-pac.nl)
+* **Party And Co** - *MTASA community* - [website](www.mta-pac.nl)
