@@ -4,6 +4,7 @@ Properties = newclass("Properties")
 function Properties:init()
 	---@field [parent=#Properties] #table selectedElements Table of selected TimeLineElements.
 	self.SelectedTimeLineElements = {}
+	---@field [parent=#Properties] #table<#Gui> PropertyUiElements Ui elements in de current properties selection.
 	self.PropertyUiElements = {}
 	
 	self.PropertyUiElementsSize = 0
@@ -31,7 +32,6 @@ function Properties:generatePropertyFields(aTimeLineElement)
     aTimeLineElement:addUpdateHandler(function() startTimeInput:setValue(aTimeLineElement.StartTime, false) end)
     startTimeInput:addUpdateHandler(function() aTimeLineElement.StartTime = startTimeInput:getValue() end)
     startTimeInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
-    --self.ScrollWindow:addUIElement(startTimeInput)
     table.insert(self.PropertyUiElements, startTimeInput)
     
     local durationInput = InputBox(self:getPropertyGuiPosition(30), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,30), self.ParentWindow, nil, nil, nil, nil, true)
@@ -40,7 +40,6 @@ function Properties:generatePropertyFields(aTimeLineElement)
     durationInput:addUpdateHandler(function() aTimeLineElement:setDuration(durationInput:getValue()) end)
     durationInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
     table.insert(self.PropertyUiElements, durationInput)
-    --self.ScrollWindow:addUIElement(durationInput)
   end
   if(PathCamPosition:made(aTimeLineElement) ~= nil) then
     --TODO Do we need this explicit cast?
