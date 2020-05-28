@@ -278,7 +278,7 @@ end
 -------------------------------
 function GraphTimeLine:isTimeLineElementOnGraph(aTimeLineElement)
 	local GraphStartTime,GraphEndTime = self.ParentGraph:getGraphTimeSpan()
-	return 	(aTimeLineElement.StartTime > GraphStartTime and aTimeLineElement.StartTime <= GraphEndTime) or 
+	return 	(aTimeLineElement.StartTime >= GraphStartTime and aTimeLineElement.StartTime <= GraphEndTime) or 
 			(aTimeLineElement.StartTime + aTimeLineElement.Duration > GraphStartTime and aTimeLineElement.StartTime + aTimeLineElement.Duration <= GraphEndTime) or
 			(aTimeLineElement.StartTime < GraphStartTime and aTimeLineElement.StartTime + aTimeLineElement.Duration > GraphEndTime)
 end

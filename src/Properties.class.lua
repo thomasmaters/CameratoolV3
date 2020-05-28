@@ -7,14 +7,12 @@ function Properties:init()
 	self.PropertyUiElements = {}
 	
 	self.PropertyUiElementsSize = 0
+	self.AmountOfTabs = 1
+	self.TabsBar 		= Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,20),nil,1)
+	self.ParentWindow 	= Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT + 20 ),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT - 20),nil,1)
 	
-	self.ParentWindow = Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT),nil,2)
-  --TODO intergrating a scrollable window, who owns the UI elements, the Properties class or the ScrollableWindow class?
-  --[[self.ScrollWindow = ScrollableWindow(
-    Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),
-    Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT),
-    nil,
-    Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,2 * GlobalConstants.APP_HEIGHT))]]
+	
+	self.NextTabButton 	= Button(Coordinate2D(), Coordinate2D(100,20), "1", self.TabsBar)
 end
 
 function Properties:onTimeLineElementSelect(aTimeLineElement)
@@ -24,14 +22,26 @@ function Properties:onTimeLineElementSelect(aTimeLineElement)
   --self:validateMultiSelect()
 end
 
+function Properties:draw()
+  outputChatBox("This shoud not be called")
+end
+
+--- @function [parent=#Properties] generatePropertyFields
 function Properties:generatePropertyFields(aTimeLineElement)
-  if(TimeLineElement:made(aTimeLineElement)) then
+  if self:hasItemSelected() then
+    self:clear()
+  end
+
+  outputChatBox("isTimeLineElement: " ..tostring(TimeLineElement:trycast(aTimeLineElement) ~= nil))
+  outputChatBox("IsPathCamPosition: " ..tostring(PathCamPosition:trycast(aTimeLineElement) ~= nil))
+  outputChatBox("IsPathCamTarget: " ..tostring(PathCamTarget:trycast(aTimeLineElement) ~= nil))
+
+  if(TimeLineElement:trycast(aTimeLineElement)) then
     local startTimeInput = InputBox(self:getPropertyGuiPosition(30), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,30), self.ParentWindow, nil, nil, nil, nil, true)
     startTimeInput:setValue(aTimeLineElement.StartTime, false)
     aTimeLineElement:addUpdateHandler(function() startTimeInput:setValue(aTimeLineElement.StartTime, false) end)
     startTimeInput:addUpdateHandler(function() aTimeLineElement.StartTime = startTimeInput:getValue() end)
     startTimeInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
-    --self.ScrollWindow:addUIElement(startTimeInput)
     table.insert(self.PropertyUiElements, startTimeInput)
     
     local durationInput = InputBox(self:getPropertyGuiPosition(30), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,30), self.ParentWindow, nil, nil, nil, nil, true)
@@ -40,22 +50,26 @@ function Properties:generatePropertyFields(aTimeLineElement)
     durationInput:addUpdateHandler(function() aTimeLineElement:setDuration(durationInput:getValue()) end)
     durationInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
     table.insert(self.PropertyUiElements, durationInput)
-    --self.ScrollWindow:addUIElement(durationInput)
   end
-  if(PathCamPosition:made(aTimeLineElement) ~= nil) then
-    --TODO Do we need this explicit cast?
-    aTimeLineElement = PathCamPosition:cast(aTimeLineElement)
-    local startPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow,aTimeLineElement.StartPosition)
+  
+  -- Edit Path Start and End Position.
+  if(Path:trycast(aTimeLineElement) ~= nil) then
+    aTimeLineElement = Path:cast(aTimeLineElement)
+    local startPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow, aTimeLineElement.StartPosition)
+    startPointEdit:addUpdateHandler(function() aTimeLineElement:setStartPosition(startPointEdit:getValue()) end)
     startPointEdit:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
     table.insert(self.PropertyUiElements, startPointEdit)
     
-    local endPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow,aTimeLineElement.EndPosition)
+    local endPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow, aTimeLineElement.EndPosition)
+    endPointEdit:addUpdateHandler(function() aTimeLineElement:setEndPosition(endPointEdit:getValue()) end)
     endPointEdit:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
     table.insert(self.PropertyUiElements, endPointEdit)
   end
 end
 
 function Properties:onTimeLineElementDeselect(aTimeLineElement)
+  if not self:hasItemSelected() then return end
+  
   for key, val in ipairs(self.SelectedTimeLineElements) do
   	if(val == aTimeLineElement) then
       table.remove(self.SelectedTimeLineElements, key)
@@ -101,6 +115,20 @@ end
 
 function Properties:resetPropertyUiElementHeight()
   self.PropertyUiElementsSize = 0
+end
+
+function Properties:hasItemSelected()
+  if #self.PropertyUiElements > 0 then
+    return true
+  end
+  return false
+end
+
+function Properties:addToUiElements(aGuiElement)
+  table.insert(self.PropertyUiElements, aGuiElement)
+end
+
+function Properties:addTab()
 end
 
 function Properties:getPropertyGuiPosition(addedHeight)

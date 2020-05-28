@@ -5,14 +5,17 @@ function Mouse:init()
 	self.MousePosition = Coordinate2D()
 	self.ObjectBeingHold = nil
 	self.bMouseIsDragging = nil
+	self.TimeSinceClick = 0
 	
 	addEventHandler( "onClientClick", getRootElement(), bind(GlobalInterface.onButtonClicked,GlobalInterface))
 	addEventHandler( "onClientClick", getRootElement(), 
 		function(aPressedButton,aButtonState,_,_)
 			if(aPressedButton == "left" and aButtonState == "down") then
 				self.bMouseIsDragging = false
+				self.TimeSinceClick = getTickCount()
 			elseif(aPressedButton == "left" and aButtonState == "up") then
 				self.bMouseIsDragging = nil
+				self.TimeSinceClick = 0
 				triggerEvent("mouseReleased", getRootElement())
 			end
 		end
@@ -20,7 +23,7 @@ function Mouse:init()
 	addEventHandler( "onClientCursorMove", getRootElement(), 
 		function(_,_,CursorX,CursorY) 
 			self.MousePosition = Coordinate2D(CursorX,CursorY)
-			if(self.bMouseIsDragging == false) then
+			if(self.bMouseIsDragging == false and (getTickCount() - self.TimeSinceClick) > 20) then
 				self.bMouseIsDragging = true
 				outputChatBox("dragging")
 				triggerEvent("mouseIsDragging", getRootElement())

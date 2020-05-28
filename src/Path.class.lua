@@ -57,6 +57,14 @@ function Path:updateSelectedColor()
   end
 end
 
+function Path:setStartPosition(aNewPosition)
+  self.StartPosition = aNewPosition
+end
+
+function Path:setEndPosition(aNewPosition)
+  self.EndPosition = aNewPosition
+end
+
 function Path:setPosition(aNewPosition)
 	if not aNewPosition then return end
 	self.PathRectangle:setPosition(aNewPosition)
