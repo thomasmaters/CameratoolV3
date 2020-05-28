@@ -1,17 +1,17 @@
 ---@type EffectCameraRoll
 
---- @return #EffectCameraRoll 
+--- @return #EffectCameraRoll
 EffectCameraRoll = Effect:subclass("EffectCameraRoll")
-EffectCameraRollDefault = 
-{
+EffectCameraRollDefault =
+    {
 
-}
+    }
 
 function EffectCameraRoll:init(o)
-	self.super.init(o)
-	for k,v in pairs(EffectCameraRollDefault) do
-		self[k] = v
-	end
+    self.super.init(o)
+    for k,v in pairs(EffectCameraRollDefault) do
+        self[k] = v
+    end
 end
 
 function EffectCameraRoll:preDraw()

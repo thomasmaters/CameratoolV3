@@ -1,14 +1,14 @@
 ---@type Effect
 
---- @return #Effect 
+--- @return #Effect
 Effect = newclass("Effect")
 
 function Effect:init(aEffectTypeObject)
-	self.EffectTypeObject = aEffectTypeObject or nil
+    self.EffectTypeObject = aEffectTypeObject or nil
 end
 
 function Effect:getEffectStartValue()
-  return EffectTypeObject.getEffectStartValue
+    return EffectTypeObject.getEffectStartValue
 end
 
 --Virtual function, please override in a derived class

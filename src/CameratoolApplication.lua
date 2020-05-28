@@ -5,22 +5,22 @@ function bind(aFunctionToCall, ...)
 
     local boundParams = {...}
     return
-    function(...)
-        local params = {}
-        local boundParamSize = #boundParams
-        for i = 1, boundParamSize do
-            params[i] = boundParams[i]
-        end
+        function(...)
+            local params = {}
+            local boundParamSize = #boundParams
+            for i = 1, boundParamSize do
+                params[i] = boundParams[i]
+            end
 
-        local funcParams = {...}
-        for i = 1, select("#", ...) do
-            params[boundParamSize + i] = funcParams[i]
+            local funcParams = {...}
+            for i = 1, select("#", ...) do
+                params[boundParamSize + i] = funcParams[i]
+            end
+            return aFunctionToCall(unpack(params))
         end
-        return aFunctionToCall(unpack(params))
-    end
 end
 
-function print_r ( t )  
+function print_r ( t )
     local print_r_cache={}
     local function sub_print_r(t,indent)
         if (print_r_cache[tostring(t)]) then
@@ -55,22 +55,22 @@ function print_r ( t )
 end
 
 function isEventHandlerAdded( sEventName, pElementAttachedTo, func )
-	if 
-		type( sEventName ) == 'string' and 
-		isElement( pElementAttachedTo ) and 
-		type( func ) == 'function' 
-	then
-		local aAttachedFunctions = getEventHandlers( sEventName, pElementAttachedTo )
-		if type( aAttachedFunctions ) == 'table' and #aAttachedFunctions > 0 then
-			for i, v in ipairs( aAttachedFunctions ) do
-				if v == func then
-					return true
-				end
-			end
-		end
-	end
- 
-	return false
+    if
+        type( sEventName ) == 'string' and
+        isElement( pElementAttachedTo ) and
+        type( func ) == 'function'
+    then
+        local aAttachedFunctions = getEventHandlers( sEventName, pElementAttachedTo )
+        if type( aAttachedFunctions ) == 'table' and #aAttachedFunctions > 0 then
+            for i, v in ipairs( aAttachedFunctions ) do
+                if v == func then
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
 end
 
 function deepcopy(orig)
@@ -89,12 +89,12 @@ function deepcopy(orig)
 end
 
 function string.random(aLength)
-	if aLength < 1 then return nil end -- Check for aLength < 1
-	local s = "" -- Start string
-	for i = 1, aLength do
-			s = s .. string.char(math.random(32, 126)) -- Generate random number from 32 to 126, turn it into character and add to string
-	end
-	return s -- Return string
+    if aLength < 1 then return nil end -- Check for aLength < 1
+    local s = "" -- Start string
+    for i = 1, aLength do
+        s = s .. string.char(math.random(32, 126)) -- Generate random number from 32 to 126, turn it into character and add to string
+    end
+    return s -- Return string
 end
 
 GlobalConstants = Constants()
@@ -108,7 +108,7 @@ local fps = false
 function getCurrentFPS() -- Setup the useful function
     return fps
 end
- 
+
 local function updateFPS(msSinceLastFrame)
     -- FPS are the frames per second, so count the frames rendered per milisecond using frame delta time and then convert that to frames per second.
     fps = (1 / msSinceLastFrame) * 1000
@@ -127,11 +127,11 @@ addEventHandler("onClientRender", root, drawFPS)
 
 --Our main function
 addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource()),
-	function()
-		---PERTTYFUNCTION---
-		if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("CameratoolApplication:lampda") end
-		---PERTTYFUNCTION--- 
-		local InternalGraph = Graph(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50))
-		GlobalInterface:createInterface()
-	end
+    function()
+        ---PERTTYFUNCTION---
+        if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("CameratoolApplication:lampda") end
+        ---PERTTYFUNCTION---
+        local InternalGraph = Graph(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50))
+        GlobalInterface:createInterface()
+    end
 )

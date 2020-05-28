@@ -1,17 +1,17 @@
 ---@type EffectCameraFOV
 
---- @return #EffectCameraFOV 
+--- @return #EffectCameraFOV
 EffectCameraFOV = Effect:subclass("EffectCameraFOV")
-EffectCameraFOVDefault = 
-{
+EffectCameraFOVDefault =
+    {
 
-}
+    }
 
 function EffectCameraFOV:init(o)
-	self.super.init(o)
-	for k,v in pairs(EffectCameraFOVDefault) do
-		self[k] = v
-	end
+    self.super.init(o)
+    for k,v in pairs(EffectCameraFOVDefault) do
+        self[k] = v
+    end
 end
 
 function EffectCameraFOV:preDraw()
