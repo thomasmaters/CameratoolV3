@@ -15,7 +15,7 @@ function GuiCoordinate3D:init(aPosition, aSize, aParent, aCoordinate3D, addToRen
   end
 
   local inputSizeX = (self.Size.x - 4) / 3
-  local inputSizeY = math.floor(self.Size.y / 3 * 2)
+  local inputSizeY = math.floor(self.Size.y / 5 * 2.5)
   local inputStartY = math.floor(self.Size.y / 3)
   
   ---@field [parent=#GuiCoordinate3D] #Text InfoText Small text description of what the user can change.
@@ -75,6 +75,9 @@ function GuiCoordinate3D:setValue(aValueX, aValueY, aValueZ, bCascadeUpdate)
   if(bCascadeUpdate == nil or bCascadeUpdate) then
     self:callUpdateHandlers()
   end
+end
+
+function GuiCoordinate3D:draw()
 end
 
 function GuiCoordinate3D:destructor()

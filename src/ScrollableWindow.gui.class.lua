@@ -21,9 +21,10 @@ function ScrollableWindow:init(aPosition, aSize, aParent, aTotalSize)
   
   self.ScrollWindowRenderTarget = dxCreateRenderTarget( aTotalSize.x, aTotalSize.y, true )
   self.ScrollRectangle = Rectangle(Coordinate2D(), self.Size, aParent, nil, nil, nil, false)
-  self.Test = Text(Coordinate2D(), "asfdasfd", aParent, self.Size, nil, nil, nil, nil, nil, nil, nil, false)
+  self.Test = Text(Coordinate2D(), "asfdasfd", nil, self.Size, nil, nil, nil, nil, nil, nil, nil, false)
   
   self.UIElements = {}
+  self:addUIElement(self.Test)
   
   GlobalInterface:addGuiElementToRenderStack(self)
   
@@ -60,7 +61,6 @@ function ScrollableWindow:draw()
   for k,v in ipairs(self.UIElements) do
     v:draw()
   end
-  self.Test:draw()
   dxSetRenderTarget()
   dxDrawImageSection( self.Position.x, self.Position.y, self.Size.x, self.Size.y, 0, self.CurrentScrollPosition, self.Size.x, self.Size.y, self.ScrollWindowRenderTarget )  
 end

@@ -31,6 +31,8 @@ function StaticEffect:updateSelectedColor()
 	end
 end
 
+
+--- Some GUI functions.
 function StaticEffect:setPosition(aNewPosition)
 	if not aNewPosition then return end
 	self.EffectRectangle:setPosition(aNewPosition)

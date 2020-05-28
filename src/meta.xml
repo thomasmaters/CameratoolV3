@@ -29,7 +29,7 @@
 	<script src="InputBox.Gui.class.lua" type="client" />
 	<script src="GuiCoordinate2D.lua" type="client" />
 	<script src="GuiCoordinate3D.lua" type="client" />
-	<script src="ScrollableWindow.lua" type="client" />
+	<script src="ScrollableWindow.Gui.class.lua" type="client" />
 	
 	<script src="Properties.class.lua" type="client" />
 	<script src="Interface.class.lua" type="client" />

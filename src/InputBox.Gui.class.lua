@@ -56,6 +56,9 @@ end
 
 function InputBox:getValue()
   if(self.InputType == GlobalEnums.InputBoxTypes.number or self.InputType == GlobalEnums.InputBoxTypes.signedNumber) then
+	if tonumber(self.CurrentText) == nil then
+		return tonumber(0)
+	end
     return tonumber(self.CurrentText)
   end
 	return self.CurrentText or ""
@@ -125,6 +128,14 @@ function InputBox:removeCharacter()
 	self:setValue()
 end
 
+function InputBox:deleteCharacter()
+	if self.CursorPosition < self.CurrentText:len() then
+		self.CurrentText = self.CurrentText:sub(1, self.CursorPosition).. self.CurrentText:sub(self.CursorPosition + 2, self.CurrentText:len())
+		self.CursorPosition = self.CursorPosition
+		self:setValue()
+	end
+end
+
 function InputBox:handleChar(character)
 	if self.bFocus and string.len(self.CurrentText) < self.CharacterLimit then
 		local newCurrentText = self.CurrentText:sub(1,self.CursorPosition) ..character.. self.CurrentText:sub(self.CursorPosition + 1,self.CurrentText:len())
@@ -137,9 +148,9 @@ function InputBox:handleChar(character)
 end
 
 function InputBox:validateType(newCurrentText)
-  if self.InputType == GlobalEnums.InputBoxTypes.signedNumber then
-  --TODO Make constants of limits.
-    return (tonumber(newCurrentText) ~= nil) and tonumber(newCurrentText) <= 10000000 and tonumber(newCurrentText) >= -10000000
+	if self.InputType == GlobalEnums.InputBoxTypes.signedNumber then
+		--TODO Make constants of limits.
+		return (tonumber(newCurrentText) ~= nil) and tonumber(newCurrentText) <= 10000000 and tonumber(newCurrentText) >= -10000000
 	elseif self.InputType == GlobalEnums.InputBoxTypes.number then
 		return (tonumber(newCurrentText) ~= nil) and tonumber(newCurrentText) >= 0 and tonumber(newCurrentText) <= 10000000
 	else
@@ -156,24 +167,25 @@ end
 
 function InputBox:handleSpecialKey(button, state)
 	if not self.bFocus then return end
-	if state then
-		if button == "backspace" and string.len(self.CurrentText) > 0 then
-			self:removeCharacter()
-		elseif button == "backspace" and string.len(self.CurrentText) == 0 then
-			self:enableDefaultText()
-			self:setValue()
-		elseif button == "enter" then
-			self:enableDefaultText()
-			self:setValue()			
-		elseif button == "escape" then
-			self:removeFocus()
-			self:enableDefaultText()
-	  elseif button == "arrow_l" and self.CursorPosition >= 1 then
-      outputChatBox(tostring(self.CursorPosition))
-      self.CursorPosition = self.CursorPosition - 1
-    elseif button == "arrow_r" and self.CursorPosition < string.len(self.CurrentText) then
-      self.CursorPosition = self.CursorPosition + 1
-    end
+		if state then
+			if button == "backspace" and string.len(self.CurrentText) > 0 then
+				self:removeCharacter()
+			elseif button == "delete" and string.len(self.CurrentText) > 0 then
+				self:deleteCharacter()
+			elseif button == "backspace" and string.len(self.CurrentText) == 0 then
+				self:enableDefaultText()
+				self:setValue()
+			elseif button == "enter" then
+				self:enableDefaultText()
+				self:setValue()			
+			elseif button == "escape" then
+				self:removeFocus()
+				self:enableDefaultText()
+			elseif button == "arrow_l" and self.CursorPosition >= 1 then
+				self.CursorPosition = self.CursorPosition - 1
+			elseif button == "arrow_r" and self.CursorPosition < string.len(self.CurrentText) then
+				self.CursorPosition = self.CursorPosition + 1
+		end
 	end
 end
 

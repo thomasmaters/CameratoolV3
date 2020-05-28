@@ -32,6 +32,8 @@ function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizon
 	self.TextVerticalAlign = aVerticalTextAlgin or "center"
 	---@field [parent=#Text] #string TextHorizontalAlign
 	self.TextHorizontalAlign = aHorizontalTextAlgin or "center"
+	 ---@field [parent=#Text] #color TextColor
+  self.TextColor = tocolor(getColorFromString(GlobalConstants.GUI_TEXT_COLOR))
 	---@field [parent=#Text] #boolean bClipText
 	self.bClipText = abClipText or true
 	
@@ -52,7 +54,7 @@ function Text:draw()
 				self.GuiPosition.y,
 				self.GuiPosition.x + (self.Size.x or 0),
 				self.GuiPosition.y + (self.Size.y or dxGetFontHeight(self.TextScale,self.Font)),
-				tocolor(0,0,0),
+				self.TextColor,
 				self.TextScale,
 				self.Font,
 				self.TextHorizontalAlign,

@@ -105,7 +105,7 @@ function Interface:removeInterfaceElement(aGuiElement)
 			table.remove(self.InterfaceRenderStack,k)
 		end
 	end		
-	for k, v in ipairs(self.InterfaceClickBindendElements) do
+  for k, v in ipairs(self.InterfaceClickBindendElements) do
 		if v == aGuiElement then
 			table.remove(self.InterfaceClickBindendElements,k)
 		end
