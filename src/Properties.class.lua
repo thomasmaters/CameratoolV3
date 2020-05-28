@@ -4,6 +4,7 @@ Properties = newclass("Properties")
 function Properties:init()
 	---@field [parent=#Properties] #table selectedElements Table of selected TimeLineElements.
 	self.SelectedTimeLineElements = {}
+	---@field [parent=#Properties] #table<#Gui> PropertyUiElements Ui elements in de current properties selection.
 	self.PropertyUiElements = {}
 	
 	self.PropertyUiElementsSize = 0

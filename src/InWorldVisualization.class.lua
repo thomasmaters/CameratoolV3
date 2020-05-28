@@ -61,6 +61,7 @@ function InWorldVisualization:visualizeAnimation()
 		self.AnimatedObject:setPosition(Vector3(0,0,0))
 		self.PositionAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(1))
 		self.TargetAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(2))
+		return --TODO Do we need a return here?
 	end
 	
 	local curPosition = self.PositionAnimator:getCurrentPosition()
