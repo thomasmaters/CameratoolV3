@@ -12,6 +12,8 @@ function Animator:init()
     self.AnimationStartTime = 0
     --- @field [parent=#Animator] #Coordinate3D CurrentPosition
     self.CurrentPosition = {}
+    
+    self.WaitRoutine = nil
 end
 
 --- @function [parent=#Animator] isAnimating
@@ -36,6 +38,9 @@ end
 --Sets bAnimating to false and internal logic will kill everything in the next onClientPreRender tick.
 function Animator:stopAnimating()
     self.bAnimating = false
+    if animate ~= nil then
+        removeEventHandler ( "onClientPreRender", getRootElement(), animate)
+    end
 end
 
 --- @function [parent=#Animator] interpolateOver
@@ -55,45 +60,20 @@ function Animator:interpolateOver(timeLinePaths)
     )
 
     self.bAnimating = true
-    self.interpolateInstance = nil
-    self.animateStartTime = getTickCount()
+    self.InterpolateInstance = nil
+    self.AnimationStartTime = getTickCount()
 
     local animationPoints = {}
     local index = 1
 
-    --Sleep execution until a point in the graph is reached.
-    local function waitForNext(tickCountToWaitFor)
-        outputChatBox("Sleeping")
-        local function sleep()
-            coroutine.resume(waitRoutine)
-        end
-
-        addEventHandler ( "onClientPreRender", getRootElement(), sleep)
-        waitRoutine = coroutine.create(
-            function()
-                while(tickCountToWaitFor > (getTickCount() - self.animateStartTime)) do
-                    --Do we need to kill ourselfs?
-                    if not self.bAnimating then
-                        outputChatBox("Stopping coroutine because animating is false")
-                        removeEventHandler ( "onClientPreRender", getRootElement(), sleep)
-                        return
-                    end
-                    coroutine.yield()
-                end
-                removeEventHandler ( "onClientPreRender", getRootElement(), sleep)
-                prepareNext()
-            end
-        )
-    end
-
-    local function prepareNext()
+    function prepareNext()
         outputChatBox("Prepare next")
         if index > #timeLinePaths then
             self.bAnimating = false
             return --End animation
         end
 
-        if timeLinePaths[index].StartTime > (getTickCount() - self.animateStartTime) then
+        if timeLinePaths[index].StartTime > (getTickCount() - self.AnimationStartTime) then
             waitForNext(timeLinePaths[index].StartTime)
         else
             --Construct the points to interpolate over.
@@ -114,27 +94,55 @@ function Animator:interpolateOver(timeLinePaths)
             else
                 table.insert(animationPoints, timeLinePaths[index].EndPosition:pack())
             end
-            print_r(animationPoints)
+--            print_r(animationPoints)
 
             --Start interpolating
-            self.interpolateInstance = Interpolate(0,1,timeLinePaths[index].Duration, timeLinePaths[index].PathAnimationType)
+            self.InterpolateInstance = Interpolate(0,1,timeLinePaths[index].Duration, timeLinePaths[index].PathAnimationType)
             addEventHandler ( "onClientPreRender", getRootElement(), animate)
         end
     end
-
-    local function animate()
-        local progress = self.interpolateInstance:getCurrentProgressValue()
-
-        if self.bAnimating == false then
-            removeEventHandler ( "onClientPreRender", getRootElement(), animate)
+    
+    --Sleep execution until a point in the graph is reached.
+    function waitForNext(tickCountToWaitFor)
+        outputChatBox("Sleeping")
+        local function sleep()
+            if coroutine.status(self.WaitRoutine) ~= 'dead' then
+                coroutine.resume(self.WaitRoutine)
+            end
         end
 
-        self.CurrentPosition = GlobalSpline:getPointOnSpline(animationPoints,progress)
-
-        if progress >= 1 then
+        addEventHandler ( "onClientPreRender", getRootElement(), sleep)
+        self.WaitRoutine = coroutine.create(
+            function()
+                while(tickCountToWaitFor > (getTickCount() - self.AnimationStartTime)) do
+                    --Do we need to kill ourselfs?
+                    if not self.bAnimating then
+                        outputChatBox("Stopping coroutine because animating is false")
+                        removeEventHandler ( "onClientPreRender", getRootElement(), sleep)
+                        return
+                    end
+                    coroutine.yield()
+                end
+                removeEventHandler ( "onClientPreRender", getRootElement(), sleep)
+                prepareNext()
+            end
+        )
+    end
+    
+    function animate()
+        if self.bAnimating == false then
+            outputChatBox("Stopping animating")
             removeEventHandler ( "onClientPreRender", getRootElement(), animate)
-            index = index + 1
-            prepareNext()
+        else
+            local progress = self.InterpolateInstance:getCurrentProgressValue()
+    
+            self.CurrentPosition = GlobalSpline:getPointOnSpline(animationPoints, progress)
+    
+            if progress >= 1 then
+                removeEventHandler ( "onClientPreRender", getRootElement(), animate)
+                index = index + 1
+                prepareNext()
+            end
         end
     end
 

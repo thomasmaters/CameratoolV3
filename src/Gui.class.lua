@@ -9,7 +9,7 @@ Gui:virtual("setValue")
 --@param #Gui aParent Parent Gui element.
 --@param #string aPrimaryColor Primary gui element color.
 --@param #string aSecondaryColor Secondary gui element color.
-function Gui:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
+function Gui:init(aPosition, aParent, aPrimaryColor, aSecondaryColor, aEnabled)
     ---PERTTYFUNCTION---
     if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Gui.class:init") end
     ---PERTTYFUNCTION---
@@ -28,6 +28,8 @@ function Gui:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
     self.PrimaryColor = aPrimaryColor or GlobalConstants.GUI_PRIMARY_COLOR
     ---@field [parent=#Gui] #string ID GuiID
     self.ID = string.random(10)
+    ---@field [parent=#Gui] #boolean bEnabled
+    self.bEnabled = (aEnabled == nil and true or aEnabled)
 end
 
 ---@function [parent=#Gui] setPosition
@@ -55,9 +57,29 @@ end
 ---@function [parent=#Gui] getRelativePosition
 --Gets the relative position from its parent (if any).
 function Gui:getRelativePosition()
-    return self.RelativePosition;
+    return self.RelativePosition
 end
 
+---@function [parent=#Gui] destructor
 function Gui:destructor()
     self:clearUpdateHandlers()
+end
+
+---@function [parent=#Gui] enableGui
+-- Sets Gui enabled and triggers an event.
+function Gui:enableGui()
+    self.bEnabled = true
+end
+
+---@function [parent=#Gui] disableGui
+-- Sets Gui disabled and triggers an event.
+function Gui:disableGui()
+    outputChatBox("Disabling Gui Element")
+    self.bEnabled = false
+end
+
+---@function [parent=#Gui] toggleGui
+-- Toggels if the Gui element is enabled and triggers an event.
+function Gui:toggleGui()
+    self.bEnabled = not self.bEnabled
 end

@@ -19,6 +19,22 @@ function InWorldVisualization:init(aGraph)
     addEventHandler( "onClientRender" , getRootElement(), bind(self.draw,self))
 end
 
+function InWorldVisualization:getAnimationTime()
+    local positionTime = self.PositionAnimator:getAnimationTime()
+    local cameraTime = self.TargetAnimator:getAnimationTime()
+    
+    if positionTime == getTickCount() and cameraTime == getTickCount() then
+        -- Animation not yet started.
+        return 0
+    elseif positionTime < cameraTime then
+        -- Position animation is started sooner.
+        return positionTime
+    else
+        -- Camera animation is started sooner.
+        return cameraTime
+    end
+end
+
 function InWorldVisualization:updateInWorldView(aButton, pressOrRelease)
     if aButton ~= 'l' or pressOrRelease then return end
 
@@ -44,6 +60,9 @@ function InWorldVisualization:updateInWorldView(aButton, pressOrRelease)
 
     self.PositionSplinePoints 		= self:getSplinePointsTable(self.PositionTimeLineElements)
     self.TargetSplinePoints 		= self:getSplinePointsTable(self.TargetTimeLineElements)
+    
+    if #self.PositionSplinePoints > 0 or #self.TargetSplinePoints > 0 then
+    end
 end
 
 function InWorldVisualization:draw()
@@ -59,6 +78,10 @@ end
 function InWorldVisualization:visualizeAnimation()
     if not self.PositionAnimator:isAnimating() and not self.TargetAnimator:isAnimating() then
         self.AnimatedObject:setPosition(Vector3(0,0,0))
+        if self.PositionAnimator ~= nil then
+            self.PositionAnimator:stopAnimating()
+            self.TargetAnimator:stopAnimating()
+        end
         self.PositionAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(1))
         self.TargetAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(2))
         return --TODO Do we need a return here?

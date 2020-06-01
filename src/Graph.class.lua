@@ -77,9 +77,16 @@ function Graph:updateRenderTarget()
     if not GlobalInterface:isInterfaceVisable() then return end
 
     dxSetRenderTarget(self.GraphRenderTarget)
+    -- Draw graph timelines
     for k,v in ipairs(self.GraphTimeLines) do
         v:draw()
     end
+    -- Draw moving cursor
+    local animTime = self.WorldVisualization:getAnimationTime()
+    outputChatBox(animTime.. "  " ..self.GraphCurrentTime)
+    local kaas = self:getPositionOnGraphFromTime(animTime + self.GraphCurrentTime)
+    dxDrawLine(kaas,0,kaas,self.Size.y)
+    
     --TODO: Maybe change the drawing to Line class?
     for i=math.floor(self.GraphCurrentTime / 5000) - 1,math.ceil((self.GraphCurrentTime + self.GraphVisableDuration)/5000) do
         local x = self:getPositionOnGraphFromTime(i * 5000)

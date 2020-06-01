@@ -50,7 +50,7 @@ function Spline:getCurvePoints(path, numOfSeg)
 end
 
 function Spline:getMatrixFromPoints(points)
-    assert(#points ~= 4, "Spline:getMatrixFromPoints, points size mismatch, expected size of 4 got " ..tostring(#points))
+    assert(#points == 4, "Spline:getMatrixFromPoints, points size mismatch, expected size of 4 got " ..tostring(#points))
 
     --Table of Coordinate3D's.
     if Coordinate3D:made(points[1]) then
