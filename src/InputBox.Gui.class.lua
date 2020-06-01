@@ -38,11 +38,11 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
     end
 
     ---@field [parent=#InputBox] #Button ClickableArea Button thats enables input on the inputbox.
-    self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self.super, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, addToRenderStackFlag)
+    self.ClickableAera = Button(Coordinate2D(), self.Size, self.CurrentText, self.super, 0, GlobalConstants.CAM_TARGET_PATH_COLOR, aSecondaryColor, false)
     self.ClickableAera:addUpdateHandler(function() self:setFocus() end)
 
     ---@field [parent=#InputBox] #Text InputText Visualizer for the inputted text.
-    self.InputText = Text(Coordinate2D(), self.DefaultText, self.super, self.Size, "default", 1.4, "left", nil, nil, nil, nil,addToRenderStackFlag)
+    self.InputText = Text(Coordinate2D(), self.DefaultText, self.super, self.Size, "default", 1.4, "left", nil, nil, nil, nil, false)
 
     addEvent("mouseReleased", true)
     addEventHandler("mouseReleased", getRootElement(), bind(self.removeFocus,self))
@@ -53,6 +53,20 @@ function InputBox:init(aPosition, aSize, aParent, aDefaultText, aPrimaryColor, a
         GlobalInterface:addGuiElementToRenderStack(self)
     end
 end
+
+function InputBox:enableGui()
+    self.super:enableGui()
+    if not GlobalInterface:isGuiElementInRenderStack(self) then
+        GlobalInterface:addGuiElementToRenderStack(self)    
+    end
+end
+
+function InputBox:disableGui()
+    outputChatBox("Disabling Inputbox")
+    self.super:disableGui()
+    GlobalInterface:removeGuiElementFromRenderStack(self)
+end
+
 
 function InputBox:getValue()
     if(self.InputType == GlobalEnums.InputBoxTypes.number or self.InputType == GlobalEnums.InputBoxTypes.signedNumber) then
@@ -75,6 +89,7 @@ function InputBox:setValue(aValue, bCascadeUpdate)
 end
 
 function InputBox:removeFocus()
+    if not self.bEnabled then return end
     if not self.bFocus then return end
 
     local mousePosition = GlobalMouse:getPosition()
@@ -137,6 +152,7 @@ function InputBox:deleteCharacter()
 end
 
 function InputBox:handleChar(character)
+    if not self.bEnabled then return end
     if self.bFocus and string.len(self.CurrentText) < self.CharacterLimit then
         local newCurrentText = self.CurrentText:sub(1,self.CursorPosition) ..character.. self.CurrentText:sub(self.CursorPosition + 1,self.CurrentText:len())
         if self:validateType(newCurrentText) then
@@ -166,6 +182,7 @@ function InputBox:enableDefaultText()
 end
 
 function InputBox:handleSpecialKey(button, state)
+    if not self.bEnabled then return end
     if not self.bFocus then return end
     if state then
         if button == "backspace" and string.len(self.CurrentText) > 0 then
@@ -190,6 +207,8 @@ function InputBox:handleSpecialKey(button, state)
 end
 
 function InputBox:setFocus()
+    if not self.bEnabled then return end
+    
     outputChatBox("setfocus")
     self.CursorPosition = self.CurrentText:len()
     self.bShowDefault = false
@@ -221,5 +240,5 @@ function InputBox:destructor()
     self.super:destructor()
     self.ClickableAera:destructor()
     self.InputText:destructor()
-    GlobalInterface:removeInterfaceElement(self)
+    GlobalInterface:removeGuiElementFromRenderStack(self)
 end

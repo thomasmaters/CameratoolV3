@@ -78,5 +78,5 @@ end
 
 function Text:destructor()
     self.super:destructor()
-    GlobalInterface:removeInterfaceElement(self)
+    GlobalInterface:removeGuiElementFromRenderStack(self)
 end

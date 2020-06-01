@@ -93,16 +93,17 @@ function Interface:addGuiElementToRenderStack(aGuiElement)
     table.insert(self.InterfaceRenderStack, aGuiElement)
 end
 
---- @function [parent=#Interface] removeInterfaceElement
+--- @function [parent=#Interface] removeGuiElementFromRenderStack
 --@param #Gui aGuiElement Removes an element from the renderstack and its button click binds.
-function Interface:removeInterfaceElement(aGuiElement)
+function Interface:removeGuiElementFromRenderStack(aGuiElement)
     ---PERTTYFUNCTION---
-    if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Interface.class:removeInterfaceElement") end
+    if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Interface.class:removeGuiElementFromRenderStack") end
     ---PERTTYFUNCTION---
     if not aGuiElement then return end
     for k, v in ipairs(self.InterfaceRenderStack) do
         if v == aGuiElement then
             table.remove(self.InterfaceRenderStack,k)
+            outputChatBox("Removed from render stack")
         end
     end
     for k, v in ipairs(self.InterfaceClickBindendElements) do
@@ -110,6 +111,19 @@ function Interface:removeInterfaceElement(aGuiElement)
             table.remove(self.InterfaceClickBindendElements,k)
         end
     end
+end
+
+--- @function [parent=#Interface] isGuiElementInRenderStack
+--@param #Gui aGuiElement A Gui element to check if it is in the render stack.
+--@return #boolean Returns true if in renderstack, false otherwise.
+function Interface:isGuiElementInRenderStack(aGuiElement)
+    if not aGuiElement then return false end
+    for k, v in ipairs(self.InterfaceRenderStack) do
+        if v == aGuiElement then
+            return true
+        end
+    end
+    return false    
 end
 
 --- @function [parent=#Interface] drawInterface

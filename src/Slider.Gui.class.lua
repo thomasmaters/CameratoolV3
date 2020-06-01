@@ -27,8 +27,8 @@ function Slider:init(aPosition, aSize, aSelectorSize, aMinimalValue, aMaximalVal
     local VisualRectanglePos = Coordinate2D(0,aSelectorSize.y / 2 - aSelectorSize.y * 0.125)
     local VisualRectangleSize= Coordinate2D(aSize.x,aSelectorSize.y*0.25)
 
-    self.VisiualRectangle = Rectangle(VisualRectanglePos, VisualRectangleSize, self.super, 1, aPrimaryColor, aSecondaryColor)
-    self.SliderRectangle = Rectangle(SliderRectanglePos, aSelectorSize, self.super, 1, aPrimaryColor, aSecondaryColor)
+    self.VisiualRectangle = Rectangle(VisualRectanglePos, VisualRectangleSize, self.super, 1, GlobalConstants.GUI_TERTIARY_COLOR, aSecondaryColor)
+    self.SliderRectangle = Rectangle(SliderRectanglePos, aSelectorSize, self.super, 1, GlobalConstants.GUI_TERTIARY_COLOR, aPrimaryColor)
 
     GlobalInterface:addButtonClickBind(self)
 end
@@ -89,5 +89,5 @@ function Slider:destructor()
     self.super:destructor()
     self.VisiualRectangle:destructor()
     self.SliderRectangle:destructor()
-    GlobalInterface:removeInterfaceElement(self)
+    GlobalInterface:removeGuiElementFromRenderStack(self)
 end

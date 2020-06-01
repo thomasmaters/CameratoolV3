@@ -46,6 +46,7 @@ function Constants:init(o)
     self.RECTANGLE_BORDER_SIZE = 1 --Border that is used for drawing rectangles
     self.GUI_PRIMARY_COLOR = "#2c3e50"
     self.GUI_SECONDARY_COLOR = "#95a5a6f0"
+    self.GUI_TERTIARY_COLOR = "#34495e"
     self.GUI_TEXT_COLOR = "#ecf0f1"
 
     ------------------------INTERFACE-------------------------

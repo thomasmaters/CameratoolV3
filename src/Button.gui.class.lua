@@ -9,7 +9,7 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
     if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("Button.gui.class:init") end
     ---PERTTYFUNCTION---
 
-    self.super:init(aPosition, aParent, aPrimaryColor, aSecondaryColor)
+    self.super:init(aPosition, aParent, aPrimaryColor or GlobalConstants.GUI_TERTIARY_COLOR, aSecondaryColor)
 
     --- @field [parent=#Button] #Coordinate3D Size
     self.Size = Coordinate2D(aSize)
@@ -19,7 +19,7 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
         self.Size = self.Size - Coordinate2D(2 * borderSize, 2 * borderSize)
     end
     --- @field [parent=#Button] #Rectangle ButtonRectangle
-    self.ButtonRectangle = Rectangle(Coordinate2D(), self.Size, self, aBorderSize, aPrimaryColor, aSecondaryColor, addToRenderStackFlag)
+    self.ButtonRectangle = Rectangle(Coordinate2D(), self.Size, self, aBorderSize, self.PrimaryColor, self.SecondaryColor, addToRenderStackFlag)
     --- @field [parent=#Button] #Text ButtonText
     self.ButtonText = Text(Coordinate2D(), aButtonText, self, self.Size, "default", 1.2, nil, nil, nil, nil, nil, addToRenderStackFlag)
     GlobalInterface:addButtonClickBind(self)
@@ -66,5 +66,5 @@ function Button:destructor()
     self.super:destructor()
     self.ButtonRectangle:destructor()
     self.ButtonText:destructor()
-    GlobalInterface:removeInterfaceElement(self)
+    GlobalInterface:removeGuiElementFromRenderStack(self)
 end

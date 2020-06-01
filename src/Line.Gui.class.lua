@@ -29,5 +29,5 @@ end
 
 function Line:destructor()
     self.super:destructor()
-    GlobalInterface:removeInterfaceElement(self)
+    GlobalInterface:removeGuiElementFromRenderStack(self)
 end

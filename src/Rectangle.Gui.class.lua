@@ -62,5 +62,5 @@ function Rectangle:draw()
 end
 
 function Rectangle:destructor()
-    GlobalInterface:removeInterfaceElement(self)
+    GlobalInterface:removeGuiElementFromRenderStack(self)
 end

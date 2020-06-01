@@ -167,7 +167,7 @@ end
 --Removes all references to the timelineelement being hold.
 -------------------------------
 function GraphTimeLine:removeHoldingElement() --Deletes the object currently selected by the mouse.
-    GlobalInterface:removeInterfaceElement(GlobalMouse.ObjectBeingHold)
+    GlobalInterface:removeGuiElementFromRenderStack(GlobalMouse.ObjectBeingHold)
     GlobalMouse:releaseObject()
     self:removeSelection()
 end

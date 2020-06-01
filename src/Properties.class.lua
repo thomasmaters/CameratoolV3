@@ -7,13 +7,16 @@ function Properties:init()
     ---@field [parent=#Properties] #table<#Gui> PropertyUiElements Ui elements in de current properties selection.
     self.PropertyUiElements = {}
 
+    ---@field [parent=#Properties] #number The combined height of the UI elements.
     self.PropertyUiElementsSize = 0
-    self.AmountOfTabs = 1
+    ---@field [parent=#Properties] #number The amount of tabs in the Property window.
+    self.AmountOfTabs   = 0
+    self.CurrentTab     = 1
     self.TabsBar 		= Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,20),nil,1)
     self.ParentWindow 	= Rectangle(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH + GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT + 20 ),Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,GlobalConstants.APP_HEIGHT - 20),nil,1)
 
-
     self.NextTabButton 	= Button(Coordinate2D(), Coordinate2D(100,20), "1", self.TabsBar)
+    self:addTab()
 end
 
 function Properties:onTimeLineElementSelect(aTimeLineElement)
@@ -43,28 +46,28 @@ function Properties:generatePropertyFields(aTimeLineElement)
         aTimeLineElement:addUpdateHandler(function() startTimeInput:setValue(aTimeLineElement.StartTime, false) end)
         startTimeInput:addUpdateHandler(function() aTimeLineElement.StartTime = startTimeInput:getValue() end)
         startTimeInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
-        table.insert(self.PropertyUiElements, startTimeInput)
+        self:addToUiElements(startTimeInput)
 
         local durationInput = InputBox(self:getPropertyGuiPosition(30), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,30), self.ParentWindow, nil, nil, nil, nil, true)
         durationInput:setValue(aTimeLineElement.Duration, false)
         aTimeLineElement:addUpdateHandler(function() durationInput:setValue(aTimeLineElement.Duration, false) end)
         durationInput:addUpdateHandler(function() aTimeLineElement:setDuration(durationInput:getValue()) end)
         durationInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
-        table.insert(self.PropertyUiElements, durationInput)
+        self:addToUiElements(durationInput)
     end
 
     -- Edit Path Start and End Position.
     if(Path:trycast(aTimeLineElement) ~= nil) then
         aTimeLineElement = Path:cast(aTimeLineElement)
-        local startPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow, aTimeLineElement.StartPosition)
+        local startPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow, aTimeLineElement.StartPosition)
         startPointEdit:addUpdateHandler(function() aTimeLineElement:setStartPosition(startPointEdit:getValue()) end)
         startPointEdit:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
-        table.insert(self.PropertyUiElements, startPointEdit)
+        self:addToUiElements(startPointEdit)
 
-        local endPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60),  Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow, aTimeLineElement.EndPosition)
+        local endPointEdit = GuiCoordinate3D(self:getPropertyGuiPosition(60), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,60), self.ParentWindow, aTimeLineElement.EndPosition)
         endPointEdit:addUpdateHandler(function() aTimeLineElement:setEndPosition(endPointEdit:getValue()) end)
         endPointEdit:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
-        table.insert(self.PropertyUiElements, endPointEdit)
+        self:addToUiElements(endPointEdit)
     end
 end
 
@@ -106,12 +109,15 @@ function Properties:validateMultiSelect()
 end
 
 function Properties:clear()
-    for k,v in ipairs(self.PropertyUiElements) do
-        v:destructor()
-        v = nil
-        self.PropertyUiElements[k] = nil
+    for i=1,self.AmountOfTabs do
+        for k,v in ipairs(self.PropertyUiElements[i]) do
+            v:destructor()
+            v = nil
+            self.PropertyUiElements[i][k] = nil
+        end
     end
     self:resetPropertyUiElementHeight()
+    self.CurrentTab = 1
 end
 
 function Properties:resetPropertyUiElementHeight()
@@ -126,14 +132,20 @@ function Properties:hasItemSelected()
 end
 
 function Properties:addToUiElements(aGuiElement)
-    table.insert(self.PropertyUiElements, aGuiElement)
+    table.insert(self.PropertyUiElements[self.AmountOfTabs], aGuiElement)
 end
 
 function Properties:addTab()
+    self.AmountOfTabs = self.AmountOfTabs + 1
+    self.PropertyUiElements[self.AmountOfTabs] = {}
+    self:resetPropertyUiElementHeight()
 end
 
 function Properties:getPropertyGuiPosition(addedHeight)
     local UiCoordinate = Coordinate2D(0,self.PropertyUiElementsSize)
     self.PropertyUiElementsSize = self.PropertyUiElementsSize + addedHeight
+    if self.PropertyUiElementsSize > self.ParentWindow.Size.x then
+        self:addTab()
+    end
     return UiCoordinate
 end
