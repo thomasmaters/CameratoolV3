@@ -93,7 +93,7 @@ end
 --@return #number Total duration of the second spline.
 --This will make the average movement speed across the second spline equal to the average movement speed of the frist spline.
 function Spline:syncPoints(points1, points2, targetSpeed)
-    local length = self:getLengthOfSpline(points2,100)
+    local length = self:getLengthOfSpline(points2, 100)
     return length / targetSpeed
 end
 

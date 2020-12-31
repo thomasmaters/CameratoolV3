@@ -10,8 +10,8 @@ function HandleInterfaceEvents:init(o)
     self.super:init()
     addEvent("onCT3ButtonClick")
     addEvent("onRequestHideInterface")
-    addEventHandler("onCT3ButtonClick",getRootElement(),bind(self.onControlButtonsClick,self))
-    addEventHandler("onRequestHideInterface",getRootElement(),bind(self.super.showInterface,Interface))
+    addEventHandler("onCT3ButtonClick", getRootElement(),bind(self.onControlButtonsClick,self))
+    addEventHandler("onRequestHideInterface", getRootElement(),bind(self.super.showInterface,Interface))
 end
 
 --- @function [parent=#HandleInterfaceEvents] onButtonClicked
@@ -22,7 +22,7 @@ function HandleInterfaceEvents:onButtonClicked( aPressedButton, aButtonState, aC
             local BindedElementsPosition = v:getPosition()
             if( MousePosition > BindedElementsPosition and MousePosition < BindedElementsPosition + v.Size) then
                 v:clicked()
-                triggerEvent("onCT3ButtonClick",getRootElement(),v.ID)
+                triggerEvent("onCT3ButtonClick", getRootElement(),v.ID)
                 break
             end
         end
@@ -34,10 +34,10 @@ function HandleInterfaceEvents:onControlButtonsClick(aID)
     if self.leftWindowButtonPlay.ID == aID then
         outputChatBox("play")
     elseif self.leftWindowButtonSync.ID == aID then
-        triggerEvent("onCT3SyncButtonClick",getRootElement())
+        triggerEvent("onCT3SyncButtonClick", getRootElement())
         outputChatBox("sync")
     elseif self.leftWindowButtonDelete.ID == aID then
-        triggerEvent("onCT3DeleteButtonClick",getRootElement())
+        triggerEvent("onCT3DeleteButtonClick", getRootElement())
         outputChatBox("delete")
     end
 end

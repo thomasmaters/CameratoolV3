@@ -21,7 +21,7 @@ function Button:init(aPosition, aSize, aButtonText, aParent, aBorderSize, aPrima
     --- @field [parent=#Button] #Rectangle ButtonRectangle
     self.ButtonRectangle = Rectangle(Coordinate2D(), self.Size, self, aBorderSize, self.PrimaryColor, self.SecondaryColor, addToRenderStackFlag)
     --- @field [parent=#Button] #Text ButtonText
-    self.ButtonText = Text(Coordinate2D(), aButtonText, self, self.Size, "default", 1.2, nil, nil, nil, nil, nil, addToRenderStackFlag)
+    self.ButtonText = Text(Coordinate2D(), aButtonText, self, self.Size, nil, 1.2, nil, nil, nil, nil, nil, addToRenderStackFlag)
     GlobalInterface:addButtonClickBind(self)
 end
 

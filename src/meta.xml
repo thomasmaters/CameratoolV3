@@ -5,6 +5,7 @@
 	<file src="/Images/eye.png" download="true" />
 	<file src="/Images/foot.png" download="true" />
 	<file src="/Images/link.png" download="true" />
+	<file src="/Fonts/font.otf" download="true" />
 	
 	<script src="matrix.lua" type="client" />
 	<script src="inheritance.lua" type="client" />

@@ -44,7 +44,7 @@ function Properties:generatePropertyFields(aTimeLineElement)
         local startTimeInput = InputBox(self:getPropertyGuiPosition(30), Coordinate2D(GlobalConstants.RIGHT_WINDOW_WIDTH,30), self.ParentWindow, nil, nil, nil, nil, true)
         startTimeInput:setValue(aTimeLineElement.StartTime, false)
         aTimeLineElement:addUpdateHandler(function() startTimeInput:setValue(aTimeLineElement.StartTime, false) end)
-        startTimeInput:addUpdateHandler(function() aTimeLineElement.StartTime = startTimeInput:getValue() end)
+        startTimeInput:addUpdateHandler(function() aTimeLineElement:setStartTime(startTimeInput:getValue()) end)
         startTimeInput:addUpdateHandler(function() aTimeLineElement:callUpdateHandlers() end)
         self:addToUiElements(startTimeInput)
 

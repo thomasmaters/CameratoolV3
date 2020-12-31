@@ -25,7 +25,7 @@ function Text:init(aPosition, aText, aParent, aSize, aFont, aTextScale, aHorizon
     ---@field [parent=#Text] #string Text
     self.Text = aText or ""
     ---@field [parent=#Text] #string Font
-    self.Font = aFont or "default"
+    self.Font = aFont or GlobalConstants.FONT or "default"
     ---@field [parent=#Text] #number TextScale
     self.TextScale = aTextScale or 1
     ---@field [parent=#Text] #string TextVerticalAlign

@@ -1,6 +1,4 @@
 ---@type Graph
-
---- @return #Graph
 Graph = newclass("Graph")
 
 function Graph:init(aPosition, aSize)
@@ -8,9 +6,19 @@ function Graph:init(aPosition, aSize)
 
     self.Position = aPosition
     self.Size = aSize
+    
+    --- @field [parent=#Graph] #number GraphVisableDuration
     self.GraphVisableDuration = 30000
+    --- @field [parent=#Graph] #number GraphCurrentTime The current time that will be the left most value.
     self.GraphCurrentTime = 0
+    --- @field [parent=#Graph] #number GraphTotalTime Total time that is displayed on the graph
     self.GraphTotalTime = 20000
+    --- @field [parent=#Graph] #number GraphUsedTime The total time that is used by timeline elements.
+    self.GraphUsedTime = 0
+    
+    self.GraphAnimationTime = 0
+    
+    self.GraphAnimator = Interpolate(0, 1, self.GraphUsedTime, GlobalEnums.EasingTypes.Linear, true)
     self.GraphRenderTarget = dxCreateRenderTarget( aSize.x, aSize.y, true )
     self.GraphTimeLines = {}
     self.WorldVisualization = InWorldVisualization(self)
@@ -58,6 +66,14 @@ function Graph:init(aPosition, aSize)
             self:updateRenderTarget()
         end
     )
+    
+    addEventHandler ( "onClientPreRender", getRootElement(),
+        function()
+            self.GraphAnimationTime = self.GraphAnimator:getCurrentProgressValue() * self.GraphUsedTime
+            dxDrawText(self.GraphAnimationTime, 0, 50,0,0,tocolor(255,255,255),5)
+            self.WorldVisualization:visualizeAnimation(self.GraphAnimationTime)
+        end
+    )
 end
 
 function Graph:getGraphTimeLine(aIndex)
@@ -82,9 +98,8 @@ function Graph:updateRenderTarget()
         v:draw()
     end
     -- Draw moving cursor
-    local animTime = self.WorldVisualization:getAnimationTime()
-    outputChatBox(animTime.. "  " ..self.GraphCurrentTime)
-    local kaas = self:getPositionOnGraphFromTime(animTime + self.GraphCurrentTime)
+    local kaas = self:getPositionOnGraphFromTime(self.GraphAnimationTime)
+    
     dxDrawLine(kaas,0,kaas,self.Size.y)
     
     --TODO: Maybe change the drawing to Line class?
@@ -114,6 +129,20 @@ function Graph:getGraphTimeSpan()
     return self.GraphCurrentTime, (self.GraphCurrentTime + self.GraphVisableDuration)
 end
 
+function Graph:calculatedTotalUsedTime()
+    self.GraphUsedTime = 0
+    for k,v in ipairs(self.GraphTimeLines) do
+        local timeLinePaths = v:getTimeLineElements()
+        for ke,va in ipairs(timeLinePaths) do
+            if self.GraphUsedTime < (va.StartTime + va.Duration) then
+                self.GraphUsedTime = (va.StartTime + va.Duration)
+            end
+        end
+    end
+    self.GraphAnimator.Duration = self.GraphUsedTime
+end
+
+--- @function [parent=#Graph] getCurrentTimeFromMousePosition
 function Graph:getCurrentTimeFromMousePosition()
     local MouseOnGraph = GlobalMouse:getPosition() - self.Position
     if(MouseOnGraph > Coordinate2D(0,0) and MouseOnGraph < self.Size) then
@@ -122,24 +151,32 @@ function Graph:getCurrentTimeFromMousePosition()
     return nil
 end
 
-function Graph:getPositionOnGraphFromTime(aElementTime)
-    return self.Position.x + ((aElementTime - self.GraphCurrentTime) / ( self.GraphVisableDuration)* self.Size.x)
+--- @function [parent=#Graph] getPositionOnGraphFromTime
+function Graph:getPositionOnGraphFromTime(aTime)
+    return ((aTime - self.GraphCurrentTime) / ( self.GraphVisableDuration)* self.Size.x)
 end
 
+--- @function [parent=#Graph] isMouseAboveGraph
 function Graph:isMouseAboveGraph()
     local MousePosition = GlobalMouse:getPosition()
     return (MousePosition > self.Position and MousePosition < self.Position + self.Size)
 end
 
+--- @function [parent=#Graph] getTimeLineElementWidthFromTime
 function Graph:getTimeLineElementWidthFromTime(aDuration)
     if not aDuration then return end
     return aDuration / self.GraphVisableDuration * self.Size.x
 end
 
+function Graph:getTotalTime()
+end
+
+--- @function [parent=#Graph] getSize
 function Graph:getSize()
     return self.Size
 end
 
+--- @function [parent=#Graph] getPosition
 function Graph:getPosition()
     return self.Position
 end

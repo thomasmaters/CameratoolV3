@@ -35,10 +35,12 @@ end
 
 function Path:removeConnectedPath()
     self.ConnectedToPath = nil
+    triggerEvent("onPathChanged", getRootElement(), self)
 end
 
 function Path:connectToPath(aPath)
     self.ConnectedToPath = aPath
+    triggerEvent("onPathChanged", getRootElement(), self)
 end
 
 function Path:setSelected(...)
@@ -59,10 +61,12 @@ end
 
 function Path:setStartPosition(aNewPosition)
     self.StartPosition = aNewPosition
+    triggerEvent("onPathChanged", getRootElement(), self)
 end
 
 function Path:setEndPosition(aNewPosition)
     self.EndPosition = aNewPosition
+    triggerEvent("onPathChanged", getRootElement(), self)
 end
 
 function Path:setPosition(aNewPosition)

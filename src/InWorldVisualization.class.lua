@@ -2,7 +2,7 @@
 InWorldVisualization = newclass("InWorldVisualization")
 
 function InWorldVisualization:init(aGraph)
-    self.ParentGraph = aGraph
+    self.ParentGraph = aGraph or error("No graph defined for InWorldVisualization.")
     self.PositionTimeLineElements = {}
     self.TargetTimeLineElements = {}
     self.PositionSplinePoints = {}
@@ -15,33 +15,20 @@ function InWorldVisualization:init(aGraph)
     self.PositionAnimator = Animator() --#Animator
     self.TargetAnimator = Animator() --#Animator
 
+    addEvent("onTimeLineElementChange", true)
+    addEvent("onTimeLineElementAdded", true)
+    addEvent("onTimeLineElementRemoved", true)
+    addEvent("onPathChanged", true)
     addEventHandler( "onClientKey", getRootElement(), bind(self.updateInWorldView,self))
     addEventHandler( "onClientRender" , getRootElement(), bind(self.draw,self))
-end
-
-function InWorldVisualization:getAnimationTime()
-    local positionTime = self.PositionAnimator:getAnimationTime()
-    local cameraTime = self.TargetAnimator:getAnimationTime()
-    
-    if positionTime == getTickCount() and cameraTime == getTickCount() then
-        -- Animation not yet started.
-        return 0
-    elseif positionTime < cameraTime then
-        -- Position animation is started sooner.
-        return positionTime
-    else
-        -- Camera animation is started sooner.
-        return cameraTime
-    end
+    addEventHandler( "onTimeLineElementChange", getRootElement(), bind(self.onTimeLineElementChange, self))
+    addEventHandler( "onTimeLineElementAdded", getRootElement(), bind(self.onTimeLineElementChange, self))
+    addEventHandler( "onTimeLineElementRemoved", getRootElement(), bind(self.onTimeLineElementChange, self))
+    addEventHandler( "onPathChanged", getRootElement(), bind(self.onTimeLineElementChange, self))
 end
 
 function InWorldVisualization:updateInWorldView(aButton, pressOrRelease)
-    if aButton ~= 'l' or pressOrRelease then return end
-
-    if self.PositionAnimator:isAnimating() then
-        self.PositionAnimator:stopAnimating()
-        self.TargetAnimator:stopAnimating()
-    end
+    if not (aButton == 'l' and pressOrRelease == false) then return end
 
     local timeLineElements = self.ParentGraph:getAllTimeLineElements() --I sinserly hope this is a copy
     local tempCamTargetPoints = {}
@@ -60,32 +47,27 @@ function InWorldVisualization:updateInWorldView(aButton, pressOrRelease)
 
     self.PositionSplinePoints 		= self:getSplinePointsTable(self.PositionTimeLineElements)
     self.TargetSplinePoints 		= self:getSplinePointsTable(self.TargetTimeLineElements)
-    
-    if #self.PositionSplinePoints > 0 or #self.TargetSplinePoints > 0 then
-    end
 end
 
 function InWorldVisualization:draw()
     if(#self.PositionSplinePoints < 1) then return end
-    self:visualizeAnimation()
     for k,v in ipairs(self.PositionSplinePoints) do
         for i=1,#v - 1 do
-            dxDrawLine3D(v[i].x, v[i].y, v[i].z, v[i + 1].x, v[i + 1 ].y, v[i + 1].z,tocolor ( 0, 255, 0, 230 ), 10)
+            dxDrawLine3D(v[i].x, v[i].y, v[i].z, v[i + 1].x, v[i + 1 ].y, v[i + 1].z, tocolor( 0, 255, 0, 230 ), 10)
         end
     end
 end
 
-function InWorldVisualization:visualizeAnimation()
-    if not self.PositionAnimator:isAnimating() and not self.TargetAnimator:isAnimating() then
-        self.AnimatedObject:setPosition(Vector3(0,0,0))
-        if self.PositionAnimator ~= nil then
-            self.PositionAnimator:stopAnimating()
-            self.TargetAnimator:stopAnimating()
-        end
-        self.PositionAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(1))
-        self.TargetAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(2))
-        return --TODO Do we need a return here?
-    end
+function InWorldVisualization:onTimeLineElementChange(aElement)
+    outputChatBox("onTimeLineElementChange")
+    self:updateInWorldView('l', false)
+    self.PositionAnimator:updateAnimationPoints(self.ParentGraph:getGraphTimeLine(1))
+    self.TargetAnimator:updateAnimationPoints(self.ParentGraph:getGraphTimeLine(2))
+end
+
+function InWorldVisualization:visualizeAnimation(time)
+    self.PositionAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(1), time)
+    self.TargetAnimator:interpolateOver(self.ParentGraph:getGraphTimeLine(2), time)
 
     local curPosition = self.PositionAnimator:getCurrentPosition()
     self.AnimatedObject:setPosition(Vector3(curPosition[1],curPosition[2],curPosition[3]))
@@ -100,7 +82,6 @@ function InWorldVisualization:getSplinePointsTable(aTable)
     local anotherTempTable = {}
 
     for k,subTable in ipairs(aTable) do
-        outputChatBox("sub table size: " .. #subTable)
         tempTable[k] = {}
         anotherTempTable[k] = {}
         for subKey,v in ipairs(subTable) do
@@ -109,8 +90,7 @@ function InWorldVisualization:getSplinePointsTable(aTable)
                 table.insert(tempTable[k],v.EndPosition:pack())
             end
         end
-        anotherTempTable[k] = GlobalSpline:getCurvePoints(tempTable[k],4)
-        outputChatBox("Size of tempTable: " .. #tempTable[k] .. " Size of splinepoints: " .. #anotherTempTable[k])
+        anotherTempTable[k] = GlobalSpline:getCurvePoints(tempTable[k],6)
     end
 
     return anotherTempTable

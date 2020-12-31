@@ -20,6 +20,7 @@ function TimeLineElement:setDuration(aDuration)
     if(aDuration >= 1) then
         self.Duration = aDuration
         self:callUpdateHandlers()
+        triggerEvent("onTimeLineElementChange", getRootElement(), self)
     end
 end
 
@@ -27,11 +28,10 @@ function TimeLineElement:setSelected()
     self.bSelected = not self.bSelected
     if self.bSelected then
         GlobalProperties:onTimeLineElementSelect(self)
-        --triggerEvent("onTimeLineElementSelect", getResourceRootElement(), self)
     else
         GlobalProperties:onTimeLineElementDeselect(self)
-        --triggerEvent("onTimeLineElementDeselect", getResourceRootElement(), self)
     end
+    triggerEvent("onTimeLineElementChange", getRootElement(), self)
 end
 
 function TimeLineElement:isSelected()
@@ -40,4 +40,12 @@ end
 
 
 function TimeLineElement:setStartTime(aStartTime)
+    if not aStartTime then return end
+    
+    self.StartTime = aStartTime
+    triggerEvent("onTimeLineElementChange", getRootElement(), self)
+end
+
+function TimeLineElement:destructor()
+    triggerEvent("onTimeLineElementChange", getRootElement(), self)
 end
