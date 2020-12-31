@@ -11,8 +11,11 @@ function GraphTimeLine:init(aGraph,aPosition,aSize,aAllowedTimeLineTypes,aGraphT
         aSize = aSize -- Coordinate2D(4 * (aGraph.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE ),4 * ( aGraph.RectangleBorderSize or GlobalConstants.RECTANGLE_BORDER_SIZE ))
     end
 
+    --- @field [parent=#GraphTimeLine] #Graph ParentGraph
     self.ParentGraph = aGraph or error("No TimeLine parent given")
+    --- @field [parent=#GraphTimeLine] Coordinate2D Position
     self.Position = aPosition or error("No TimeLine position given!")
+    --- @field [parent=#GraphTimeLine] Coordinate2D Size
     self.Size = aSize or error("No TimeLine size given!")
     self.TimeLineRectangle = Rectangle(aPosition - self.ParentGraph:getPosition(),aSize,nil,nil,nil,nil,false)
     

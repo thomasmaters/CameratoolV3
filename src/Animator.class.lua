@@ -56,7 +56,7 @@ end
 
 function Animator:createAnimationPoints()
     if not (#self.TimeLinePaths > 0) then return end
-    if self.CurrentAnimationIndex == nil or self.CurrentAnimationIndex == 0 then return end
+    if self.CurrentAnimationIndex == nil or self.CurrentAnimationIndex == 0 or self.CurrentAnimationIndex > #self.TimeLinePaths then return end
 
     --Construct the points to interpolate over.
     self.AnimationPoints = {}

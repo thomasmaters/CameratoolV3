@@ -17,7 +17,7 @@ function TimeLineElement:init(aStartTime, aDuration, bSelected)
 end
 
 function TimeLineElement:setDuration(aDuration)
-    if(aDuration >= 1) then
+    if aDuration >= 1 and aDuration ~= self.Duration then
         self.Duration = aDuration
         self:callUpdateHandlers()
         triggerEvent("onTimeLineElementChange", getRootElement(), self)
@@ -41,6 +41,7 @@ end
 
 function TimeLineElement:setStartTime(aStartTime)
     if not aStartTime then return end
+    if aStartTime == self.StartTime then return end
     
     self.StartTime = aStartTime
     triggerEvent("onTimeLineElementChange", getRootElement(), self)
