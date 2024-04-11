@@ -2,6 +2,14 @@
 	<min_mta_version client="1.3.0-9.04431" />
 	<oop>true</oop>
 	
+	<script src="Lib/c_common.lua" type="client" />
+	<script src="Lib/c_cam2RTImage.lua" type="client" />
+	<file src="Lib/fx/mta-helper.fx" type="client" />
+	<file src="Lib/fx/cam2RTScreen_vehicle.fx" type="client" />	
+	<file src="Lib/fx/cam2RTScreen_world.fx" type="client" />
+	<file src="Lib/fx/cam2RTScreen_world_add.fx" type="client" />
+	<file src="Lib/fx/cam2RTScreen_world_smap.fx" type="client" />
+	
 	<file src="/Images/eye.png" download="true" />
 	<file src="/Images/foot.png" download="true" />
 	<file src="/Images/link.png" download="true" />

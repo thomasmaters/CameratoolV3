@@ -11,15 +11,19 @@ function InWorldVisualization:init(aGraph)
     self.bEnableInWorldView = true
 
     self.AnimatedObject = createObject ( 980, 0, 0, 0)
+    self.AnimatedTargetObject = createObject( 1337, 0, 0, 0)
 
     self.PositionAnimator = Animator() --#Animator
     self.TargetAnimator = Animator() --#Animator
+    
+    self.PreviewImage = cam2RTImage:create( getCamera():getMatrix(), true )
 
     addEvent("onTimeLineElementChange", true)
     addEvent("onTimeLineElementAdded", true)
     addEvent("onTimeLineElementRemoved", true)
     addEvent("onPathChanged", true)
     addEventHandler( "onClientKey", getRootElement(), bind(self.updateInWorldView,self))
+    addEventHandler( "onClientPreRender" , getRootElement(), bind(self.drawPreview,self))
     addEventHandler( "onClientRender" , getRootElement(), bind(self.draw,self))
     addEventHandler( "onTimeLineElementChange", getRootElement(), bind(self.onTimeLineElementChange, self))
     addEventHandler( "onTimeLineElementAdded", getRootElement(), bind(self.onTimeLineElementChange, self))
@@ -49,12 +53,41 @@ function InWorldVisualization:updateInWorldView(aButton, pressOrRelease)
     self.TargetSplinePoints 		= self:getSplinePointsTable(self.TargetTimeLineElements)
 end
 
+function InWorldVisualization:findRotation( pos1, pos2 ) 
+    local norm = pos2 - pos1
+    local z = -math.deg( math.atan2( norm.x, norm.y ) )
+    local x = math.deg(math.atan2(norm.z, math.sqrt(norm.x*norm.x + norm.y*norm.y)))
+
+    return Vector3(x, 0, z)
+end
+
+function InWorldVisualization:drawPreview()
+    rot = self:findRotation(self.AnimatedObject:getPosition(), self.AnimatedTargetObject:getPosition())
+    self.PreviewImage:setCameraMatrix(Matrix(self.AnimatedObject:getPosition(), rot))
+end
+
 function InWorldVisualization:draw()
-    if(#self.PositionSplinePoints < 1) then return end
-    for k,v in ipairs(self.PositionSplinePoints) do
-        for i=1,#v - 1 do
-            dxDrawLine3D(v[i].x, v[i].y, v[i].z, v[i + 1].x, v[i + 1 ].y, v[i + 1].z, tocolor( 0, 255, 0, 230 ), 10)
+    if(#self.PositionSplinePoints > 0) then
+        for k,v in ipairs(self.PositionSplinePoints) do
+            for i=1,#v - 1 do
+                dxDrawLine3D(v[i].x, v[i].y, v[i].z, v[i + 1].x, v[i + 1 ].y, v[i + 1].z, tocolor( 0, 255, 0, 230 ), 10)
+            end
         end
+    end
+    if(#self.TargetSplinePoints > 0) then
+        for k,v in ipairs(self.TargetSplinePoints) do
+            for i=1,#v - 1 do
+                dxDrawLine3D(v[i].x, v[i].y, v[i].z, v[i + 1].x, v[i + 1 ].y, v[i + 1].z, tocolor( 0, 0, 255, 230 ), 10)
+            end
+        end
+    end
+    
+    if self.PreviewImage then
+        myImage = self.PreviewImage:getRenderTarget()
+        local colR, colG, colB = getSkyGradient()
+        local sx, sy = guiGetScreenSize ()
+        dxDrawRectangle(sx / 2 - sy * 0.25, 0, sy * 0.5, sy * ((sy/ sx) * 0.4), tocolor(colR, colG, colB, 255))
+        dxDrawImage(sx / 2 - sy * 0.25, 0, sy * 0.5, sy * ((sy/ sx) * 0.4), myImage)
     end
 end
 
@@ -71,6 +104,9 @@ function InWorldVisualization:visualizeAnimation(time)
 
     local curPosition = self.PositionAnimator:getCurrentPosition()
     self.AnimatedObject:setPosition(Vector3(curPosition[1],curPosition[2],curPosition[3]))
+
+    local curPosition = self.TargetAnimator:getCurrentPosition()
+    self.AnimatedTargetObject:setPosition(Vector3(curPosition[1],curPosition[2],curPosition[3]))
 end
 
 -------------------------------

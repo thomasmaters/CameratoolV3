@@ -89,6 +89,7 @@ function GraphTimeLine:onMouseScrollOnTimeLineElement(aButton)
             if(b.StartTime > selectedTimeLineElement.StartTime + selectedTimeLineElement.Duration and b.StartTime < selectedTimeLineElement.StartTime + selectedTimeLineElement.Duration - timeIncreaseRate) then
                 timeIncreaseRate = -1 * (b.StartTime - selectedTimeLineElement.StartTime - selectedTimeLineElement.Duration - 1)
 
+                -- Did we hit an other Path object?
                 if Path:trycast(selectedTimeLineElement) ~= nil then
                     b.StartPosition = selectedTimeLineElement.EndPosition
                     selectedTimeLineElement:connectToPath(b)

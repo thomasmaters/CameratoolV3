@@ -1,3 +1,5 @@
+
+
 function bind(aFunctionToCall, ...)
     if not aFunctionToCall then
         error("Bad function pointer @ bind.")
@@ -103,6 +105,7 @@ GlobalInterface = HandleInterfaceEvents() --#HandleInterfaceEvents
 GlobalMouse = Mouse() --#Mouse
 GlobalSpline = Spline(GlobalConstants.SPLINE_TENSION) --#Spline
 GlobalProperties = Properties() --#Properties
+GlobalDatabase = GlobalDatabase()
 
 local fps = false
 function getCurrentFPS() -- Setup the useful function
@@ -131,6 +134,8 @@ addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource(
         ---PERTTYFUNCTION---
         if GlobalConstants.ENABLE_PRETTY_FUNCTION then outputDebugString("CameratoolApplication:lampda") end
         ---PERTTYFUNCTION---
+        GlobalDatabase:connect()
+
         local InternalGraph = Graph(Coordinate2D(GlobalConstants.LEFT_WINDOW_WIDTH,GlobalConstants.SCREEN_HEIGHT - GlobalConstants.APP_HEIGHT ),Coordinate2D(GlobalConstants.SCREEN_WIDTH * 0.6,GlobalConstants.APP_HEIGHT - 50))
         GlobalInterface:createInterface()
     end

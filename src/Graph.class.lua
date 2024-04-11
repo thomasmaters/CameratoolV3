@@ -76,6 +76,12 @@ function Graph:init(aPosition, aSize)
     )
 end
 
+function Graph:saveToDatabase()
+end
+
+function Graph:loadFromDatabase()
+end
+
 function Graph:getGraphTimeLine(aIndex)
     if aIndex > 0  then
         return self.GraphTimeLines[aIndex]:getTimeLineElements()

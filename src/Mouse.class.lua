@@ -23,7 +23,7 @@ function Mouse:init()
     addEventHandler( "onClientCursorMove", getRootElement(),
         function(_,_,CursorX,CursorY)
             self.MousePosition = Coordinate2D(CursorX,CursorY)
-            if(self.bMouseIsDragging == false and (getTickCount() - self.TimeSinceClick) > 20) then
+            if(self.bMouseIsDragging == false and (getTickCount() - self.TimeSinceClick) > 30) then
                 self.bMouseIsDragging = true
                 outputChatBox("dragging")
                 triggerEvent("mouseIsDragging", getRootElement())
